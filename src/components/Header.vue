@@ -6,30 +6,33 @@
                :router="true"
                mode="horizontal"
                @select="handleSelect">
-        <el-menu-item index="1" :route="{name:'HelloWorld'}">ReHigh Store</el-menu-item>
+        <el-menu-item index="1" route="/">ReHigh Store</el-menu-item>
         <el-submenu index="2">
-          <template slot="title">Categori</template>
-          <el-menu-item index="2-1" :route="{name:'man'}">item one</el-menu-item>
-          <el-menu-item index="2-2" :route="{name:'women'}">item two</el-menu-item>
-          <el-menu-item index="2-3" :route="{name:'kids'}">item three</el-menu-item>
+          <template slot="title"> Categori </template>
+          <el-menu-item index="2-1" route="/man">   Man   </el-menu-item>
+          <el-menu-item index="2-2" route="/women"> Women </el-menu-item>
+          <el-menu-item index="2-3" route="/kids">  Kids  </el-menu-item>
         </el-submenu>
-        <el-menu-item index="3" :route="{name:'info'}">
-          Info
-        </el-menu-item>
-        <el-menu-item index="4" :route="{name:'orders'}">Orders</el-menu-item>
-        <el-menu-item index="5" :route="{name:'signin'}">Sign in</el-menu-item>
+        <el-menu-item index="3" route="/info">   Info   </el-menu-item>
+        <el-menu-item index="4" route="/orders"> Orders </el-menu-item>
+        <el-submenu   index="5">
+          <template slot="title"> User </template>
+          <el-menu-item index="5-1" route="/signin"> Sign in </el-menu-item>
+          <el-menu-item index="5-2" route="/signup"> Sign up </el-menu-item>
+          <el-menu-item index="5-3" route="/logout"> Logout  </el-menu-item>
+        </el-submenu>
       </el-menu>
     </el-row>
     <!--Mobile toolbar-->
-    <v-toolbar class="hidden-sm-and-up primary">
+    <v-toolbar class="hidden-sm-and-up primary white--text">
       <v-toolbar-side-icon
         @click="sideNav = !sideNav"
-        class="hidden-sm-and-up">
+        class="hidden-sm-and-up white--text">
       </v-toolbar-side-icon>
       <h2>ReHigh Store</h2>
     </v-toolbar>
     <!--Navigation drawer-->
-    <v-navigation-drawer temporary v-model="sideNav" height="100vh">
+    <v-navigation-drawer temporary absolute v-model="sideNav" height="100vh">
       <v-list>
         <v-list-tile
           v-for="item in menuItems"
@@ -75,5 +78,7 @@ export default {
 </script>
 
 <style scoped lang="sass">
+  .app-header
+    height: 60px
 
 </style>
