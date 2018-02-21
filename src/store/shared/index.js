@@ -1,7 +1,7 @@
 export default {
   // State ---------------------------------------------------
   state: {
-    loading: false,
+    loading: true,
     error: null
   },
   // Mutations ---------------------------------------------------
@@ -28,6 +28,10 @@ export default {
     setError:
       ({commit}, payload) => {
         commit('setError', payload)
+      },
+    setLoading:
+      ({commit}, payload) => {
+        commit('setLoading', payload)
       }
   },
   // Getters  ---------------------------------------------------

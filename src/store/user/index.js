@@ -26,6 +26,7 @@ export default {
     setUser:
       (state, payload) => {
         state.user = payload
+        console.log(payload.user)
       },
     setAdmin:
       (state, payload) => {
@@ -86,17 +87,13 @@ export default {
               const newUser = {
                 id: user.uid,
                 registeredMeetups: [], // new user don't have registered meetups yet
-                fbKeys: {}
+                fbKeys: {},
+                emailVerified: payload.emailVerified
               }
               commit('setUser', newUser) // setUser - invoke mutation
-              // [START sendemailverification]
               firebase.auth().currentUser.sendEmailVerification().then(function () {
-                // Email Verification sent!
-                // [START_EXCLUDE]
                 alert('Email Verification Sent!')
-                // [END_EXCLUDE]
               })
-              // [END sendemailverification]
             }
           )
           .catch(
@@ -119,7 +116,8 @@ export default {
               const registeredUser = {
                 id: user.uid,
                 registeredMeetups: [], // initially empty< but later will loaded from firebase
-                fbKeys: {}
+                fbKeys: {},
+                emailVerified: payload.emailVerified
               }
               commit('setUser', registeredUser)
               console.log('Succesful login')
@@ -146,13 +144,15 @@ export default {
       },
     autoSignIn:
       ({commit}, payload) => {
+        commit('setLoading', true)
         commit('setUser', {
           id: payload.uid,
           registeredMeetups: [],
-          fbKeys: {}
+          fbKeys: {},
+          emailVerified: payload.emailVerified
         })
-        // TODO: admin list to fetch from firebase
-        let user = firebase.auth().currentUser
+        commit('setLoading', false)
+        let user = payload
         if (user != null) {
           user.providerData.forEach(function (profile) {
             if (profile.email === 'montessoriberdsk@gmail.com') {
@@ -179,7 +179,8 @@ export default {
               const updatedUser = {
                 id: getters.user.id,
                 registeredMeetups: registeredMeetups,
-                fbKeys: swappedPairs
+                fbKeys: swappedPairs,
+                emailVerified: getters.user.emailVerified
               }
               commit('setLoading', false)
               commit('setUser', updatedUser)
