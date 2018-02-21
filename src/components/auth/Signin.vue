@@ -17,6 +17,7 @@
               >
                 <el-form-item label="Email" prop="email">
                   <el-input type="email"
+                            id="email"
                             :autofocus="true"
                             v-model="formRule.email"
                             auto-complete="on"
@@ -35,6 +36,10 @@
                              @click="submitForm('formRule')">Sign In</el-button>
                   <el-button @click="clearForm('formRule')">Clear</el-button>
                 </el-form-item>
+                <div v-if="submitCount > 2">
+                  <p>Forgot password?</p>
+                  <el-button type="success"  @click="resetPassword">Reset password</el-button>
+                </div>
               </el-form>
             </v-container>
         </el-card>
@@ -82,7 +87,8 @@ export default {
         email: [
           {validator: checkEmail, trigger: 'blur'}
         ]
-      }
+      },
+      submitCount: 0
     }
   },
   computed: {
@@ -109,6 +115,7 @@ export default {
   },
   methods: {
     submitForm (formName) {
+      this.submitCount++
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$store.dispatch('signUserIn', {email: this.formRule.email, password: this.formRule.password})
@@ -122,6 +129,11 @@ export default {
     },
     isValidEmail: function (email) {
       return /^\S+@\S+\.\S+$/.test(email)
+    },
+    resetPassword: function sendPasswordReset () {
+      let email = document.getElementById('email').value
+      console.log(email)
+      this.$store.dispatch('resetPassword', email)
     }
   }
 }

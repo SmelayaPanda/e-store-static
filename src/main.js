@@ -89,7 +89,7 @@ new Vue({
         if (user) {
           this.$store.dispatch('autoSignIn', user)
           this.$store.dispatch('fetchUserData')
-          console.log(user)
+          // console.log(user)
         }
       })
   }

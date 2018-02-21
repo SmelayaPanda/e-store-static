@@ -163,6 +163,21 @@ export default {
           })
         }
       },
+    resetPassword:
+      ({commit}, payload) => {
+        firebase.auth().sendPasswordResetEmail(payload).then(function () {
+          alert('Password Reset Email Sent!')
+        }).catch(function (error) {
+          let errorCode = error.code
+          let errorMessage = error.message
+          if (errorCode === 'auth/invalid-email') {
+            alert(errorMessage)
+          } else if (errorCode === 'auth/user-not-found') {
+            alert(errorMessage)
+          }
+          console.log(error)
+        })
+      },
     fetchUserData:
       ({commit, getters}) => {
         commit('setLoading', true)
