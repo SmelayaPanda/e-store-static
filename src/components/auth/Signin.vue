@@ -29,9 +29,6 @@
                             auto-complete="off">
                   </el-input>
                 </el-form-item>
-                <!--<el-form-item label="Confirm" prop="checkPass">-->
-                <!--<el-input type="password" v-model="formRule.checkPass" auto-complete="off"></el-input>-->
-                <!--</el-form-item>-->
                 <el-form-item>
                   <el-button type="primary"
                              :disabled="loading"
@@ -72,15 +69,6 @@ export default {
         callback()
       }
     }
-    let validateConfPass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please input the password again'))
-      } else if (value !== this.formRule.password) {
-        callback(new Error('Two inputs don\'t match!'))
-      } else {
-        callback()
-      }
-    }
     return {
       formRule: {
         password: '',
@@ -90,9 +78,6 @@ export default {
       rules: {
         password: [
           {validator: validatePass, trigger: 'blur'}
-        ],
-        checkPass: [
-          {validator: validateConfPass, trigger: 'blur'}
         ],
         email: [
           {validator: checkEmail, trigger: 'blur'}
