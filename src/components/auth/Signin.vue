@@ -33,7 +33,7 @@
                   <el-button type="primary"
                              :disabled="loading"
                              @click="submitForm('formRule')">Sign In</el-button>
-                  <el-button @click="resetForm('formRule')">Reset</el-button>
+                  <el-button @click="clearForm('formRule')">Clear</el-button>
                 </el-form-item>
               </el-form>
             </v-container>
@@ -117,7 +117,7 @@ export default {
         }
       })
     },
-    resetForm (formName) {
+    clearForm (formName) {
       this.$refs[formName].resetFields()
     },
     isValidEmail: function (email) {
@@ -128,44 +128,4 @@ export default {
 </script>
 
 <style scoped>
-  .custom-loader {
-    animation: loader 1s infinite;
-    display: flex;
-  }
-
-  @-moz-keyframes loader {
-    from {
-      transform: rotate(0);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  @-webkit-keyframes loader {
-    from {
-      transform: rotate(0);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  @-o-keyframes loader {
-    from {
-      transform: rotate(0);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  @keyframes loader {
-    from {
-      transform: rotate(0);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
 </style>
