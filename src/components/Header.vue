@@ -4,8 +4,7 @@
     <el-row type="flex" justify="center" class="hidden-xs-only">
       <el-menu :default-active="'1'"
                :router="true"
-               mode="horizontal"
-               @select="handleSelect">
+               mode="horizontal">
         <el-menu-item index="1" route="/">ReHigh Store</el-menu-item>
         <el-submenu index="2">
           <template slot="title"> Categori </template>
@@ -17,9 +16,21 @@
         <el-menu-item index="4" route="/orders"> Orders </el-menu-item>
         <el-submenu   index="5">
           <template slot="title"> User </template>
-          <el-menu-item index="5-1" route="/signin"> Sign in </el-menu-item>
-          <el-menu-item index="5-2" route="/signup"> Sign up </el-menu-item>
-          <el-menu-item index="5-3" route="/logout"> Logout  </el-menu-item>
+          <el-menu-item index="5-1" route="/account"
+                        v-if="this.isAuthenticatedUser">
+           Account
+          </el-menu-item>
+          <el-menu-item index="5-2" route="/signin"
+                        v-if="!this.isAuthenticatedUser">
+            Sign in
+          </el-menu-item>
+          <el-menu-item index="5-3" route="/signup"
+                        v-if="!this.isAuthenticatedUser">
+            Sign up
+          </el-menu-item>
+          <el-menu-item index="5-4" route="/logout"
+                        v-if="this.isAuthenticatedUser"
+                        @click="onLogout"> Logout  </el-menu-item>
         </el-submenu>
       </el-menu>
     </el-row>
@@ -64,15 +75,11 @@ export default {
     }
   },
   methods: {
-    handleSelect (key, keyPath) {
-      console.log(key, keyPath)
-    },
-    handleOpen (key, keyPath) {
-      console.log(key, keyPath)
-    },
-    handleClose (key, keyPath) {
-      console.log(key, keyPath)
-    }
+    onLogout:
+      function () {
+        this.$store.dispatch('logout')
+        // window.location.reload()
+      }
   }
 }
 </script>

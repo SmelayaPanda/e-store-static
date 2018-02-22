@@ -1,8 +1,11 @@
 <template>
   <v-container>
-
+    <!--Loading circular-->
+    <v-container v-if="this.isLoading">
+      <app-loader></app-loader>
+    </v-container>
     <!--Authentication form-->
-    <el-row type="flex" justify="center">
+    <el-row type="flex" justify="center" v-if="!this.isLoading">
       <el-col :xs="24" :sm="14" :md="12" :lg="10" :xl="8">
         <app-alert v-if="error" :text="error.message"></app-alert>
         <el-card>
@@ -99,10 +102,6 @@ export default {
     error:
         function () {
           return this.$store.getters.error
-        },
-    loading:
-        function () {
-          return this.$store.getters.loading
         }
   },
   watch: {

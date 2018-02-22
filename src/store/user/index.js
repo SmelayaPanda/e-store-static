@@ -208,9 +208,16 @@ export default {
       },
     logout:
       ({commit}) => {
+        commit('setLoading', true)
         firebase.auth().signOut()
-        commit('setUser', null)
-        window.location.reload()
+          .then(() => {
+            commit('setUser', null)
+            commit('setLoading', false)
+          })
+          .catch(err => {
+            console.log(err)
+            commit('setLoading', false)
+          })
       }
   },
   // Getters  ---------------------------------------------------

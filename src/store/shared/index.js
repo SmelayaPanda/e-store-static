@@ -1,7 +1,7 @@
 export default {
   // State ---------------------------------------------------
   state: {
-    loading: true,
+    loading: false,
     error: null
   },
   // Mutations ---------------------------------------------------
