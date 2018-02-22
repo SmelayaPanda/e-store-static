@@ -21,7 +21,6 @@ export default {
   computed: {
     isVerifiedEmail: function () {
       if (this.$store.getters.user) {
-        console.log(this.$store.getters.user.emailVerified)
         return this.$store.getters.user.emailVerified
       }
     }

@@ -1,5 +1,5 @@
 import {store} from '../store'
-// for block creation new meetup and profile settings
+// Guardian of private user data
 export default (to, from, next) => {
   if (store.getters.user) {
     next()

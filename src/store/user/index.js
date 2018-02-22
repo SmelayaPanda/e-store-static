@@ -1,32 +1,18 @@
 import * as firebase from 'firebase'
+import router from '../../router'
+import { Message } from 'element-ui'
 
 export default {
   // State ---------------------------------------------------
   state: {
-    user: null, // new user creates only with firebase auth()
+    user: null,
     isAdmin: false
   },
   // Mutations ---------------------------------------------------
-  mutations: { // to change state
-    registerUserForMeetup:
-      (state, payload) => {
-        const id = payload.id
-        if (state.user.registeredMeetups.findIndex(meetup => meetup.id === id) >= 0) {
-          return
-        }
-        state.user.registeredMeetups.push(id)
-        state.user.fbKeys[id] = payload.fbKey
-      },
-    unregisterUserFromMeetup:
-      (state, payload) => {
-        const registeredMeetups = state.user.registeredMeetups
-        registeredMeetups.splice(registeredMeetups.findIndex(meetup => meetup.id === payload), 1)
-        Reflect.deleteProperty(state.user.fbKeys, payload)
-      },
+  mutations: { // change state
     setUser:
       (state, payload) => {
         state.user = payload
-        console.log(payload.user)
       },
     setAdmin:
       (state, payload) => {
@@ -35,55 +21,16 @@ export default {
   },
   // Actions ---------------------------------------------------
   actions: { // specify the mutation
-    registerUserForMeetup:
-      ({commit, getters}, payload) => {
-        commit('setLoading', true)
-        const user = getters.user
-        firebase.database().ref('/users/' + user.id).child('/registrations/')
-          .push(payload)
-          .then(
-            data => {
-              commit('setLoading', false)
-              commit('registerUserForMeetup', {id: payload, fbKey: data.key})
-            })
-          .catch(
-            error => {
-              console.log(error)
-              commit('setLoading', false)
-            })
-      },
-    unregisterUserFromMeetup:
-      ({commit, getters}, payload) => {
-        commit('setLoading', true)
-        const user = getters.user
-        if (!user.fbKeys) {
-          return
-        }
-        const fbKey = user.fbKeys[payload]
-        firebase.database().ref('/users/' + user.id + '/registrations/').child(fbKey)
-          .remove()
-          .then(
-            () => {
-              commit('setLoading', false)
-              commit('unregisterUserFromMeetup', payload)
-            })
-          .catch(
-            error => {
-              console.log(error)
-              commit('setLoading', false)
-            })
-      },
-    // Firebase authentication
     signUserUp:
       ({commit}, payload) => {
-        commit('setLoading', true) // start loading process
-        commit('clearError')
+        commit('LOADING', true) // start loading process
+        commit('CLEAR_ERR')
         // return a Promise
         firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
           .then(
             user => {
-              commit('setLoading', false) // we have user == loading complete
-              commit('clearError')
+              commit('LOADING', false) // we have user == loading complete
+              commit('CLEAR_ERR')
               const newUser = {
                 id: user.uid,
                 registeredMeetups: [], // new user don't have registered meetups yet
@@ -91,15 +38,21 @@ export default {
                 emailVerified: payload.emailVerified
               }
               commit('setUser', newUser) // setUser - invoke mutation
-              firebase.auth().currentUser.sendEmailVerification().then(function () {
-                alert('Email Verification Sent!')
-              })
+              firebase.auth().currentUser.sendEmailVerification()
+                .then(function () {
+                  Message({
+                    showClose: true,
+                    message: 'Congratulations, the account was created!',
+                    type: 'success',
+                    duration: 10000
+                  })
+                })
             }
           )
           .catch(
             error => {
-              commit('setLoading', false) // we have error == loading complete
-              commit('setError', error) // in this case it is the specific object from firebase with message property
+              commit('LOADING', false) // we have error == loading complete
+              commit('ERR', error) // in this case it is the specific object from firebase with message property
               console.log(error)
             }
           )
@@ -109,13 +62,14 @@ export default {
         if (firebase.auth().currentUser) {
           firebase.auth().signOut()
         }
-        commit('setLoading', true)
-        commit('clearError')
+        console.log(payload)
+        commit('LOADING', true)
+        commit('CLEAR_ERR')
         firebase.auth().signInAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
           .then(
             user => {
-              commit('setLoading', false)
-              commit('clearError')
+              commit('LOADING', false)
+              commit('CLEAR_ERR')
               const registeredUser = {
                 id: user.uid,
                 registeredMeetups: [], // initially empty< but later will loaded from firebase
@@ -128,8 +82,8 @@ export default {
           )
           .catch(
             error => {
-              commit('setLoading', false)
-              commit('setError', error)
+              commit('LOADING', false)
+              commit('ERR', error)
               console.log(error)
             }
           )
@@ -137,7 +91,7 @@ export default {
         let user = firebase.auth().currentUser
         if (user != null) {
           user.providerData.forEach(function (profile) {
-            if (profile.email === 'montessoriberdsk@gmail.com') {
+            if (profile.email === 'admin@gmail.com') {
               commit('setAdmin', true)
             } else {
               commit('setAdmin', false)
@@ -147,19 +101,19 @@ export default {
       },
     autoSignIn:
       ({commit}, payload) => {
-        commit('clearError')
-        commit('setLoading', true)
+        commit('CLEAR_ERR')
+        commit('LOADING', true)
         commit('setUser', {
           id: payload.uid,
           registeredMeetups: [],
           fbKeys: {},
           emailVerified: payload.emailVerified
         })
-        commit('setLoading', false)
+        commit('LOADING', false)
         let user = payload
         if (user != null) {
           user.providerData.forEach(function (profile) {
-            if (profile.email === 'montessoriberdsk@gmail.com') {
+            if (profile.email === 'admin@gmail.com') {
               commit('setAdmin', true)
             } else {
               commit('setAdmin', false)
@@ -170,57 +124,41 @@ export default {
     resetPassword:
       ({commit}, payload) => {
         firebase.auth().sendPasswordResetEmail(payload).then(function () {
-          alert('Password Reset Email Sent!')
+          Message({
+            showClose: true,
+            message: 'Password Reset Email Sent!',
+            duration: 10000,
+            type: 'success'
+          })
         }).catch(function (error) {
           let errorCode = error.code
           let errorMessage = error.message
           if (errorCode === 'auth/invalid-email') {
-            alert(errorMessage)
+            Message({
+              showClose: true,
+              message: errorMessage,
+              duration: 10000
+            })
           } else if (errorCode === 'auth/user-not-found') {
-            alert(errorMessage)
+            Message({
+              showClose: true,
+              message: errorMessage,
+              duration: 10000
+            })
           }
           console.log(error)
         })
       },
-    fetchUserData:
-      ({commit, getters}) => {
-        commit('setLoading', true)
-        firebase.database().ref('/users/' + getters.user.id + '/registrations/').once('value')
-          .then(
-            (data) => {
-              const dataPairs = data.val() // val() - to transform onto js valid form object!!
-              let registeredMeetups = []
-              let swappedPairs = {}
-              for (let key in dataPairs) {
-                registeredMeetups.push(dataPairs[key]) // dataPairs[key] = meetupId
-                swappedPairs[dataPairs[key]] = key
-              }
-              const updatedUser = {
-                id: getters.user.id,
-                registeredMeetups: registeredMeetups,
-                fbKeys: swappedPairs,
-                emailVerified: getters.user.emailVerified
-              }
-              commit('setLoading', false)
-              commit('setUser', updatedUser)
-            })
-          .catch(
-            error => {
-              commit('setLoading', false)
-              console.log(error)
-            })
-      },
     logout:
       ({commit}) => {
-        commit('setLoading', true)
         firebase.auth().signOut()
           .then(() => {
-            commit('setUser', null)
-            commit('setLoading', false)
+            commit('setUser', '')
+            router.push('/')
+            window.location.reload()
           })
           .catch(err => {
             console.log(err)
-            commit('setLoading', false)
           })
       }
   },

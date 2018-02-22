@@ -1,14 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import user from './user/index'
 import shared from './shared/index'
+import user from './user/index'
+import cart from './shopping-cart/index'
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   modules: {
     user: user,
-    shared: shared
+    shared: shared,
+    cart: cart
   }
 })

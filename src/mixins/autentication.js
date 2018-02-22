@@ -4,7 +4,7 @@ export const authMixin = {
   computed: {
     isAuthenticatedUser:
       function () {
-        return store.getters.user !== null && store.getters.user !== undefined
+        return Boolean(store.getters.user)
       },
     isAdmin: function () {
       return this.$store.getters.isAdmin

@@ -6,32 +6,32 @@ export default {
   },
   // Mutations ---------------------------------------------------
   mutations: { // to change state
-    setLoading:
+    LOADING:
       (state, payload) => {
         state.loading = payload
       },
-    setError:
+    ERR:
       (state, payload) => {
         state.error = payload
       },
-    clearError:
+    CLEAR_ERR:
       (state) => {
         state.error = null
       }
   },
   // Actions ---------------------------------------------------
   actions: { // specify the mutation
-    clearError:
+    CLEAR_ERR:
       ({commit}) => {
-        commit('clearError')
+        commit('CLEAR_ERR')
       },
-    setError:
+    ERR:
       ({commit}, payload) => {
-        commit('setError', payload)
+        commit('ERR', payload)
       },
-    setLoading:
+    LOADING:
       ({commit}, payload) => {
-        commit('setLoading', payload)
+        commit('LOADING', payload)
       }
   },
   // Getters  ---------------------------------------------------

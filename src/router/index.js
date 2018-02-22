@@ -35,11 +35,6 @@ export default new Router({
       beforeEnter: AuthGuard
     },
     {
-      path: '/logout',
-      name: 'logout',
-      beforeEnter: AuthGuard
-    },
-    {
       path: '/info',
       name: 'info',
       component: Info

@@ -119,7 +119,7 @@ export default {
         if (valid) {
           this.$store.dispatch('signUserIn', {email: this.formRule.email, password: this.formRule.password})
         } else {
-          return this.$store.dispatch('setError', { message: 'Please, fill in the fields correctly' })
+          return this.$store.dispatch('ERR', { message: 'Please, fill in the fields correctly' })
         }
       })
     },
