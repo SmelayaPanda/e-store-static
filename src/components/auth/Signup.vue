@@ -36,7 +36,6 @@
                 <el-button type="primary"
                            :disabled="loading"
                            @click="submitForm('formRule')">Sign up</el-button>
-                <el-button @click="clearForm('formRule')">Clear</el-button>
               </el-form-item>
             </el-form>
           </v-container>
@@ -133,9 +132,6 @@ export default {
           return this.$store.dispatch('ERR', { message: 'Please, fill in the fields correctly' })
         }
       })
-    },
-    clearForm (formName) {
-      this.$refs[formName].resetFields()
     },
     isValidEmail: function (email) {
       return /^\S+@\S+\.\S+$/.test(email)

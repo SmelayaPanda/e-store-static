@@ -23,21 +23,20 @@ export default {
   actions: { // specify the mutation
     signUserUp:
       ({commit}, payload) => {
-        commit('LOADING', true) // start loading process
+        commit('LOADING', true)
         commit('CLEAR_ERR')
-        // return a Promise
         firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
           .then(
             user => {
-              commit('LOADING', false) // we have user == loading complete
+              commit('LOADING', false)
               commit('CLEAR_ERR')
               const newUser = {
                 id: user.uid,
-                registeredMeetups: [], // new user don't have registered meetups yet
+                registeredMeetups: [],
                 fbKeys: {},
                 emailVerified: payload.emailVerified
               }
-              commit('setUser', newUser) // setUser - invoke mutation
+              commit('setUser', newUser)
               firebase.auth().currentUser.sendEmailVerification()
                 .then(function () {
                   Message({
@@ -51,8 +50,8 @@ export default {
           )
           .catch(
             error => {
-              commit('LOADING', false) // we have error == loading complete
-              commit('ERR', error) // in this case it is the specific object from firebase with message property
+              commit('LOADING', false)
+              commit('ERR', error)
               console.log(error)
             }
           )
@@ -62,7 +61,6 @@ export default {
         if (firebase.auth().currentUser) {
           firebase.auth().signOut()
         }
-        console.log(payload)
         commit('LOADING', true)
         commit('CLEAR_ERR')
         firebase.auth().signInAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
@@ -72,12 +70,12 @@ export default {
               commit('CLEAR_ERR')
               const registeredUser = {
                 id: user.uid,
-                registeredMeetups: [], // initially empty< but later will loaded from firebase
+                registeredMeetups: [],
                 fbKeys: {},
                 emailVerified: payload.emailVerified
               }
               commit('setUser', registeredUser)
-              console.log('Succesful login')
+              console.log('Successful Login')
             }
           )
           .catch(
@@ -87,7 +85,6 @@ export default {
               console.log(error)
             }
           )
-        // TODO: admin list to fetch from firebase
         let user = firebase.auth().currentUser
         if (user != null) {
           user.providerData.forEach(function (profile) {

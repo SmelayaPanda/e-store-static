@@ -36,8 +36,7 @@
                 <el-form-item>
                   <el-button type="primary"
                              :disabled="this.isLoading"
-                             @click="submitForm('formRule')">Sign In</el-button>
-                  <el-button @click="clearForm('formRule')">Clear</el-button>
+                             @click="submitForm('formRule')"> Sign In </el-button>
                 </el-form-item>
                 <div v-if="submitCount > 2">
                   <p>Forgot password?</p>
@@ -123,15 +122,11 @@ export default {
         }
       })
     },
-    clearForm (formName) {
-      this.$refs[formName].resetFields()
-    },
     isValidEmail: function (email) {
       return /^\S+@\S+\.\S+$/.test(email)
     },
     resetPassword: function sendPasswordReset () {
       let email = document.getElementById('email').value
-      console.log(email)
       this.$store.dispatch('resetPassword', email)
     }
   }
