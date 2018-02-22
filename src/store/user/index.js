@@ -106,6 +106,9 @@ export default {
       },
     signUserIn:
       ({commit}, payload) => {
+        if (firebase.auth().currentUser) {
+          firebase.auth().signOut()
+        }
         commit('setLoading', true)
         commit('clearError')
         firebase.auth().signInAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
@@ -144,6 +147,7 @@ export default {
       },
     autoSignIn:
       ({commit}, payload) => {
+        commit('clearError')
         commit('setLoading', true)
         commit('setUser', {
           id: payload.uid,

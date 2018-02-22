@@ -35,7 +35,7 @@
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary"
-                             :disabled="loading"
+                             :disabled="this.isLoading"
                              @click="submitForm('formRule')">Sign In</el-button>
                   <el-button @click="clearForm('formRule')">Clear</el-button>
                 </el-form-item>
