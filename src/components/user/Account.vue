@@ -8,10 +8,10 @@
       <div v-if="isVerifiedEmail">
         <!--Personal card-->
         <div></div>
-        <el-row type="flex" justify="center" class="mt-2">
-          <el-col :xs="24" :sm="8" :md="6" :lg="4" :xl="2">
+        <el-row type="flex" justify="center" style="flex-wrap: wrap">
+          <el-col :xs="24" :sm="6" :md="5" :lg="4" :xl="3" class="ml-1 mr-1 mb-2">
             <el-card :body-style="{ padding: '0px' }">
-              <img src="@/assets/logo.png" class="image">
+              <img src="@/assets/placeholders/person_placeholder.png" height="200px">
               <div style="padding: 14px;">
                 <span>Smelaya Panda</span>
                 <div class="bottom clearfix">
@@ -31,24 +31,7 @@
               </div>
             </el-card>
           </el-col>
-          <el-col :span="11" class="ml-2">
-            <!---->
-            <el-card class="mb-2">
-              <h2 class="mb-3">My shopping cart</h2>
-              <el-row type="flex" align="middle">
-                <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" align="left">
-                  <h2>Apple mac book pro beautiful computer ever</h2>
-                </el-col>
-                <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" align="right">
-                  <el-input-number size="small" v-model="qty"></el-input-number>
-                  <el-button type="warning" size="small">
-                    <i class="el-icon-delete"></i>
-                  </el-button>
-                  <el-button type="success" size="small" class="ml-0">Buy</el-button>
-                </el-col>
-              </el-row>
-            </el-card>
-            <!---->
+          <el-col :xs="24" :sm="17" :md="13" :lg="11" :xl="9" class="ml-1 mr-1">
             <el-card>
               <h2 class="mb-2">My orders history</h2>
               <el-collapse accordion>
@@ -92,7 +75,11 @@
         </el-row>
       </div>
       <div v-else>
-        <h2>Confirm your email</h2>
+        <h3>
+          <i class="el-icon-info"></i>
+          Confirm your email address to continue
+        </h3>
+        <p>Email with verification link sent to address: <br><span>{{ userEmail }}</span></p>
       </div>
     </div>
   </div>
@@ -105,7 +92,6 @@ export default {
   name: 'Account',
   data () {
     return {
-      qty: 1
     }
   },
   components: {
@@ -116,6 +102,9 @@ export default {
       if (this.$store.getters.user) {
         return this.$store.getters.user.emailVerified
       }
+    },
+    userEmail () {
+      return this.$store.getters.user.email
     }
   }
 }

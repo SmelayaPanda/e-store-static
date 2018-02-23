@@ -39,7 +39,8 @@
                 </el-button>
               </el-form-item>
               <div v-if="submitCount > 2">
-                <p>Forgot password?</p>
+                <span class="primary--text ml-3">Forgot password?</span>
+                <p>Enter your email in the above field and click:</p>
                 <el-button type="success" @click="resetPassword">Reset password</el-button>
               </div>
             </el-form>

@@ -32,6 +32,7 @@ export default {
               commit('CLEAR_ERR')
               const newUser = {
                 id: user.uid,
+                email: payload.email,
                 registeredMeetups: [],
                 fbKeys: {},
                 emailVerified: payload.emailVerified
@@ -72,6 +73,7 @@ export default {
               commit('CLEAR_ERR')
               const registeredUser = {
                 id: user.uid,
+                email: payload.email,
                 registeredMeetups: [],
                 fbKeys: {},
                 emailVerified: payload.emailVerified
@@ -104,6 +106,7 @@ export default {
         commit('LOADING', true)
         commit('setUser', {
           id: payload.uid,
+          email: payload.email,
           registeredMeetups: [],
           fbKeys: {},
           emailVerified: payload.emailVerified

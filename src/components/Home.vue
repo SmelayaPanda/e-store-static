@@ -1,9 +1,13 @@
 <template>
   <div class="hello">
-    <h1>Hello</h1>
-    <el-checkbox v-model="checked">Option</el-checkbox>
-    <el-button @click="getFBData">getFBData</el-button>
-    {{ msg }}
+    <h1 style="font-size: 72px">re:<span class="primary--text">High</span></h1>
+
+    <h1 style="font-size: 72px">Store</h1>
+    <img src="@/assets/placeholders/people.jpg" alt="" width="500px">
+    <div>
+      <el-button @click="getFBData">SayHi</el-button>
+    </div>
+    <p style="font-size: 48px">{{ msg }}</p>
   </div>
 </template>
 
@@ -14,7 +18,7 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
+      msg: '',
       checked: true
     }
   },
