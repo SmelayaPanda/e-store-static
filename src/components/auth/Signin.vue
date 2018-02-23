@@ -10,40 +10,40 @@
         <app-alert v-if="error" :text="error.message"></app-alert>
         <el-card>
           <h2>Sign in</h2>
-            <v-container>
-
-              <el-form :model="formRule"
-                       status-icon
-                       :rules="rules"
-                       auto-complete="on"
-                       ref="formRule"
-              >
-                <el-form-item label="Email" prop="email">
-                  <el-input type="email"
-                            id="email"
-                            :autofocus="true"
-                            v-model="formRule.email"
-                            auto-complete="on"
-                  >
-                  </el-input>
-                </el-form-item>
-                <el-form-item label="Password" prop="password">
-                  <el-input type="password"
-                            v-model="formRule.password"
-                            auto-complete="off">
-                  </el-input>
-                </el-form-item>
-                <el-form-item>
-                  <el-button type="primary"
-                             :disabled="this.isLoading"
-                             @click="submitForm('formRule')"> Sign In </el-button>
-                </el-form-item>
-                <div v-if="submitCount > 2">
-                  <p>Forgot password?</p>
-                  <el-button type="success"  @click="resetPassword">Reset password</el-button>
-                </div>
-              </el-form>
-            </v-container>
+          <v-container>
+            <el-form :model="formRule"
+                     status-icon
+                     :rules="rules"
+                     auto-complete="on"
+                     ref="formRule"
+            >
+              <el-form-item label="Email" prop="email">
+                <el-input type="email"
+                          id="email"
+                          :autofocus="true"
+                          v-model="formRule.email"
+                          auto-complete="on"
+                >
+                </el-input>
+              </el-form-item>
+              <el-form-item label="Password" prop="password">
+                <el-input type="password"
+                          v-model="formRule.password"
+                          auto-complete="off">
+                </el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary"
+                           :disabled="this.isLoading"
+                           @click="submitForm('formRule')"> Sign In
+                </el-button>
+              </el-form-item>
+              <div v-if="submitCount > 2">
+                <p>Forgot password?</p>
+                <el-button type="success" @click="resetPassword">Reset password</el-button>
+              </div>
+            </el-form>
+          </v-container>
         </el-card>
       </el-col>
     </el-row>
@@ -118,7 +118,7 @@ export default {
         if (valid) {
           this.$store.dispatch('signUserIn', {email: this.formRule.email, password: this.formRule.password})
         } else {
-          return this.$store.dispatch('ERR', { message: 'Please, fill in the fields correctly' })
+          return this.$store.dispatch('ERR', {message: 'Please, fill in the fields correctly'})
         }
       })
     },

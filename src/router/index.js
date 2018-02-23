@@ -6,7 +6,7 @@ import Info from '@/components/info/Info'
 // AUTH
 import Signin from '@/components/auth/Signin'
 import Signup from '@/components/auth/Signup'
-import Account from '@/components/auth/Account'
+import Account from '@/components/user/Account'
 import AuthGuard from '@/router/auth-guard'
 
 Vue.use(Router)

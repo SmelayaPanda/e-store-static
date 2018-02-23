@@ -1,6 +1,6 @@
 import * as firebase from 'firebase'
 import router from '../../router'
-import { Message } from 'element-ui'
+import { Message, Notification } from 'element-ui'
 
 export default {
   // State ---------------------------------------------------
@@ -39,11 +39,13 @@ export default {
               commit('setUser', newUser)
               firebase.auth().currentUser.sendEmailVerification()
                 .then(function () {
-                  Message({
-                    showClose: true,
-                    message: 'Congratulations, the account was created!',
+                  Notification({
+                    title: 'Congratulations',
+                    message: 'The account was created!',
                     type: 'success',
-                    duration: 10000
+                    showClose: true,
+                    duration: 10000,
+                    offset: 50
                   })
                 })
             }
@@ -121,23 +123,27 @@ export default {
     resetPassword:
       ({commit}, payload) => {
         firebase.auth().sendPasswordResetEmail(payload).then(function () {
-          Message({
+          Notification({
+            title: 'Info',
+            message: `Reset password form sent to your email: ${payload}!`,
+            type: 'info',
             showClose: true,
-            message: 'Password Reset Email Sent!',
-            duration: 10000,
-            type: 'success'
+            duration: 20000,
+            offset: 50
           })
         }).catch(function (error) {
           let errorCode = error.code
           let errorMessage = error.message
           if (errorCode === 'auth/invalid-email') {
             Message({
+              type: 'error',
               showClose: true,
               message: errorMessage,
               duration: 10000
             })
           } else if (errorCode === 'auth/user-not-found') {
             Message({
+              type: 'error',
               showClose: true,
               message: errorMessage,
               duration: 10000
