@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-3">
+  <div class="mb-3" v-show="!isAdminPanel">
     <!--Toolbar-->
     <el-row type="flex" justify="center" class="hidden-xs-only">
       <el-menu :default-active="'1'"
@@ -79,6 +79,12 @@ export default {
         function () {
           this.$store.dispatch('logout')
           // window.location.reload()
+        }
+  },
+  computed: {
+    isAdminPanel:
+        function () {
+          return window.location.pathname === '/admin'
         }
   }
 }

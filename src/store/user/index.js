@@ -92,7 +92,7 @@ export default {
         let user = firebase.auth().currentUser
         if (user != null) {
           user.providerData.forEach(function (profile) {
-            if (profile.email === 'admin@gmail.com') {
+            if (profile.email === 'smelayapandagm@gmail.com') {
               commit('setAdmin', true)
             } else {
               commit('setAdmin', false)
@@ -115,7 +115,7 @@ export default {
         let user = payload
         if (user != null) {
           user.providerData.forEach(function (profile) {
-            if (profile.email === 'admin@gmail.com') {
+            if (profile.email === 'smelayapandagm@gmail.com') {
               commit('setAdmin', true)
             } else {
               commit('setAdmin', false)

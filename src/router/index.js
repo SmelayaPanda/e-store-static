@@ -9,6 +9,9 @@ import Signin from '@/components/auth/Signin'
 import Signup from '@/components/auth/Signup'
 import Account from '@/components/user/Account'
 import AuthGuard from '@/router/auth-guard'
+// ADMIN
+import Admin from '@/components/admin/AdminPanel'
+
 // SHOP
 import Shop from '@/components/shop/Shop'
 import Product from '@/components/shop/Product'
@@ -58,6 +61,12 @@ export default new Router({
       name: 'product',
       props: true,
       component: Product
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      props: true,
+      component: Admin
     }
   ],
   mode: 'history'

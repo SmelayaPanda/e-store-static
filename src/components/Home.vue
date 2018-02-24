@@ -3,7 +3,7 @@
     <h1 style="font-size: 72px">re:<span class="primary--text">High</span></h1>
 
     <h1 style="font-size: 72px">Store</h1>
-    <img src="@/assets/placeholders/people.jpg" alt="" width="500px">
+    <img src="@/assets/placeholders/people.jpg" alt="" width="500px" style="opacity: 0.9">
     <div>
       <el-button @click="getFBData">SayHi</el-button>
     </div>
