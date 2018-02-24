@@ -22,8 +22,8 @@ export default {
             })
           .catch(
             error => {
-              commit('LOADING', false)
               console.log(error)
+              commit('LOADING', false)
             })
       },
     addNewProduct:
@@ -34,9 +34,45 @@ export default {
             let products = getters.getProducts
             products[data.key] = payload
             commit('setProducts', products)
+            commit('LOADING', false)
           })
           .catch(err => {
             console.log(err)
+            commit('LOADING', false)
+          })
+      },
+    editProduct:
+      ({commit, getters}, payload) => {
+        commit('LOADING', true)
+        let id = payload.id
+        delete payload.id
+        firebase.database().ref('products').child(id).update(payload)
+          .then(() => {
+            console.log('success')
+            let products = getters.getProducts
+            products[id] = payload
+            commit('setProducts', products)
+            commit('LOADING', false)
+          })
+          .catch(err => {
+            console.log(err)
+            commit('LOADING', false)
+          })
+      },
+    deleteProduct:
+      ({commit, getters}, payload) => {
+        commit('LOADING', true)
+        let products = getters.getProducts
+        delete products[payload]
+        firebase.database().ref('products').child(payload).remove()
+          .then(() => {
+            console.log('Product removed')
+            commit('setProducts', products)
+            commit('LOADING', false)
+          })
+          .catch(err => {
+            console.log(err)
+            commit('LOADING', false)
           })
       }
   },

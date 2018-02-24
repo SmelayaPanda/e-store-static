@@ -1,10 +1,10 @@
 <template>
   <div>
-    <v-btn class="primary" fab @click="dialogFormVisible = true">
-      <v-icon class="white--text">add</v-icon>
-    </v-btn>
+    <el-button size="mini" @click="dialogFormVisible = true">
+      <i class="el-icon-edit"></i>
+    </el-button>
 
-    <el-dialog title="New product info" :visible.sync="dialogFormVisible" width="100%" :fullscreen="true">
+    <el-dialog title="Edit product info" :visible.sync="dialogFormVisible" width="100%" :fullscreen="true">
       <el-form :model="product">
         <el-form-item label="Title" :label-width="formLabelWidth">
           <el-input v-model="product.title"></el-input>
@@ -60,7 +60,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-row type="flex" justify="center">
-          <el-button type="primary" @click="addNewProduct">Ok</el-button>
+          <el-button type="primary" @click="edit">Ok</el-button>
           <el-button class="mr-5" @click="dialogFormVisible = false">Cancel</el-button>
         </el-row>
   </span>
@@ -70,30 +70,20 @@
 
 <script>
 export default {
-  name: 'AddProduct',
+  name: 'EditProduct',
+  props: ['editProduct'],
   data () {
     return {
+      product: this.editProduct,
       dialogFormVisible: false,
-      product: {
-        title: 'Some product name',
-        description: 'And awesome description',
-        priority: 1,
-        currency: 'RUR',
-        price: '100',
-        qty: 10,
-        color: 'green',
-        size: 'big',
-        weight: 0.5,
-        weightMeasure: 'kg',
-        date: '2016-05-03'
-      },
       formLabelWidth: '120px'
     }
   },
   methods: {
-    addNewProduct () {
+    edit () {
       let creationDate = new Date()
-      let newProduct = {
+      let editedObj = {
+        id: this.editProduct.id,
         title: this.product.title,
         description: this.product.description,
         priority: this.product.priority,
@@ -106,9 +96,9 @@ export default {
         weightMeasure: this.product.weightMeasure,
         date: creationDate.toISOString()
       }
-      console.log(newProduct)
+      console.log(editedObj)
+      this.$store.dispatch('editProduct', editedObj)
       this.dialogFormVisible = false
-      this.$store.dispatch('addNewProduct', newProduct)
     }
   }
 }

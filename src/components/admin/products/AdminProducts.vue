@@ -96,16 +96,10 @@
       <el-table-column
         label="Operations">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            @click="handleEdit(scope.$index, scope.row)">Edit
-          </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            style="margin-left: 0"
-            @click="handleDelete(scope.$index, scope.row)">Delete
-          </el-button>
+          <el-row type="flex">
+            <edit-product :editProduct="scope.row"></edit-product>
+            <delete-product :id="scope.row.id" :title="scope.row.title"></delete-product>
+          </el-row>
         </template>
       </el-table-column>
     </el-table>
@@ -114,24 +108,21 @@
 
 <script>
 import AddProduct from './crud/AddProduct'
+import EditProduct from './crud/EditProduct'
+import DeleteProduct from './crud/DeleteProducts'
 
 export default {
   components: {
-    AddProduct
+    EditProduct,
+    AddProduct,
+    DeleteProduct
   },
   name: 'AdminProducts',
   data () {
     return {
     }
   },
-  methods: {
-    handleEdit (index, row) {
-      console.log(index, row)
-    },
-    handleDelete (index, row) {
-      console.log(index, row)
-    }
-  },
+  methods: {},
   computed: {
     products () {
       let arr = []
@@ -139,10 +130,8 @@ export default {
       for (let key in prodObj) {
         let pushObj = prodObj[key]
         pushObj.id = key
-        console.log(pushObj)
         arr.push(pushObj)
       }
-      console.log(arr.length)
       return arr
     }
   }
