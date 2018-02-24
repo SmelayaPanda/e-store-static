@@ -6,29 +6,27 @@
                :router="true"
                mode="horizontal">
         <el-menu-item index="1" route="/">ReHigh Store</el-menu-item>
-        <el-menu-item index="2" route="/man">Man</el-menu-item>
-        <el-menu-item index="3" route="/women">Women</el-menu-item>
-        <el-menu-item index="4" route="/kids">Kids</el-menu-item>
-        <el-menu-item index="5" route="/info"> Info</el-menu-item>
-        <el-menu-item index="6" route="/cart">
+        <el-menu-item index="2" route="/shop">Shop</el-menu-item>
+        <el-menu-item index="3" route="/info"> Info</el-menu-item>
+        <el-menu-item index="4" route="/cart">
           Cart
           <el-tag size="mini" class="mb-1">0</el-tag>
         </el-menu-item>
-        <el-submenu index="7">
+        <el-submenu index="5">
           <template slot="title"> User</template>
-          <el-menu-item index="7-1" route="/account"
+          <el-menu-item index="5-1" route="/account"
                         v-if="this.isAuthenticatedUser">
             Account
           </el-menu-item>
-          <el-menu-item index="7-2" route="/signin"
+          <el-menu-item index="5-2" route="/signin"
                         v-if="!this.isAuthenticatedUser">
             Sign in
           </el-menu-item>
-          <el-menu-item index="7-3" route="/signup"
+          <el-menu-item index="5-3" route="/signup"
                         v-if="!this.isAuthenticatedUser">
             Sign up
           </el-menu-item>
-          <el-menu-item index="7-4" route="/logout"
+          <el-menu-item index="5-4" route="/logout"
                         v-if="this.isAuthenticatedUser"
                         @click="onLogout"> Logout
           </el-menu-item>

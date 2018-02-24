@@ -10,9 +10,8 @@ import Signup from '@/components/auth/Signup'
 import Account from '@/components/user/Account'
 import AuthGuard from '@/router/auth-guard'
 // SHOP
-import Man from '@/components/shop/Man'
-import Women from '@/components/shop/Women'
-import Kids from '@/components/shop/Kids'
+import Shop from '@/components/shop/Shop'
+import Product from '@/components/shop/Product'
 
 Vue.use(Router)
 
@@ -50,19 +49,15 @@ export default new Router({
       component: Info
     },
     {
-      path: '/man',
-      name: 'man',
-      component: Man
+      path: '/shop',
+      name: 'shop',
+      component: Shop
     },
     {
-      path: '/women',
-      name: 'women',
-      component: Women
-    },
-    {
-      path: '/kids',
-      name: 'kids',
-      component: Kids
+      path: '/product/:id',
+      name: 'product',
+      props: true,
+      component: Product
     }
   ],
   mode: 'history'

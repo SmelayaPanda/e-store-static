@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <!--Cashed version-->
+  <div v-once>
     <el-row el-row type="flex" justify="center">
       <el-col :xs="24" :sm="18" :md="14" :lg="12" :xl="6" type="flex" align="middle">
         <h1>Hello from info</h1>
