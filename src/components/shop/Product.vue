@@ -9,16 +9,18 @@
                 <img src="@/assets/placeholders/people.jpg" class="main_img"/>
               </div>
             </el-col>
-            <el-col :span="12" v-model="getProductInfo">
+            <el-col :span="12" v-model="product">
               <h2>Info</h2>
               <div style="text-align: left; margin-left: 20px;">
-                <p>Id:</p>
-                <p>Title: </p>
-                <p>Description: </p>
-                <p>Price: </p>
-                <p>Quantity: </p>
-                <p>Weight: </p>
-                <p>Colors: </p>
+                <p>Id: {{ this.id }}</p>
+                <p>Title: {{ product.title }} </p>
+                <p>Description: {{ product.description }} </p>
+                <p>Price: {{ product.price }} {{ product.currency }}</p>
+                <p>Quantity: {{ product.qty }} </p>
+                <p>Color: {{ product.color }} </p>
+                <p>Color: {{ product.size }} </p>
+                <p>Weight: {{ product.weight }} {{ product.weightMeasure }}</p>
+                <p>Date: {{ product.date | date }}</p>
               </div>
             </el-col>
           </el-row>
@@ -33,9 +35,13 @@
 export default {
   props: ['id'],
   name: 'ManId',
+  data () {
+    return {
+    }
+  },
   computed: {
-    getProductInfo () {
-      return ''
+    product () {
+      return this.$store.getters.getProductsById(this.id)
     }
   }
 }

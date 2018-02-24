@@ -3,27 +3,35 @@
     <h1 class="mb-2">All products</h1>
     <add-product></add-product>
     <el-table
-      :data="tableData"
+      :data="products"
+      size="small"
+      :highlight-current-row="true"
       style="width: 90vw; text-align: left"
     >
       <!--ID-->
       <el-table-column
         label="id"
-        width="40">
+        width="100">
         <template slot-scope="scope">
-          <span style="margin-left: 2px">{{ scope.row.id }}</span>
+          <el-popover trigger="hover" placement="top">
+            <p>Id: {{ scope.row.id }}</p>
+            <span>* unique database parameter</span>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium">{{ scope.row.id | snippet(8) }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <!--DESCRIPTION-->
       <el-table-column
-        label="Title"
-        width="240">
+        label="Title/Description"
+        width="260">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>Title: {{ scope.row.title }}</p>
             <p>Description: {{ scope.row.description }}</p>
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.title | snippet(40) }}</el-tag>
+              <el-tag size="medium">{{ scope.row.title | snippet(32) }}</el-tag>
             </div>
           </el-popover>
         </template>
@@ -31,7 +39,7 @@
       <!--Priority-->
       <el-table-column
         label="Priority"
-        width="100">
+        width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.priority }}</span>
         </template>
@@ -39,7 +47,7 @@
       <!--PRICE-->
       <el-table-column
         label="Price"
-        width="120">
+        width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.price }} {{ scope.row.currency }}</span>
         </template>
@@ -47,7 +55,7 @@
       <!--QUANTITY-->
       <el-table-column
         label="Quantity"
-        width="120">
+        width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.qty }}</span>
         </template>
@@ -63,7 +71,7 @@
       <!--SIZE-->
       <el-table-column
         label="Size"
-        width="120">
+        width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.size }}</span>
         </template>
@@ -71,7 +79,7 @@
       <!--WEIGHT-->
       <el-table-column
         label="Weight"
-        width="120">
+        width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.weight }} {{ scope.row.weightMeasure }}</span>
         </template>
@@ -81,7 +89,7 @@
         label="Date"
         width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.date }}</span>
+          <span>{{ scope.row.date | date }}</span>
         </template>
       </el-table-column>
       <!--EDIT/DELETE-->
@@ -95,6 +103,7 @@
           <el-button
             size="mini"
             type="danger"
+            style="margin-left: 0"
             @click="handleDelete(scope.$index, scope.row)">Delete
           </el-button>
         </template>
@@ -113,59 +122,6 @@ export default {
   name: 'AdminProducts',
   data () {
     return {
-      tableData: [{
-        id: 1,
-        title: 'Product firs and first and biggest',
-        description: 'Awesome product, firs place',
-        priority: 1,
-        currency: 'RUR',
-        price: '1500',
-        qty: 10,
-        color: 'green',
-        size: 'big',
-        weight: '0.1',
-        weightMeasure: 'kg',
-        date: '2016-05-03'
-      }, {
-        id: 2,
-        title: 'Product second eah',
-        description: 'Awesome product, firs place',
-        priority: 2,
-        currency: 'RUR',
-        price: '9000',
-        qty: 7,
-        color: 'red',
-        size: 'small',
-        weight: '0.3',
-        weightMeasure: 'kg',
-        date: '2016-05-03'
-      }, {
-        id: 3,
-        title: 'Product 3',
-        description: 'Awesome product, firs place',
-        priority: 3,
-        currency: 'RUR',
-        price: '1200',
-        qty: 167,
-        color: ['blue', 'red', 'yellow'],
-        size: 'big',
-        weight: '0.5',
-        weightMeasure: 'gr',
-        date: '2016-05-03'
-      }, {
-        id: 22,
-        title: 'Product 4',
-        description: 'Awesome product, firs place',
-        priority: 4,
-        currency: 'RUR',
-        price: '150',
-        qty: 10,
-        color: 'green',
-        size: 'large',
-        weight: '3.1',
-        weightMeasure: 'mg',
-        date: '2016-05-03'
-      }]
     }
   },
   methods: {
@@ -174,8 +130,20 @@ export default {
     },
     handleDelete (index, row) {
       console.log(index, row)
-    },
-    addNewProduct () {
+    }
+  },
+  computed: {
+    products () {
+      let arr = []
+      let prodObj = this.$store.getters.getProducts
+      for (let key in prodObj) {
+        let pushObj = prodObj[key]
+        pushObj.id = key
+        console.log(pushObj)
+        arr.push(pushObj)
+      }
+      console.log(arr.length)
+      return arr
     }
   }
 }

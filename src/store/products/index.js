@@ -12,33 +12,32 @@ export default {
   },
   actions: {
     fetchProducts:
-      ({commit, getters}) => {
+      ({commit}) => {
         commit('LOADING', true)
         firebase.database().ref('/products/').once('value')
           .then(
             (data) => {
-              const dataPairs = data.val() // val() - to transform onto js valid form object!!
-              console.log(dataPairs)
-              // let registeredMeetups = []
-              // let swappedPairs = {}
-              // for (let key in dataPairs) {
-              //   registeredMeetups.push(dataPairs[key]) // dataPairs[key] = meetupId
-              //   swappedPairs[dataPairs[key]] = key
-              // }
-              // const updatedUser = {
-              //   id: getters.user.id,
-              //   registeredMeetups: registeredMeetups,
-              //   fbKeys: swappedPairs,
-              //   emailVerified: getters.user.emailVerified
-              // }
+              commit('setProducts', data.val())
               commit('LOADING', false)
-              commit('setProducts', '')
             })
           .catch(
             error => {
               commit('LOADING', false)
               console.log(error)
             })
+      },
+    addNewProduct:
+      ({commit, getters}, payload) => {
+        commit('LOADING', true)
+        firebase.database().ref('/products/').push(payload)
+          .then(data => {
+            let products = getters.getProducts
+            products[data.key] = payload
+            commit('setProducts', products)
+          })
+          .catch(err => {
+            console.log(err)
+          })
       }
   },
   // Getters  ---------------------------------------------------
@@ -49,9 +48,7 @@ export default {
       },
     getProductsById:
       state => (productId) => {
-        return state.products.find((p) => {
-          return p.id === productId
-        })
+        return state.products[productId]
       }
   }
 }

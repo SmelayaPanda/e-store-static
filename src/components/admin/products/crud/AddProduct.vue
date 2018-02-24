@@ -2,7 +2,7 @@
   <div>
     <el-button @click="dialogFormVisible = true">Add</el-button>
 
-    <el-dialog title="Product info" :visible.sync="dialogFormVisible" width="100%" :fullscreen="true">
+    <el-dialog title="New product info" :visible.sync="dialogFormVisible" width="100%" :fullscreen="true">
       <el-form :model="product">
         <el-form-item label="Title" :label-width="formLabelWidth">
           <el-input v-model="product.title"></el-input>
@@ -57,8 +57,10 @@
         </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogFormVisible = false">Cancel</el-button>
-    <el-button type="primary" @click="addNewProduct">Confirm</el-button>
+        <el-row type="flex" justify="center">
+          <el-button type="primary" @click="addNewProduct">Confirm</el-button>
+          <el-button class="mr-5" @click="dialogFormVisible = false">Cancel</el-button>
+        </el-row>
   </span>
     </el-dialog>
   </div>
@@ -104,6 +106,7 @@ export default {
       }
       console.log(newProduct)
       this.dialogFormVisible = false
+      this.$store.dispatch('addNewProduct', newProduct)
     }
   }
 }

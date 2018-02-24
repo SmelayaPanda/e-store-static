@@ -9,18 +9,18 @@
         <!---->
         <el-row>
           <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8"
-                  v-for="o in 9" :key="o"
+                  v-for="(p,key) in products" :key="key"
           >
-            {{ o }}
-            <div @click="viewId(o)" class="card_wrapper">
+            {{ key }}
+            <div @click="viewId(key)" class="card_wrapper">
               <el-card class="main_card"
                        :body-style="{ padding: '0px' }">
                 <img src="@/assets/placeholders/man_placeholder.png"
                      class="image" height="300px">
                 <div class="card_body">
-                  <span>Yummy hamburger</span>
+                  <span>{{ p.title }}</span>
                   <div>
-                    <time class="time">$37</time>
+                    <time class="time">{{ p.price }} {{ p.currency }}</time>
                   </div>
                 </div>
               </el-card>
@@ -38,6 +38,11 @@ export default {
   methods: {
     viewId (id) {
       this.$router.push('/product/' + id)
+    }
+  },
+  computed: {
+    products () {
+      return this.$store.getters.getProducts
     }
   }
 }
