@@ -10,7 +10,7 @@
         <el-menu-item index="3" route="/info"> Info</el-menu-item>
         <el-menu-item index="4" route="/cart">
           Cart
-          <el-tag size="mini" class="mb-1">0</el-tag>
+          <el-tag size="mini" class="mb-1">{{ productCount }}</el-tag>
         </el-menu-item>
         <el-submenu index="5">
           <template slot="title"> User</template>
@@ -82,10 +82,12 @@ export default {
         }
   },
   computed: {
-    isAdminPanel:
-        function () {
-          return window.location.pathname === '/admin'
-        }
+    isAdminPanel () {
+      return window.location.pathname === '/admin'
+    },
+    productCount () {
+      return this.$store.getters.cart.length
+    }
   }
 }
 </script>

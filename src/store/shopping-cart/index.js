@@ -8,7 +8,6 @@ export default {
     setCart:
       (state, payload) => {
         state.cart = payload
-        console.log('state will be changed')
       }
   },
   actions: {
@@ -22,21 +21,22 @@ export default {
         }
         firebase.database().ref(`users/${user.id}/cart`).push(payload)
           .then((data) => {
-            return data.key
-          })
-          .then(key => {
             let cart = getters.cart
-            payload.cartId = key
-            cart.push(payload)
-            commit('setCart', cart)
-            return firebase.database().ref(`users/${user.id}/cart`).child(key).update(payload)
-          })
-          .then(() => {
-            commit('LOADING', false)
+            payload.cartId = data.key
+            firebase.database().ref(`users/${user.id}/cart`).child(data.key).update(payload)
+              .then(() => {
+                cart.push(payload)
+                commit('setCart', cart)
+                commit('LOADING', false)
+              })
+              .catch(err => {
+                console.log(err)
+                commit('LOADING', false)
+              })
           })
           .catch(
-            error => {
-              console.log(error)
+            err => {
+              console.log(err)
               commit('LOADING', false)
             })
       },
@@ -52,7 +52,8 @@ export default {
           .then(
             () => {
               let cart = getters.cart
-              cart.splice(payload, 1)
+              let idx = cart.findIndex(el => el.cartId === payload)
+              cart.splice(idx, 1)
               commit('setCart', cart)
               commit('LOADING', false)
             })

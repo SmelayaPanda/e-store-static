@@ -30,15 +30,21 @@
                 </div>
                 <v-divider class="mb-3 mt-4"></v-divider>
                 <el-button v-if="!alreadyAddedProduct"
-                           size="medium"
+                           size="mini"
                            type="primary"
                            @click="addToCart">
-                  Add to cart
+                  <span style="font-size: 14px">Add to cart</span>
                   <v-icon class="white--text ml-1">shopping_cart</v-icon>
                 </el-button>
                 <!--ELSE-->
                 <div v-else>
-                  <p class="primary--text">Already added to cart!</p>
+                  <router-link to="/cart">
+                    <el-tag type="text" class="mb-2">
+                      Already added to cart!
+                      <i class="el-icon-d-arrow-right"></i>
+                    </el-tag>
+                  </router-link>
+                  <br>
                   <el-button size="mini" @click="removeFromCart">
                     <v-icon>remove_shopping_cart</v-icon>
                   </el-button>
