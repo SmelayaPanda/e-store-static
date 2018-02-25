@@ -88,8 +88,10 @@ new Vue({
       user => {
         if (user) {
           this.$store.dispatch('autoSignIn', user)
+          // console.log(user)
         }
+        this.$store.dispatch('fetchProducts')
+        this.$store.dispatch('fetchUserCart')
       })
-    this.$store.dispatch('fetchProducts')
   }
 })

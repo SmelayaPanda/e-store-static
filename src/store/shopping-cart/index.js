@@ -1,62 +1,60 @@
 import * as firebase from 'firebase'
 
 export default {
-  // State ---------------------------------------------------
   state: {
-    user: null, // new user creates only with firebase auth()
-    isAdmin: false
+    cart: []
   },
-  // Mutations ---------------------------------------------------
-  mutations: { // to change state
-    registerUserForMeetup:
+  mutations: {
+    setCart:
       (state, payload) => {
-        const id = payload.id
-        if (state.user.registeredMeetups.findIndex(meetup => meetup.id === id) >= 0) {
-          return
-        }
-        state.user.registeredMeetups.push(id)
-        state.user.fbKeys[id] = payload.fbKey
-      },
-    unregisterUserFromMeetup:
-      (state, payload) => {
-        const registeredMeetups = state.user.registeredMeetups
-        registeredMeetups.splice(registeredMeetups.findIndex(meetup => meetup.id === payload), 1)
-        Reflect.deleteProperty(state.user.fbKeys, payload)
+        state.cart = payload
+        console.log('state will be changed')
       }
   },
-  // Actions ---------------------------------------------------
-  actions: { // specify the mutation
-    registerUserForMeetup:
+  actions: {
+    addToCart:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
         const user = getters.user
-        firebase.database().ref('/users/' + user.id).child('/registrations/')
-          .push(payload)
-          .then(
-            data => {
-              commit('LOADING', false)
-              commit('registerUserForMeetup', {id: payload, fbKey: data.key})
-            })
+        if (!user) {
+          commit('LOADING', false)
+          return
+        }
+        firebase.database().ref(`users/${user.id}/cart`).push(payload)
+          .then((data) => {
+            return data.key
+          })
+          .then(key => {
+            let cart = getters.cart
+            payload.cartId = key
+            cart.push(payload)
+            commit('setCart', cart)
+            return firebase.database().ref(`users/${user.id}/cart`).child(key).update(payload)
+          })
+          .then(() => {
+            commit('LOADING', false)
+          })
           .catch(
             error => {
               console.log(error)
               commit('LOADING', false)
             })
       },
-    unregisterUserFromMeetup:
+    removeFromCart:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
         const user = getters.user
-        if (!user.fbKeys) {
+        if (!user) {
+          commit('LOADING', false)
           return
         }
-        const fbKey = user.fbKeys[payload]
-        firebase.database().ref('/users/' + user.id + '/registrations/').child(fbKey)
-          .remove()
+        firebase.database().ref(`users/${user.id}/cart`).child(payload).remove()
           .then(
             () => {
+              let cart = getters.cart
+              cart.splice(payload, 1)
+              commit('setCart', cart)
               commit('LOADING', false)
-              commit('unregisterUserFromMeetup', payload)
             })
           .catch(
             error => {
@@ -64,35 +62,34 @@ export default {
               commit('LOADING', false)
             })
       },
-    fetchUserData:
+    fetchUserCart:
       ({commit, getters}) => {
         commit('LOADING', true)
-        firebase.database().ref('/users/' + getters.user.id + '/registrations/').once('value')
+        const user = getters.user
+        if (!user) {
+          commit('LOADING', false)
+          return
+        }
+        firebase.database().ref(`users/${user.id}/cart`).once('value')
           .then(
             (data) => {
-              const dataPairs = data.val() // val() - to transform onto js valid form object!!
-              let registeredMeetups = []
-              let swappedPairs = {}
-              for (let key in dataPairs) {
-                registeredMeetups.push(dataPairs[key]) // dataPairs[key] = meetupId
-                swappedPairs[dataPairs[key]] = key
-              }
-              const updatedUser = {
-                id: getters.user.id,
-                registeredMeetups: registeredMeetups,
-                fbKeys: swappedPairs,
-                emailVerified: getters.user.emailVerified
+              console.log('Cart data fetched')
+              if (data.val()) {
+                commit('setCart', Object.values(data.val()))
               }
               commit('LOADING', false)
-              commit('setUser', updatedUser)
             })
           .catch(
             error => {
-              commit('LOADING', false)
               console.log(error)
+              commit('LOADING', false)
             })
       }
   },
-  // Getters  ---------------------------------------------------
-  getters: {}
+  getters: {
+    cart:
+      state => {
+        return state.cart
+      }
+  }
 }

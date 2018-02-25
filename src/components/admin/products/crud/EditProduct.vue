@@ -83,7 +83,7 @@ export default {
     edit () {
       let creationDate = new Date()
       let editedObj = {
-        id: this.editProduct.id,
+        productId: this.editProduct.id,
         title: this.product.title,
         description: this.product.description,
         priority: this.product.priority,

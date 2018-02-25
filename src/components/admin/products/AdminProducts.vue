@@ -126,7 +126,7 @@ export default {
   computed: {
     products () {
       let arr = []
-      let prodObj = this.$store.getters.getProducts
+      let prodObj = this.$store.getters.products
       for (let key in prodObj) {
         let pushObj = prodObj[key]
         pushObj.id = key

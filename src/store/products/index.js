@@ -14,9 +14,10 @@ export default {
     fetchProducts:
       ({commit}) => {
         commit('LOADING', true)
-        firebase.database().ref('/products/').once('value')
+        firebase.database().ref('products').once('value')
           .then(
             (data) => {
+              console.log('Product fetched')
               commit('setProducts', data.val())
               commit('LOADING', false)
             })
@@ -29,12 +30,20 @@ export default {
     addNewProduct:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
-        firebase.database().ref('/products/').push(payload)
+        let products = getters.products ? getters.products : {}
+        firebase.database().ref('products').push(payload)
           .then(data => {
-            let products = getters.getProducts
-            products[data.key] = payload
+            return data.key
+          })
+          .then(key => {
+            payload.productId = key
+            products[key] = payload
+            return firebase.database().ref('products').child(key).update(payload)
+          })
+          .then(() => {
             commit('setProducts', products)
             commit('LOADING', false)
+            window.location.reload()
           })
           .catch(err => {
             console.log(err)
@@ -44,13 +53,11 @@ export default {
     editProduct:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
-        let id = payload.id
-        delete payload.id
-        firebase.database().ref('products').child(id).update(payload)
+        firebase.database().ref('products').child(payload.id).update(payload)
           .then(() => {
             console.log('success')
-            let products = getters.getProducts
-            products[id] = payload
+            let products = getters.products
+            products[payload.productId] = payload
             commit('setProducts', products)
             commit('LOADING', false)
           })
@@ -62,13 +69,14 @@ export default {
     deleteProduct:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
-        let products = getters.getProducts
+        let products = getters.products
         delete products[payload]
         firebase.database().ref('products').child(payload).remove()
           .then(() => {
-            console.log('Product removed')
             commit('setProducts', products)
+            console.log('Product was removed')
             commit('LOADING', false)
+            window.location.reload()
           })
           .catch(err => {
             console.log(err)
@@ -78,13 +86,13 @@ export default {
   },
   // Getters  ---------------------------------------------------
   getters: {
-    getProducts:
+    products:
       state => {
         return state.products
       },
-    getProductsById:
+    productById:
       state => (productId) => {
-        return state.products[productId]
+        return state.products[productId] ? state.products[productId] : {}
       }
   }
 }

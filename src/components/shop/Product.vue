@@ -1,32 +1,54 @@
 <template>
   <div>
-    <el-row el-row type="flex" justify="center">
-      <el-col :xs="24" :sm="20" :md="18" :lg="16" :xl="14" type="flex" align="middle">
-        <el-card style="height: 700px">
-          <el-row type="flex">
-            <el-col :span="12">
-              <div class="img_wrapper">
-                <img src="@/assets/placeholders/people.jpg" class="main_img"/>
-              </div>
-            </el-col>
-            <el-col :span="12" v-model="product">
-              <h2>Info</h2>
-              <div style="text-align: left; margin-left: 20px;">
-                <p>Id: {{ this.id }}</p>
-                <p>Title: {{ product.title }} </p>
-                <p>Description: {{ product.description }} </p>
-                <p>Price: {{ product.price }} {{ product.currency }}</p>
-                <p>Quantity: {{ product.qty }} </p>
-                <p>Color: {{ product.color }} </p>
-                <p>Color: {{ product.size }} </p>
-                <p>Weight: {{ product.weight }} {{ product.weightMeasure }}</p>
-                <p>Date: {{ product.date | date }}</p>
-              </div>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-    </el-row>
+    <!--Loading circular-->
+    <v-container v-if="this.isLoading">
+      <app-loader></app-loader>
+    </v-container>
+    <div v-else>
+      <el-row el-row type="flex" justify="center">
+        <el-col :xs="24" :sm="20" :md="18" :lg="16" :xl="14" type="flex" align="middle">
+          <el-card style="height: 700px">
+            <el-row type="flex">
+              <el-col :span="12">
+                <div class="img_wrapper">
+                  <img src="@/assets/placeholders/people.jpg" class="main_img"/>
+                </div>
+              </el-col>
+              <el-col :span="12" v-model="product">
+                <h2>Info</h2>
+                <v-divider class="mb-3 mt-3"></v-divider>
+                <div style="text-align: left; margin-left: 40px;">
+                  <p>Id: {{ this.id }}</p>
+                  <p>Title: {{ product.title }} </p>
+                  <p>Description: {{ product.description }} </p>
+                  <p>Price: {{ product.price }} {{ product.currency }}</p>
+                  <p>Quantity: {{ product.qty }} </p>
+                  <p>Color: {{ product.color }} </p>
+                  <p>Color: {{ product.size }} </p>
+                  <p>Weight: {{ product.weight }} {{ product.weightMeasure }}</p>
+                  <p>Date: {{ product.date | date }}</p>
+                </div>
+                <v-divider class="mb-3 mt-4"></v-divider>
+                <el-button v-if="!alreadyAddedProduct"
+                           size="medium"
+                           type="primary"
+                           @click="addToCart">
+                  Add to cart
+                  <v-icon class="white--text ml-1">shopping_cart</v-icon>
+                </el-button>
+                <!--ELSE-->
+                <div v-else>
+                  <p class="primary--text">Already added to cart!</p>
+                  <el-button size="mini" @click="removeFromCart">
+                    <v-icon>remove_shopping_cart</v-icon>
+                  </el-button>
+                </div>
+              </el-col>
+            </el-row>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -36,12 +58,27 @@ export default {
   props: ['id'],
   name: 'ManId',
   data () {
-    return {
-    }
+    return {}
   },
   computed: {
     product () {
-      return this.$store.getters.getProductsById(this.id)
+      return this.$store.getters.productById(this.id)
+    },
+    cart () {
+      return this.$store.getters.cart
+    },
+    alreadyAddedProduct () {
+      return this.$store.getters.cart.find(el => {
+        return el.productId === this.id
+      })
+    }
+  },
+  methods: {
+    addToCart () {
+      this.$store.dispatch('addToCart', this.product)
+    },
+    removeFromCart () {
+      this.$store.dispatch('removeFromCart', this.alreadyAddedProduct.cartId)
     }
   }
 }
