@@ -18,9 +18,10 @@
           </el-form-item>
           <el-form-item label="Currency" :label-width="formLabelWidth">
             <el-select v-model="product.currency" placeholder="Select a currency">
-              <el-option label="RUR" value="RUR"></el-option>
-              <el-option label="USA" value="USA"></el-option>
-              <el-option label="EUR" value="EUR"></el-option>
+              <el-option label="RUB" value="RUB"></el-option>
+              <el-option label="USD" value="USD" disabled></el-option>
+              <el-option label="EUR" value="EUR" disabled></el-option>
+              <el-option label="GBP" value="GBP" disabled></el-option>
             </el-select>
           </el-form-item>
         </el-row>
@@ -78,7 +79,7 @@ export default {
         title: 'Some product name',
         description: 'And awesome description',
         priority: 1,
-        currency: 'RUR',
+        currency: 'RUB',
         price: '100',
         qty: 10,
         color: 'green',
@@ -93,12 +94,14 @@ export default {
   methods: {
     addNewProduct () {
       let creationDate = new Date()
+      let price = this.product.price
+      price = parseFloat(price).toFixed(2)
       let newProduct = {
         title: this.product.title,
         description: this.product.description,
         priority: this.product.priority,
         currency: this.product.currency,
-        price: this.product.price,
+        price: price,
         qty: this.product.qty,
         color: this.product.color,
         size: this.product.size,

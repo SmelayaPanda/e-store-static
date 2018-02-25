@@ -1,11 +1,10 @@
 <template>
   <el-row el-row type="flex" justify="center">
     <el-col :xs="24" :sm="20" :md="16" :lg="14" :xl="8" type="flex" align="middle">
-      <el-card>
+      <el-card v-if="userCart">
         <h2 class="mb-3">My shopping cart</h2>
         <!--PRODUCTS-->
-        <el-row v-if="userCart"
-                v-for="product in userCart" :key="product.cartId"
+        <el-row v-for="product in userCart" :key="product.cartId"
                 type="flex"
                 justify="center"
                 style="flex-wrap: wrap">
@@ -15,9 +14,9 @@
               <div slot="content">{{ product.description }}</div>
               <h3>{{ product.title }}</h3>
             </el-tooltip>
-              <i class="mb-0">Parameters:</i>
-              <p class="mb-0">Color: {{ product.color }}</p>
-              <p class="mb-0">Size: {{ product.size }}</p>
+            <i class="mb-0">Parameters:</i>
+            <p class="mb-0">Color: {{ product.color }}</p>
+            <p class="mb-0">Size: {{ product.size }}</p>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" align="right">
             <p>{{ product.qty * product.price }} {{ product.currency }}</p>
@@ -29,29 +28,68 @@
             <el-button type="secondary" size="small" @click="removeFromCart(product.cartId)">
               <i class="el-icon-delete"></i>
             </el-button>
-            <el-button type="primary" size="small" class="ml-0" :disabled="product.qty === 0">Buy</el-button>
+            <div class="paypal_btn">
+              <PayPal
+                payment_method="credit_card"
+                locale="en_US"
+                env="sandbox"
+                :id="product.productId"
+                :amount="parseFloat(product.price * product.qty).toFixed(2)"
+                :currency="product.currency"
+                :client="credentials"
+                :buttonStyle="btnStyle"
+              >
+              </PayPal>
+            </div>
           </el-col>
         </el-row>
-        <el-row>
-          <v-divider></v-divider>
-          <el-row type="flex">
-            <el-col>
-              <p class="pt-3">Total price: {{ totalPrice }} </p>
-              <el-button type="primary" size="small" class="ml-0 mt-2 right">Buy all</el-button>
-            </el-col>
-          </el-row>
-        </el-row>
+        <v-divider></v-divider>
+        <div v-on:paypal-paymentCompleted="alert(1)"></div>
+        <div v-on:paypal-paymentAuthorized="alert(1)"></div>
+        <div v-on:paypal-paymentCancelled="alert(1)"></div>
+        <p class="pt-3">Total price: {{ parseFloat(totalPrice).toFixed(2) }} RUB </p>
+        <div class="paypal_total_btn">
+          <PayPal
+            payment_method="credit_card"
+            env="sandbox"
+            locale="en_US"
+            currency="RUB"
+            :amount="parseFloat(totalPrice).toFixed(2)"
+            :client="credentials"
+            :buttonStyle="btnStyle"
+            :onAuthorize="onAuthorize"
+            notify-url="https://smelayapanda.github.io"
+          >
+          </PayPal>
+          <!--:items="[{name: 'Hey', description:'Heyheyhey', price: '5.00', currency: 'RUB', quantity: '1' }]"-->
+          <!---->
+        </div>
       </el-card>
     </el-col>
   </el-row>
 </template>
 
 <script>
+import PayPal from 'vue-paypal-checkout'
+
 export default {
   name: 'ShoppingCart',
+  components: {
+    PayPal
+  },
   data () {
     return {
-      qty: 1
+      qty: 1,
+      credentials: {
+        sandbox: 'AVoXYBR4NlmlQsN39qv6W_IBq9Arn32W69rWHd9NJabWlgEaVEJMa1vtmrWmcdiXSrQkNjOoDT2ivhNr',
+        production: 'someId'
+      },
+      btnStyle: {
+        label: 'checkout',
+        size: 'responsive', // small | medium | large | responsive
+        shape: 'rect', // pill | rect
+        color: 'silver' // gold | blue | silver | black
+      }
     }
   },
   computed: {
@@ -65,16 +103,46 @@ export default {
         total += cart[product].qty * cart[product].price
       }
       return total
+    },
+    processingPayment (data, actions) {
+      console.log(data)
+      console.log(actions)
+      return ''
     }
   },
   methods: {
     removeFromCart (cartId) {
       this.$store.dispatch('removeFromCart', cartId)
+    },
+    logPayment (data, any) {
+      console.log('Payment event probably: ')
+      console.log(data)
+      console.log(any)
+      console.log(this.payment)
+    },
+    onAuthorize: function (data, actions) {
+      return actions.payment.execute().then(function (payment) {
+        window.alert('Payment Complete!')
+        window.alert(payment)
+        console.log('Payment info± ')
+        console.log(payment)
+        // The payment is complete!
+        // You can now show a confirmation message to the customer
+      })
     }
   }
 }
 </script>
 
 <style scoped>
+  .paypal_btn {
+    margin-top: 10px;
+    width: 80px;
+    height: 40px;
+  }
 
+  .paypal_total_btn {
+    width: 140px;
+    height: 40px;
+  }
 </style>

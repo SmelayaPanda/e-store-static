@@ -18,9 +18,10 @@
           </el-form-item>
           <el-form-item label="Currency" :label-width="formLabelWidth">
             <el-select v-model="product.currency" placeholder="Select a currency">
-              <el-option label="RUR" value="RUR"></el-option>
-              <el-option label="USA" value="USA"></el-option>
-              <el-option label="EUR" value="EUR"></el-option>
+              <el-option label="RUB" value="RUB"></el-option>
+              <el-option label="USD" value="USD" disabled></el-option>
+              <el-option label="EUR" value="EUR" disabled></el-option>
+              <el-option label="GBP" value="GBP" disabled></el-option>
             </el-select>
           </el-form-item>
         </el-row>
