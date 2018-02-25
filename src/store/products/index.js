@@ -53,7 +53,7 @@ export default {
     editProduct:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
-        firebase.database().ref('products').child(payload.id).update(payload)
+        firebase.database().ref('products').child(payload.productId).update(payload)
           .then(() => {
             console.log('success')
             let products = getters.products
