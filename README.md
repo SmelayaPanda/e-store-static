@@ -24,7 +24,7 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 PayPal response
 
 {
-    // PAYMENT
+    // Info about the PAYMENT:
   mc_gross: '540.00',
   mc_currency: 'RUB',
   quantity: '1',
@@ -34,13 +34,21 @@ PayPal response
   payment_status: 'Pending',
   payment_type: 'instant',
   payment_gross: '',
-  txn_id: '6TT03235VV6182257', // transaction ID
+  txn_id: '6TT03235VV6182257', // transaction ID (Keep this ID to avoid processing the transaction twice!)
+  custom: '',   // Your custom field
 
 
-    // PAYER
+
+    // Info about PAYER
   address_status: 'confirmed',
   address_street: '1 Main St',
   address_zip: '95131',
+  address_state: 'CA',
+  address_city: 'San Jose',
+  address_country: 'United States',
+  address_name: 're high',
+  address_country_code: 'US',
+
   first_name: 're',
   last_name: 'high',
   payer_id: 'T7SZQ2MZWEYTN',
@@ -49,23 +57,17 @@ PayPal response
 
 
   // BUSINESS
-  verify_sign: 'AfQZ8JXN3447m31txmgI-snkBnbFAZ6K3UBgGiwRtsbpTBGCVUqGVVrE',
-  address_state: 'CA',
-  address_city: 'San Jose',
-  address_country: 'United States',
-  address_name: 're high',
-  address_country_code: 'US',
   business:       'rehigh_b@gmail.com',
   receiver_email: 'rehigh_b@gmail.com',
   receiver_id:    '6M9996XM7LWL6',
   pending_reason: 'paymentreview',
 
   // OTHER
+  verify_sign: 'AfQZ8JXN3447m31txmgI-snkBnbFAZ6K3UBgGiwRtsbpTBGCVUqGVVrE',
   txn_type: 'express_checkout',
   residence_country: 'US',
-  test_ipn: '1',
+  test_ipn: '1',              -- Testing with the Sandbox
   transaction_subject: '',
-  custom: '',
   ipn_track_id: '13ece3426cd23'
   notify_version: '3.9',
   charset: 'windows-1252',
@@ -82,7 +84,11 @@ PayPal response
   tax: '0.00',                   --- add
   address_street: '1 Main St',
   payment_date: '02:54:17 Feb 26, 2018 PST',
+
+  ---------------------------------------------------
   payment_status: 'Completed', --------------- changed
+  ---------------------------------------------------
+
   charset: 'windows-1252',
   address_zip: '95131',
   first_name: 're',

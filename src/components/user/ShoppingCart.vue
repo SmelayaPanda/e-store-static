@@ -38,6 +38,7 @@
                 :currency="product.currency"
                 :client="credentials"
                 :buttonStyle="btnStyle"
+                notify-url="https://us-central1-e-store-dev.cloudfunctions.net/processPayPal"
               >
               </PayPal>
             </div>
@@ -57,12 +58,10 @@
             :amount="parseFloat(totalPrice).toFixed(2)"
             :client="credentials"
             :buttonStyle="btnStyle"
-            :onAuthorize="onAuthorize"
-            notify-url="https://us-central1-e-store-dev.cloudfunctions.net/helloWorld"
+            notify-url="https://us-central1-e-store-dev.cloudfunctions.net/processPayPal"
           >
           </PayPal>
-          <!--:items="[{name: 'Hey', description:'Heyheyhey', price: '5.00', currency: 'RUB', quantity: '1' }]"-->
-          <!---->
+          <!--:items="items"-->
         </div>
       </el-card>
     </el-col>
@@ -81,7 +80,7 @@ export default {
     return {
       qty: 1,
       credentials: {
-        sandbox: 'AVoXYBR4NlmlQsN39qv6W_IBq9Arn32W69rWHd9NJabWlgEaVEJMa1vtmrWmcdiXSrQkNjOoDT2ivhNr',
+        sandbox: 'AZEbas_YdmFwegi2_I5Lz_563v3gqPdtR-bDEFGdH6_8an1VVtWdkQAmU4sNNf-FSOzAPTRgO3g5-t1u',
         production: 'someId'
       },
       btnStyle: {
@@ -89,7 +88,24 @@ export default {
         size: 'responsive', // small | medium | large | responsive
         shape: 'rect', // pill | rect
         color: 'silver' // gold | blue | silver | black
-      }
+      },
+      items: [
+        {
+          quantity: '1',
+          name: 'item 1',
+          price: '44',
+          currency: 'RUB',
+          description: 'item 1 description',
+          tax: '1'
+        },
+        {
+          quantity: '1',
+          name: 'item 2',
+          price: '100',
+          currency: 'RUB',
+          description: 'item 2 description',
+          tax: '1'
+        }]
     }
   },
   computed: {
@@ -103,34 +119,11 @@ export default {
         total += cart[product].qty * cart[product].price
       }
       return total
-    },
-    processingPayment (data, actions) {
-      console.log(data)
-      console.log(actions)
-      return ''
     }
   },
   methods: {
     removeFromCart (cartId) {
       this.$store.dispatch('removeFromCart', cartId)
-    },
-    logPayment (data, any) {
-      console.log('Payment event probably: ')
-      console.log(data)
-      console.log(any)
-      console.log(this.payment)
-    },
-    onAuthorize: function (data, actions) {
-      return actions.payment.execute().then(function (payment) {
-        window.alert('Payment Complete!')
-        window.alert(payment)
-        window.alert(actions)
-        console.log('Payment info± ')
-        console.log(payment)
-        console.log(actions)
-        // The payment is complete!
-        // You can now show a confirmation message to the customer
-      })
     }
   }
 }

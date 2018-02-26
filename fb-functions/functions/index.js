@@ -1,116 +1,102 @@
+/* eslint-disable promise/always-return */
+
 const functions = require('firebase-functions');
-
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
-
-exports.helloWorld = functions.https.onRequest((req, res) => {
-  console.log(req.body)
-  console.log(res.body)
-});
-
-
-
-const paypal = require('paypal-rest-sdk');
-// firebase-admin SDK init
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
-// Configure your environment
-paypal.configure({
-  mode: 'sandbox', // sandbox or live
-  client_id: functions.config().paypal.client_id, // run: firebase functions:config:set paypal.client_id="yourPaypalClientID"
-  client_secret: functions.config().paypal.client_secret // run: firebase functions:config:set paypal.client_secret="yourPaypalClientSecret"
-});
-/**
- * Expected in the body the amount
- * Set up the payment information object
- * Initialize the payment and redirect the user to the PayPal payment page
- */
-exports.pay = functions.https.onRequest((req, res) => {
-  // 1.Set up a payment information object, Nuild PayPal payment request
-  const payReq = JSON.stringify({
-    intent: 'sale',
-    payer: {
-      payment_method: 'paypal'
-    },
-    redirect_urls: {
-      return_url: `${req.protocol}://${req.get('host')}/process`,
-      cancel_url: `${req.protocol}://${req.get('host')}/cancel`
-    },
-    transactions: [{
-      amount: {
-        total: req.body.price,
-        currency: 'USD'
-      },
-      // This is the payment transaction description. Maximum length: 127
-      description: req.body.uid, // req.body.id
-      // reference_id string .Optional. The merchant-provided ID for the purchase unit. Maximum length: 256.
-      // reference_id: req.body.uid,
-      custom: req.body.uid,
-      // soft_descriptor: req.body.uid
-      // "invoice_number": req.body.uid,A
-    }]
-  });
-  // 2.Initialize the payment and redirect the user.
-  paypal.payment.create(payReq, (error, payment) => {
-    const links = {};
-    if (error) {
-      console.error(error);
-      res.status('500').end();
-    } else {
-      // Capture HATEOAS links
-      payment.links.forEach((linkObj) => {
-        links[linkObj.rel] = {
-          href: linkObj.href,
-          method: linkObj.method
-        };
-      });
-      // If redirect url present, redirect user
-      if (links.hasOwnProperty('approval_url')) {
-        // REDIRECT USER TO links['approval_url'].href
-        console.info(links.approval_url.href);
-        // res.json({"approval_url":links.approval_url.href});
-        res.redirect(302, links.approval_url.href);
-      } else {
-        console.error('no redirect URI present');
-        res.status('500').end();
-      }
-    }
-  });
-});
 
-// 3.Complete the payment. Use the payer and payment IDs provided in the query string following the redirect.
-exports.process = functions.https.onRequest((req, res) => {
-  const paymentId = req.query.paymentId;
-  const payerId = {
-    payer_id: req.query.PayerID
-  };
-  return paypal.payment.execute(paymentId, payerId, (error, payment) => {
-    if (error) {
-      console.error(error);
-      res.redirect(`${req.protocol}://${req.get('host')}/error`); // replace with your url page error
-    } else {
-      if (payment.state === 'approved') {
-        console.info('payment completed successfully, description: ', payment.transactions[0].description);
-        // console.info('req.custom: : ', payment.transactions[0].custom);
-        // set paid status to True in RealTime Database
-        const date = Date.now();
-        const uid = payment.transactions[0].description;
-        const ref = admin.database().ref('users/' + uid + '/');
-        ref.push({
-          'paid': true,
-          // 'description': description,
-          'date': date
-        })
-        res.redirect(`${req.protocol}://${req.get('host')}/success`); // replace with your url, page success
-      } else {
-        console.warn('payment.state: not approved ?');
-        // replace debug url
-        res.redirect(`https://console.firebase.google.com/project/${process.env.GCLOUD_PROJECT}/functions/logs?search=&severity=DEBUG`);
+exports.processPayPal = functions.https.onRequest((req, res) => {
+  console.log('----------------------------------------------------------')
+  const payInfo = req.body
+
+  let orderId
+  let ordersIds
+  admin.database().ref('ordersIds').once('value')
+    .then(data => {
+      if(!payInfo.txn_id) {
+        throw new Error('No valid request object!')
       }
-    }
-  }).then(r => console.info('promise: ', r));
-});
+      // [ CHECK TXN ]
+      ordersIds = data.val()
+      if(ordersIds) {
+        for (let order in ordersIds) {
+          if (ordersIds[order].txn_id === payInfo.txn_id) {
+            throw new Error(`Order ${payInfo.txn_id} already added!`)
+          }
+        }
+      }
+    })
+    // [ ADD ORDER TO FIREBASE ]
+    .then(() => {
+      return admin.database().ref('orders').push(payInfo)
+    })
+    .then((data) => {
+      orderId = data.key
+      return admin.database().ref('ordersIds').push({orderId: orderId, txn_id: payInfo.txn_id})
+    })
+    .then(() => {
+      console.log(`PayPal transaction id: ${payInfo.txn_id} / Order farebaseId: ${orderId} /  added!`)
+      console.log(`Payer: ${payInfo.first_name} ${payInfo.last_name} ${payInfo.payer_email} -
+                            ${payInfo.mc_gross} ${payInfo.mc_currency}`)
+      return res.sendStatus(200)
+    })
+    .catch(err => {
+      console.log(err)
+      return res.sendStatus(500)
+    })
+})
+
+
+//  ALL RESPONSE PARAMETERS
+// -------------------------
+// Info about the PAYMENT:
+//   mc_gross: '540.00',
+//   mc_currency: 'RUB',
+//   quantity: '1',
+//   item_name: '',
+//   item_number: '',
+//   payment_date: '02:54:17 Feb 26, 2018 PST',
+//   payment_status: 'Pending',
+
+// ---------------------------------------------------
+//   payment_status: 'Completed', --- changed when business verified
+// ---------------------------------------------------
+
+//   payment_type: 'instant',
+//   payment_gross: '',
+//   txn_id: '6TT03235VV6182257', // transaction ID (Keep this ID to avoid processing the transaction twice!)
+//   custom: '',                  // Your custom field
+//
+//
+//   // Info about PAYER
+//   address_status: 'confirmed',
+//   address_street: '1 Main St',
+//   address_zip: '95131',
+//   address_state: 'CA',
+//   address_city: 'San Jose',
+//   address_country: 'United States',
+//   address_name: 're high',
+//   address_country_code: 'US',
+//
+//   first_name: 're',
+//   last_name: 'high',
+//   payer_id: 'T7SZQ2MZWEYTN',
+//   payer_email: 'rehigh_p@gmail.com',
+//   payer_status: 'verified',
+//
+//
+//   // BUSINESS
+//   business:       'rehigh_b@gmail.com',
+//   receiver_email: 'rehigh_b@gmail.com',
+//   receiver_id:    '6M9996XM7LWL6',
+//   pending_reason: 'paymentreview',
+//
+//   // OTHER
+//   verify_sign: 'AfQZ8JXN3447m31txmgI-snkBnbFAZ6K3UBgGiwRtsbpTBGCVUqGVVrE',
+//   txn_type: 'express_checkout',
+//   residence_country: 'US',
+//   test_ipn: '1',              -- Testing with the Sandbox
+//   transaction_subject: '',
+//   ipn_track_id: '13ece3426cd23'
+//   notify_version: '3.9',
+//   charset: 'windows-1252',
+//   protection_eligibility: 'Eligible',
