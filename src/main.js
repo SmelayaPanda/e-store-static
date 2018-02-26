@@ -55,32 +55,32 @@ Vue.use(Vuetify, {
 Vue.config.productionTip = false
 // FIREBASE
 let config
-if (process.env.NODE_ENV === 'development') {
-  config = {
-    apiKey: 'AIzaSyDWYuL9ChkfHkLiINoz7ZdDuQntk4eWrI8',
-    authDomain: 'e-store-dev.firebaseapp.com',
-    databaseURL: 'https://e-store-dev.firebaseio.com',
-    projectId: 'e-store-dev',
-    storageBucket: 'e-store-dev.appspot.com',
-    messagingSenderId: '252391298748'
-  }
-} else if (process.env.NODE_ENV === 'production') {
-  config = {
-    apiKey: 'AIzaSyDWYuL9ChkfHkLiINoz7ZdDuQntk4eWrI8',
-    authDomain: 'e-store-dev.firebaseapp.com',
-    databaseURL: 'https://e-store-dev.firebaseio.com',
-    projectId: 'e-store-dev',
-    storageBucket: 'e-store-dev.appspot.com',
-    messagingSenderId: '252391298748'
-  }
+// if (process.env.NODE_ENV === 'development') {
+config = {
+  apiKey: 'AIzaSyDWYuL9ChkfHkLiINoz7ZdDuQntk4eWrI8',
+  authDomain: 'e-store-dev.firebaseapp.com',
+  databaseURL: 'https://e-store-dev.firebaseio.com',
+  projectId: 'e-store-dev',
+  storageBucket: 'e-store-dev.appspot.com',
+  messagingSenderId: '252391298748'
 }
+// } else if (process.env.NODE_ENV === 'production') {
+//   config = {
+//     apiKey: 'AIzaSyA_xtUXZm6kZAKDJ4j1phpAlkqukVg_7Uo',
+//     authDomain: 'e-store-prod.firebaseapp.com',
+//     databaseURL: 'https://e-store-prod.firebaseio.com',
+//     projectId: 'e-store-prod',
+//     storageBucket: 'e-store-prod.appspot.com',
+//     messagingSenderId: '117902843738'
+//   }
+// }
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
+  components: {App},
   template: '<App/>',
   created: function () {
     firebase.initializeApp(config)

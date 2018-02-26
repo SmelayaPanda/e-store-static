@@ -58,7 +58,7 @@
             :client="credentials"
             :buttonStyle="btnStyle"
             :onAuthorize="onAuthorize"
-            notify-url="https://smelayapanda.github.io"
+            notify-url="https://us-central1-e-store-dev.cloudfunctions.net/helloWorld"
           >
           </PayPal>
           <!--:items="[{name: 'Hey', description:'Heyheyhey', price: '5.00', currency: 'RUB', quantity: '1' }]"-->
@@ -124,8 +124,10 @@ export default {
       return actions.payment.execute().then(function (payment) {
         window.alert('Payment Complete!')
         window.alert(payment)
+        window.alert(actions)
         console.log('Payment info± ')
         console.log(payment)
+        console.log(actions)
         // The payment is complete!
         // You can now show a confirmation message to the customer
       })
