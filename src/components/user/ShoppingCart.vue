@@ -7,6 +7,7 @@
         <el-row v-for="product in userCart" :key="product.cartId"
                 type="flex"
                 justify="center"
+                class="mb-3"
                 style="flex-wrap: wrap">
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" align="left">
             <el-tooltip placement="top">
@@ -27,26 +28,37 @@
             <el-button type="secondary" size="small" @click="removeFromCart(product.cartId)">
               <i class="el-icon-delete"></i>
             </el-button>
-            <div class="paypal_btn">
-              <PayPal
-                env="sandbox"
-                locale="en_US"
-                currency="RUB"
-                :items="[{
+            <buy-one :order-item="{
+              currency: 'RUB',
+              amount: parseFloat(product.price * product.qty).toFixed(2),
+              items:{
                   name: product.title.substring(0, 124),
                   quantity: product.qty,
                   price: parseFloat(product.price).toFixed(2),
                   currency: 'RUB',
                   description: product.cartId
-                }]"
-                :id="product.productId"
-                :amount="parseFloat(product.price * product.qty).toFixed(2)"
-                :client="credentials"
-                :buttonStyle="btnStyle"
-                notify-url="https://us-central1-e-store-dev.cloudfunctions.net/processPayPal"
-              >
-              </PayPal>
-            </div>
+              }
+            }">
+            </buy-one>
+            <!--<div class="paypal_btn">-->
+              <!--<PayPal-->
+                <!--env="sandbox"-->
+                <!--locale="en_US"-->
+                <!--currency="RUB"-->
+                <!--:items="[{-->
+                  <!--name: product.title.substring(0, 124),-->
+                  <!--quantity: product.qty,-->
+                  <!--price: parseFloat(product.price).toFixed(2),-->
+                  <!--currency: 'RUB',-->
+                  <!--description: product.cartId-->
+                <!--}]"-->
+                <!--:amount="parseFloat(product.price * product.qty).toFixed(2)"-->
+                <!--:client="credentials"-->
+                <!--:buttonStyle="btnStyle"-->
+                <!--notify-url="https://us-central1-e-store-dev.cloudfunctions.net/processPayPal"-->
+              <!--&gt;-->
+              <!--</PayPal>-->
+            <!--</div>-->
           </el-col>
         </el-row>
         <v-divider></v-divider>
@@ -72,13 +84,15 @@
 
 <script>
 import PayPal from 'vue-paypal-checkout'
+import BuyOne from './BuyOne'
 // NOTE: description of items = IPN <<transaction_subject>> = "cartId1, cartId2, ..."
 // ( all items descriptions will be concatenated )
 // TODO: check cart no more than 10 items
 export default {
   name: 'ShoppingCart',
   components: {
-    PayPal
+    PayPal,
+    BuyOne
   },
   data () {
     return {

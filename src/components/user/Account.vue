@@ -97,17 +97,13 @@
 </template>
 
 <script>
-import AvatarUpload from './AvatarUpload'
 
 export default {
   name: 'Account',
   data () {
-    return {
-    }
+    return {}
   },
-  components: {
-    AvatarUpload
-  },
+  components: {},
   computed: {
     isVerifiedEmail: function () {
       if (this.$store.getters.user) {
