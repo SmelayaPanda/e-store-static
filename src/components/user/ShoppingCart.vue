@@ -79,7 +79,7 @@ export default {
     return {
       qty: 1,
       credentials: {
-        sandbox: 'AVoXYBR4NlmlQsN39qv6W_IBq9Arn32W69rWHd9NJabWlgEaVEJMa1vtmrWmcdiXSrQkNjOoDT2ivhNr',
+        sandbox: 'AaTdJiFck5jx4xpaVOjFHkfNO8XZjflSRzYZ3yGbXEHZ43J7upAFabAkRhv1NJPPfDR49F9mqf8rbud4',
         production: 'someId'
       },
       btnStyle: {
