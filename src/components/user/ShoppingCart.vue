@@ -8,7 +8,6 @@
                 type="flex"
                 justify="center"
                 style="flex-wrap: wrap">
-          {{product}}
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" align="left">
             <el-tooltip placement="top">
               <div slot="content">{{ product.description }}</div>
@@ -30,11 +29,18 @@
             </el-button>
             <div class="paypal_btn">
               <PayPal
-                locale="en_US"
                 env="sandbox"
+                locale="en_US"
+                currency="RUB"
+                :items="[{
+                  name: product.title.substring(0, 124),
+                  quantity: product.qty,
+                  price: parseFloat(product.price).toFixed(2),
+                  currency: 'RUB',
+                  description: product.cartId
+                }]"
                 :id="product.productId"
                 :amount="parseFloat(product.price * product.qty).toFixed(2)"
-                :currency="product.currency"
                 :client="credentials"
                 :buttonStyle="btnStyle"
                 notify-url="https://us-central1-e-store-dev.cloudfunctions.net/processPayPal"
@@ -44,23 +50,20 @@
           </el-col>
         </el-row>
         <v-divider></v-divider>
-        <div v-on:paypal-paymentCompleted="alert(1)"></div>
-        <div v-on:paypal-paymentAuthorized="alert(1)"></div>
-        <div v-on:paypal-paymentCancelled="alert(1)"></div>
         <p class="pt-3">Total price: {{ parseFloat(totalPrice).toFixed(2) }} RUB </p>
+        <!--Total items object: {{ totalItems }}-->
         <div class="paypal_total_btn">
           <PayPal
             env="sandbox"
             locale="en_US"
             currency="RUB"
-            :items="items"
+            :items="totalItems"
             :amount="parseFloat(totalPrice).toFixed(2)"
             :client="credentials"
             :buttonStyle="btnStyle"
             notify-url="https://us-central1-e-store-dev.cloudfunctions.net/processPayPal"
           >
           </PayPal>
-          <!--:items="items"-->
         </div>
       </el-card>
     </el-col>
@@ -69,7 +72,9 @@
 
 <script>
 import PayPal from 'vue-paypal-checkout'
-
+// NOTE: description of items = IPN <<transaction_subject>> = "cartId1, cartId2, ..."
+// ( all items descriptions will be concatenated )
+// TODO: check cart no more than 10 items
 export default {
   name: 'ShoppingCart',
   components: {
@@ -77,7 +82,7 @@ export default {
   },
   data () {
     return {
-      qty: 1,
+      cartProduct: '',
       credentials: {
         sandbox: 'AaTdJiFck5jx4xpaVOjFHkfNO8XZjflSRzYZ3yGbXEHZ43J7upAFabAkRhv1NJPPfDR49F9mqf8rbud4',
         production: 'someId'
@@ -87,24 +92,7 @@ export default {
         size: 'responsive', // small | medium | large | responsive
         shape: 'rect', // pill | rect
         color: 'silver' // gold | blue | silver | black
-      },
-      items: [
-        {
-          quantity: '1',
-          name: 'item 1',
-          price: '44',
-          currency: 'RUB',
-          description: 'item 1 description',
-          tax: '1'
-        },
-        {
-          quantity: '1',
-          name: 'item 2',
-          price: '100',
-          currency: 'RUB',
-          description: 'item 2 description',
-          tax: '1'
-        }]
+      }
     }
   },
   computed: {
@@ -118,6 +106,20 @@ export default {
         total += cart[product].qty * cart[product].price
       }
       return total
+    },
+    totalItems () {
+      let items = []
+      let cart = this.userCart
+      for (let el in cart) {
+        let item = {}
+        item.name = cart[el].title
+        item.price = cart[el].price
+        item.quantity = cart[el].qty
+        item.currency = cart[el].currency
+        item.description = cart[el].cartId + ',' // (,) - delimiter of <<transaction_subject>>
+        items.push(item)
+      }
+      return items
     }
   },
   methods: {
