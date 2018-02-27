@@ -1,12 +1,12 @@
-/* eslint-disable promise/always-return */
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
 exports.processPayPal = functions.https.onRequest((req, res) => {
-  console.log('----------------------------------------------------------')
+  console.log('-------------------------------------------------------------------------------------------------------')
   const payInfo = req.body
+  console.log(payInfo)
 
   let orderId
   let ordersIds
@@ -17,16 +17,14 @@ exports.processPayPal = functions.https.onRequest((req, res) => {
       }
       // [ CHECK TXN ]
       ordersIds = data.val()
-      if(ordersIds) {
+      if (ordersIds) {
         for (let order in ordersIds) {
-          if (ordersIds[order].txn_id === payInfo.txn_id) {
+          if (ordersIds.hasOwnProperty(order) && ordersIds[order].txn_id === payInfo.txn_id) {
             throw new Error(`Order ${payInfo.txn_id} already added!`)
           }
         }
       }
-    })
-    // [ ADD ORDER TO FIREBASE ]
-    .then(() => {
+      // [ ADD ORDER TO FIREBASE ]
       return admin.database().ref('orders').push(payInfo)
     })
     .then((data) => {
@@ -46,20 +44,66 @@ exports.processPayPal = functions.https.onRequest((req, res) => {
 })
 
 
-//  ALL RESPONSE PARAMETERS
-// -------------------------
-// Info about the PAYMENT:
-//   mc_gross: '540.00',
-//   mc_currency: 'RUB',
-//   quantity: '1',
-//   item_name: '',
-//   item_number: '',
-//   payment_date: '02:54:17 Feb 26, 2018 PST',
-//   payment_status: 'Pending',
+// [ COMPLETED ]
 
-// ---------------------------------------------------
-//   payment_status: 'Completed', --- changed when business verified
-// ---------------------------------------------------
+
+// { id: 'WH-4YK32483B38864445-4LK20675K3768162K',
+//   event_version: '1.0',
+//   create_time: '2018-02-27T07:46:03.387Z',
+//   resource_type: 'sale',
+//   event_type: 'PAYMENT.SALE.COMPLETED',
+//   summary: 'A RUB 144.0 RUB pending sale payment was completed',
+//   resource:
+//   { id: '4VN03939SP657040R',
+//     state: 'completed',
+//     amount: { total: '144.00', currency: 'RUB', details: [Object] },
+//     payment_mode: 'INSTANT_TRANSFER',
+//     protection_eligibility: 'ELIGIBLE',
+//     protection_eligibility_type: 'ITEM_NOT_RECEIVED_ELIGIBLE,UNAUTHORIZED_PAYMENT_ELIGIBLE',
+//     transaction_fee: { value: '14.18', currency: 'RUB' },
+//     invoice_number: '',
+//     parent_payment: 'PAY-9FN11423NA051033PLKKQXVI',
+//     create_time: '2018-02-27T07:42:50Z',
+//     update_time: '2018-02-27T07:45:35Z',
+//     links: [ [Object], [Object], [Object] ] },
+//   links:
+//     [ { href: 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-4YK32483B38864445-4LK20675K3768162K',
+//       rel: 'self',
+//       method: 'GET' },
+//       { href: 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-4YK32483B38864445-4LK20675K3768162K/resend',
+//         rel: 'resend',
+//         method: 'POST' } ] }
+
+// [ PENDING ]
+
+//{ id: 'WH-21L98311904404408-13S91423KV893502M',
+//   event_version: '1.0',
+//   create_time: '2018-02-27T07:43:03.222Z',
+//   resource_type: 'sale',
+//   event_type: 'PAYMENT.SALE.PENDING',
+//   summary: 'Payment pending for RUB 144.0 RUB',
+//   resource:
+//    { id: '4VN03939SP657040R',
+//      state: 'pending',
+//      amount: { total: '144.00', currency: 'RUB', details: [Object] },
+//      payment_mode: 'INSTANT_TRANSFER',
+//      reason_code: 'RECEIVING_PREFERENCE_MANDATES_MANUAL_ACTION',
+//      protection_eligibility: 'ELIGIBLE',
+//      protection_eligibility_type: 'ITEM_NOT_RECEIVED_ELIGIBLE,UNAUTHORIZED_PAYMENT_ELIGIBLE',
+//      invoice_number: '',
+//      parent_payment: 'PAY-9FN11423NA051033PLKKQXVI',
+//      create_time: '2018-02-27T07:42:50Z',
+//      update_time: '2018-02-27T07:42:50Z',
+//      links: [ [Object], [Object], [Object] ] },
+//   links:
+//    [ { href: 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-21L98311904404408-13S91423KV893502M',
+//        rel: 'self',
+//        method: 'GET' },
+//      { href: 'https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-21L98311904404408-13S91423KV893502M/resend',
+//        rel: 'resend',
+//        method: 'POST' } ] }
+
+
 
 //   payment_type: 'instant',
 //   payment_gross: '',

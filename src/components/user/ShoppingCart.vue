@@ -30,7 +30,6 @@
             </el-button>
             <div class="paypal_btn">
               <PayPal
-                payment_method="credit_card"
                 locale="en_US"
                 env="sandbox"
                 :id="product.productId"
@@ -51,10 +50,10 @@
         <p class="pt-3">Total price: {{ parseFloat(totalPrice).toFixed(2) }} RUB </p>
         <div class="paypal_total_btn">
           <PayPal
-            payment_method="credit_card"
             env="sandbox"
             locale="en_US"
             currency="RUB"
+            :items="items"
             :amount="parseFloat(totalPrice).toFixed(2)"
             :client="credentials"
             :buttonStyle="btnStyle"
@@ -80,7 +79,7 @@ export default {
     return {
       qty: 1,
       credentials: {
-        sandbox: 'AZEbas_YdmFwegi2_I5Lz_563v3gqPdtR-bDEFGdH6_8an1VVtWdkQAmU4sNNf-FSOzAPTRgO3g5-t1u',
+        sandbox: 'AVoXYBR4NlmlQsN39qv6W_IBq9Arn32W69rWHd9NJabWlgEaVEJMa1vtmrWmcdiXSrQkNjOoDT2ivhNr',
         production: 'someId'
       },
       btnStyle: {
