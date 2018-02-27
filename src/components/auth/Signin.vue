@@ -43,6 +43,9 @@
                 <p>Enter your email in the above field and click:</p>
                 <el-button type="success" @click="resetPassword">Reset password</el-button>
               </div>
+              <router-link to="/signup">
+                <el-button type="text">Do not have an account?</el-button>
+              </router-link>
             </el-form>
           </v-container>
         </el-card>

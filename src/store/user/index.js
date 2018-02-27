@@ -1,6 +1,6 @@
 import * as firebase from 'firebase'
 import router from '../../router'
-import { Message, Notification } from 'element-ui'
+import {Message, Notification} from 'element-ui'
 
 export default {
   // State ---------------------------------------------------
@@ -23,21 +23,13 @@ export default {
   actions: { // specify the mutation
     signUserUp:
       ({commit}, payload) => {
-        commit('LOADING', true)
         commit('CLEAR_ERR')
+        commit('LOADING', true)
         firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
           .then(
             user => {
+              commit('setUser', user)
               commit('LOADING', false)
-              commit('CLEAR_ERR')
-              const newUser = {
-                id: user.uid,
-                email: payload.email,
-                registeredMeetups: [],
-                fbKeys: {},
-                emailVerified: payload.emailVerified
-              }
-              commit('setUser', newUser)
               firebase.auth().currentUser.sendEmailVerification()
                 .then(function () {
                   Notification({
@@ -64,29 +56,21 @@ export default {
         if (firebase.auth().currentUser) {
           firebase.auth().signOut()
         }
-        commit('LOADING', true)
         commit('CLEAR_ERR')
+        commit('LOADING', true)
         firebase.auth().signInAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
           .then(
             user => {
-              commit('LOADING', false)
-              commit('CLEAR_ERR')
-              const registeredUser = {
-                id: user.uid,
-                email: payload.email,
-                registeredMeetups: [],
-                fbKeys: {},
-                emailVerified: payload.emailVerified
-              }
-              commit('setUser', registeredUser)
               console.log('Successful Login')
+              commit('setUser', user)
+              commit('LOADING', false)
             }
           )
           .catch(
             error => {
-              commit('LOADING', false)
-              commit('ERR', error)
               console.log(error)
+              commit('ERR', error)
+              commit('LOADING', false)
             }
           )
         let user = firebase.auth().currentUser
@@ -100,18 +84,20 @@ export default {
           })
         }
       },
+    signInAnonymously:
+      ({commit}) => {
+        firebase.auth().signInAnonymouslyAndRetrieveData()
+          .then((user) => {
+            commit('setUser', user)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
     autoSignIn:
       ({commit}, payload) => {
         commit('CLEAR_ERR')
-        commit('LOADING', true)
-        commit('setUser', {
-          id: payload.uid,
-          email: payload.email,
-          registeredMeetups: [],
-          fbKeys: {},
-          emailVerified: payload.emailVerified
-        })
-        commit('LOADING', false)
+        commit('setUser', payload)
         let user = payload
         if (user != null) {
           user.providerData.forEach(function (profile) {
@@ -125,35 +111,38 @@ export default {
       },
     resetPassword:
       ({commit}, payload) => {
-        firebase.auth().sendPasswordResetEmail(payload).then(function () {
-          Notification({
-            title: 'Info',
-            message: `Reset password form sent to your email: ${payload}!`,
-            type: 'info',
-            showClose: true,
-            duration: 20000,
-            offset: 50
+        commit('CLEAR_ERR')
+        firebase.auth().sendPasswordResetEmail(payload)
+          .then(function () {
+            Notification({
+              title: 'Info',
+              message: `Reset password form sent to your email: ${payload}!`,
+              type: 'info',
+              showClose: true,
+              duration: 20000,
+              offset: 50
+            })
           })
-        }).catch(function (error) {
-          let errorCode = error.code
-          let errorMessage = error.message
-          if (errorCode === 'auth/invalid-email') {
-            Message({
-              type: 'error',
-              showClose: true,
-              message: errorMessage,
-              duration: 10000
-            })
-          } else if (errorCode === 'auth/user-not-found') {
-            Message({
-              type: 'error',
-              showClose: true,
-              message: errorMessage,
-              duration: 10000
-            })
-          }
-          console.log(error)
-        })
+          .catch(function (err) {
+            let errorCode = err.code
+            let errorMessage = err.message
+            if (errorCode === 'auth/invalid-email') {
+              Message({
+                type: 'error',
+                showClose: true,
+                message: errorMessage,
+                duration: 10000
+              })
+            } else if (errorCode === 'auth/user-not-found') {
+              Message({
+                type: 'error',
+                showClose: true,
+                message: errorMessage,
+                duration: 10000
+              })
+            }
+            console.log(err)
+          })
       },
     logout:
       ({commit}) => {

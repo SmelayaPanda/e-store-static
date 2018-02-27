@@ -29,15 +29,33 @@
                   <p>Date: {{ product.date | date }}</p>
                 </div>
                 <v-divider class="mb-3 mt-4"></v-divider>
+                <!--Authentication dialog-->
+                <el-dialog
+                  title="One second please!"
+                  :visible.sync="dialogVisible"
+                  width="30%"
+                  center
+                >
+                  <span>To continue shopping please register on the site!</span>
+                  <span slot="footer" class="dialog-footer">
+                    <router-link to="/signup">
+                      <el-button>Sing up</el-button>
+                    </router-link>
+                    <el-button type="primary" @click="signInAnonymously">Anonymously</el-button>
+                  </span>
+                </el-dialog>
+                <!--Add to cart-->
                 <el-button v-if="!alreadyAddedProduct"
                            size="mini"
                            type="primary"
                            @click="addToCart">
-                  <span style="font-size: 14px">Add to cart</span>
+                  <span style="font-size: 14px">
+                    Add to cart
+                  </span>
                   <v-icon class="white--text ml-1">shopping_cart</v-icon>
                 </el-button>
                 <!--ELSE-->
-                <div v-else>
+                <div v-if="alreadyAddedProduct">
                   <router-link to="/cart">
                     <el-tag type="text" class="mb-2">
                       Already added to cart!
@@ -64,7 +82,9 @@ export default {
   props: ['id'],
   name: 'ManId',
   data () {
-    return {}
+    return {
+      dialogVisible: false
+    }
   },
   computed: {
     product () {
@@ -81,10 +101,17 @@ export default {
   },
   methods: {
     addToCart () {
+      if (!this.isAuthenticatedUser) {
+        this.dialogVisible = true
+      }
       this.$store.dispatch('addToCart', this.product)
     },
     removeFromCart () {
       this.$store.dispatch('removeFromCart', this.alreadyAddedProduct.cartId)
+    },
+    signInAnonymously () {
+      this.dialogVisible = false
+      this.$store.dispatch('signInAnonymously')
     }
   }
 }

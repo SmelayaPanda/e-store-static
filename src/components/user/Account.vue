@@ -74,12 +74,23 @@
           </el-col>
         </el-row>
       </div>
-      <div v-else>
+      <div v-else-if="!this.isAnonymousUser">
         <h3>
           <i class="el-icon-info"></i>
           Confirm your email address to continue
         </h3>
         <p>Email with verification link sent to address: <br><span>{{ userEmail }}</span></p>
+      </div>
+      <div v-if="this.isAnonymousUser">
+        <h2 class="mb-2">You are sign in as anonymous user.</h2>
+        <p>Section "Account" is accessible only for
+          <router-link to="/signup">
+            <span class="primary--text">
+              registered users!
+            </span>
+          </router-link>
+        </p>
+        <p class="error--text">* Attention, your items in shopping cart may be lost if you click logout!</p>
       </div>
     </div>
   </div>

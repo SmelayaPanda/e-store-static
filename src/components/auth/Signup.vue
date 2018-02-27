@@ -38,6 +38,9 @@
                            @click="submitForm('formRule')">Sign up</el-button>
               </el-form-item>
             </el-form>
+            <router-link to="/signin">
+              <el-button type="text">Have an account?</el-button>
+            </router-link>
           </v-container>
         </el-card>
       </el-col>

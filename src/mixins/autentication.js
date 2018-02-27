@@ -7,7 +7,10 @@ export const authMixin = {
         return Boolean(store.getters.user)
       },
     isAdmin: function () {
-      return this.$store.getters.isAdmin
+      return store.getters.isAdmin
+    },
+    isAnonymousUser: function () {
+      return store.getters.user.isAnonymous
     }
   }
 }

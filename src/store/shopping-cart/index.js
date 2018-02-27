@@ -19,11 +19,11 @@ export default {
           commit('LOADING', false)
           return
         }
-        firebase.database().ref(`users/${user.id}/cart`).push(payload)
+        firebase.database().ref(`users/${user.uid}/cart`).push(payload)
           .then((data) => {
             let cart = getters.cart
             payload.cartId = data.key
-            firebase.database().ref(`users/${user.id}/cart`).child(data.key).update(payload)
+            firebase.database().ref(`users/${user.uid}/cart`).child(data.key).update(payload)
               .then(() => {
                 cart.push(payload)
                 commit('setCart', cart)
@@ -48,7 +48,7 @@ export default {
           commit('LOADING', false)
           return
         }
-        firebase.database().ref(`users/${user.id}/cart`).child(payload).remove()
+        firebase.database().ref(`users/${user.uid}/cart`).child(payload).remove()
           .then(
             () => {
               let cart = getters.cart
@@ -71,7 +71,7 @@ export default {
           commit('LOADING', false)
           return
         }
-        firebase.database().ref(`users/${user.id}/cart`).once('value')
+        firebase.database().ref(`users/${user.uid}/cart`).once('value')
           .then(
             (data) => {
               console.log('Cart data fetched')
