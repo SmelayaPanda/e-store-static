@@ -11,20 +11,20 @@
             <el-row type="flex">
               <el-col :span="12">
                 <div class="img_wrapper">
-                  <img src="@/assets/placeholders/people.jpg" class="main_img"/>
+                  <img src="@/assets/placeholders/man_placeholder.png" class="main_img"/>
                 </div>
               </el-col>
               <el-col :span="12" v-model="product">
-                <h2>Info</h2>
+                <h2 class="mt-3">Info</h2>
                 <v-divider class="mb-3 mt-3"></v-divider>
                 <div style="text-align: left; margin-left: 40px;">
                   <p>Id: {{ this.id }}</p>
                   <p>Title: {{ product.title }} </p>
                   <p>Description: {{ product.description }} </p>
                   <p>Price: {{ product.price }} {{ product.currency }}</p>
-                  <p>Quantity: {{ product.qty }} </p>
+                  <p>Total Quantity: {{ product.qty }} </p>
                   <p>Color: {{ product.color }} </p>
-                  <p>Color: {{ product.size }} </p>
+                  <p>Size: {{ product.size }} </p>
                   <p>Weight: {{ product.weight }} {{ product.weightMeasure }}</p>
                   <p>Date: {{ product.date | date }}</p>
                 </div>
@@ -48,6 +48,7 @@
                 <el-button v-if="!alreadyAddedProduct"
                            size="mini"
                            type="primary"
+                           class="mt-3"
                            @click="addToCart">
                   <span style="font-size: 14px">
                     Add to cart
@@ -68,6 +69,13 @@
                   </el-button>
                 </div>
               </el-col>
+            </el-row>
+            <el-row style="margin-top: 80px">
+              <p style="font-size: 24px">
+                <i class="el-icon-minus"></i>
+                Re<span class="primary--text">High</span> Store
+                <i class="el-icon-minus"></i>
+              </p>
             </el-row>
           </el-card>
         </el-col>
@@ -104,7 +112,15 @@ export default {
       if (!this.isAuthenticatedUser) {
         this.dialogVisible = true
       }
-      this.$store.dispatch('addToCart', this.product)
+      let orderProduct = {}
+      orderProduct.productId = this.id
+      orderProduct.qty = 1
+      orderProduct.title = this.product.title
+      orderProduct.color = this.product.color
+      orderProduct.size = this.product.size
+      orderProduct.price = this.product.price
+      orderProduct.currency = this.product.currency
+      this.$store.dispatch('addToCart', orderProduct)
     },
     removeFromCart () {
       this.$store.dispatch('removeFromCart', this.alreadyAddedProduct.cartId)
@@ -133,5 +149,6 @@ export default {
 
   .main_img {
     object-fit: cover;
+    padding: 10px;
   }
 </style>

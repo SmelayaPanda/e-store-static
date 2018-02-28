@@ -15,30 +15,26 @@ export default {
       ({commit, getters}, payload) => {
         commit('LOADING', true)
         const user = getters.user
+        let cart = getters.cart
         if (!user) {
           commit('LOADING', false)
           return
         }
-        firebase.database().ref(`users/${user.uid}/cart`).push(payload)
+        firebase.database().ref(`users/${user.uid}/carts`).push(payload)
           .then((data) => {
-            let cart = getters.cart
-            payload.cartId = data.key
-            firebase.database().ref(`users/${user.uid}/cart`).child(data.key).update(payload)
-              .then(() => {
-                cart.push(payload)
-                commit('setCart', cart)
-                commit('LOADING', false)
-              })
-              .catch(err => {
-                console.log(err)
-                commit('LOADING', false)
-              })
+            let cartId = data.key
+            payload.cartId = cartId
+            return firebase.database().ref('cart_user').update({[cartId]: user.uid})
           })
-          .catch(
-            err => {
-              console.log(err)
-              commit('LOADING', false)
-            })
+          .then(() => {
+            cart.push(payload)
+            commit('setCart', cart)
+            commit('LOADING', false)
+          })
+          .catch(err => {
+            console.log(err)
+            commit('LOADING', false)
+          })
       },
     removeFromCart:
       ({commit, getters}, payload) => {
@@ -48,7 +44,7 @@ export default {
           commit('LOADING', false)
           return
         }
-        firebase.database().ref(`users/${user.uid}/cart`).child(payload).remove()
+        firebase.database().ref(`users/${user.uid}/carts`).child(payload).remove()
           .then(
             () => {
               let cart = getters.cart
@@ -71,7 +67,7 @@ export default {
           commit('LOADING', false)
           return
         }
-        firebase.database().ref(`users/${user.uid}/cart`).once('value')
+        firebase.database().ref(`users/${user.uid}/carts`).once('value')
           .then(
             (data) => {
               console.log('Cart data fetched')
@@ -90,7 +86,7 @@ export default {
   getters: {
     cart:
       state => {
-        return state.cart
+        return state.cart.filter(obj => { return obj.isPayed !== true })
       }
   }
 }

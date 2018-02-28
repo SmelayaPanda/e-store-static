@@ -8,40 +8,53 @@ exports.processPayPal = functions.https.onRequest((req, res) => {
   const payInfo = req.body
   console.log(payInfo)
 
+  let userId
   let orderId
-  let ordersIds
-  admin.database().ref('ordersIds').once('value')
+  let cartIds = payInfo.transaction_subject.split(',')
+  console.log(cartIds)
+  admin.database().ref('cart_user').child(cartIds[0]).once('value')
     .then(data => {
-      if(!payInfo.txn_id) {
-        throw new Error('No valid request object!')
-      }
-      // [ CHECK TXN ]
-      ordersIds = data.val()
-      if (ordersIds) {
-        for (let order in ordersIds) {
-          if (ordersIds.hasOwnProperty(order) && ordersIds[order].txn_id === payInfo.txn_id) {
-            throw new Error(`Order ${payInfo.txn_id} already added!`)
-          }
-        }
-      }
-      // [ ADD ORDER TO FIREBASE ]
-      return admin.database().ref('orders').push(payInfo)
+      userId = data.val();
+      // if(!payInfo.txn_id) {
+      //   throw new Error('No valid request object!')
+      // }
+      // checkTransaction(data.val(), payInfo)
+      return admin.database().ref(`users/${userId}/orders`).push(payInfo)
     })
     .then((data) => {
       orderId = data.key
-      return admin.database().ref('ordersIds').push({orderId: orderId, txn_id: payInfo.txn_id})
+      return admin.database().ref('order_user').update({[orderId]: userId})
     })
     .then(() => {
-      console.log(`PayPal transaction id: ${payInfo.txn_id} / Order farebaseId: ${orderId} /  added!`)
-      console.log(`Payer: ${payInfo.first_name} ${payInfo.last_name} ${payInfo.payer_email} -
-                            ${payInfo.mc_gross} ${payInfo.mc_currency}`)
+      cartIds.forEach(cartId => {
+        admin.database().ref(`users/${userId}/carts`).child(cartId).update({isPayed: true, orderId: orderId})
+      })
+      logPaymentInfo(payInfo, orderId);
       return res.sendStatus(200)
     })
     .catch(err => {
       console.log(err)
-      return res.sendStatus(500)
+      return res.sendStatus(200) // temporary for old requests
     })
 })
+
+// Support functions
+function checkTransaction(ordersIds, payInfo) {
+  if (ordersIds) {
+    for (let order in ordersIds) {
+      if (ordersIds.hasOwnProperty(order) && ordersIds[order].txn_id === payInfo.txn_id) {
+        throw new Error(`Order ${payInfo.txn_id} already added!`)
+      }
+    }
+  }
+}
+
+function logPaymentInfo(payInfo, orderId) {
+  console.log(`PayPal transaction id: ${payInfo.txn_id} / Order farebaseId: ${orderId} /  added!`)
+  console.log(`Payer: ${payInfo.first_name} ${payInfo.last_name} ${payInfo.payer_email} -
+                            ${payInfo.mc_gross} ${payInfo.mc_currency}`)
+}
+
 // PayPal Instant Payment Notification (IPN) example:
 
 /*

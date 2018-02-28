@@ -10,10 +10,9 @@
                 class="mb-3"
                 style="flex-wrap: wrap">
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" align="left">
-            <el-tooltip placement="top">
-              <div slot="content">{{ product.description }}</div>
+            <router-link :to="'/product/' + product.productId">
               <h3>{{ product.title }}</h3>
-            </el-tooltip>
+            </router-link>
             <i class="mb-0">Parameters:</i>
             <p class="mb-0">Color: {{ product.color }}</p>
             <p class="mb-0">Size: {{ product.size }}</p>
@@ -40,25 +39,25 @@
               }
             }">
             </buy-one>
-            <!--<div class="paypal_btn">-->
-              <!--<PayPal-->
-                <!--env="sandbox"-->
-                <!--locale="en_US"-->
-                <!--currency="RUB"-->
-                <!--:items="[{-->
-                  <!--name: product.title.substring(0, 124),-->
-                  <!--quantity: product.qty,-->
-                  <!--price: parseFloat(product.price).toFixed(2),-->
-                  <!--currency: 'RUB',-->
-                  <!--description: product.cartId-->
-                <!--}]"-->
-                <!--:amount="parseFloat(product.price * product.qty).toFixed(2)"-->
-                <!--:client="credentials"-->
-                <!--:buttonStyle="btnStyle"-->
-                <!--notify-url="https://us-central1-e-store-dev.cloudfunctions.net/processPayPal"-->
-              <!--&gt;-->
-              <!--</PayPal>-->
-            <!--</div>-->
+            <div class="paypal_btn">
+              <PayPal
+                env="sandbox"
+                locale="en_US"
+                currency="RUB"
+                :items="[{
+                  name: product.title.substring(0, 124),
+                  quantity: product.qty,
+                  price: parseFloat(product.price).toFixed(2),
+                  currency: 'RUB',
+                  description: product.cartId
+                }]"
+                :amount="parseFloat(product.price * product.qty).toFixed(2)"
+                :client="credentials"
+                :buttonStyle="btnStyle"
+                notify-url="https://us-central1-e-store-dev.cloudfunctions.net/processPayPal"
+              >
+              </PayPal>
+            </div>
           </el-col>
         </el-row>
         <v-divider></v-divider>

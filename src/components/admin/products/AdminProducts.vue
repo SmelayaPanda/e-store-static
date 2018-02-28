@@ -17,7 +17,7 @@
             <p>Id: {{ scope.row.id }}</p>
             <span>* unique database parameter</span>
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.id | snippet(8) }}</el-tag>
+              <el-tag size="medium">{{ scope.row.id | snippet(6) }}</el-tag>
             </div>
           </el-popover>
         </template>

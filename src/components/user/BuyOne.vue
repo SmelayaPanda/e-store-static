@@ -28,12 +28,26 @@
         <!--Step 1-->
         <div class="form_1" v-if="activeStep === 1">
           <el-form label-position="top" label-width="100px" :model="form_1">
-            <el-form-item label="First name">
-              <el-input v-model="form_1.firstname"></el-input>
+            <el-form-item label="Email" prop="email">
+              <el-input type="email"
+                        id="email"
+                        v-model="form_1.email"
+                        auto-complete="on"
+              >
+              </el-input>
             </el-form-item>
-            <el-form-item label="Last name">
-              <el-input v-model="form_1.lastname"></el-input>
-            </el-form-item>
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="First name">
+                  <el-input v-model="form_1.firstname"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="Last name">
+                  <el-input v-model="form_1.lastname"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
             <el-form-item label="Birthday">
               <el-input v-model="form_1.birthday"></el-input>
             </el-form-item>
@@ -81,14 +95,14 @@
         <div class="form_4" v-if="activeStep === 4">
           <div class="buy_button">
             <PayPal
-            env="sandbox"
-            locale="en_US"
-            currency="RUB"
-            :items="[this.orderItem.items]"
-            :amount="this.orderItem.amount"
-            :client="credentials"
-            :buttonStyle="btnStyle"
-            notify-url="https://us-central1-e-store-dev.cloudfunctions.net/processPayPal"
+              env="sandbox"
+              locale="en_US"
+              currency="RUB"
+              :items="[this.orderItem.items]"
+              :amount="this.orderItem.amount"
+              :client="credentials"
+              :buttonStyle="btnStyle"
+              notify-url="https://us-central1-e-store-dev.cloudfunctions.net/processPayPal"
             >
             </PayPal>
           </div>
