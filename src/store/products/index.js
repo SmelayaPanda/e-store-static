@@ -17,7 +17,7 @@ export default {
         firebase.database().ref('products').once('value')
           .then(
             (data) => {
-              console.log('Product fetched')
+              console.log('Products data fetched')
               commit('setProducts', data.val())
               commit('LOADING', false)
             })

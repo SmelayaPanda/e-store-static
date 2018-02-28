@@ -92,6 +92,7 @@ new Vue({
         }
         this.$store.dispatch('fetchProducts')
         this.$store.dispatch('fetchUserCart')
+        this.$store.dispatch('fetchUserOrders')
       })
   }
 })
