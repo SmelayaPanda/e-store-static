@@ -3,7 +3,9 @@
     <el-tab-pane label="Products">
       <admin-products></admin-products>
     </el-tab-pane>
-    <el-tab-pane label="Orders">Config</el-tab-pane>
+    <el-tab-pane label="Orders">
+      <admin-orders></admin-orders>
+    </el-tab-pane>
     <el-tab-pane label="Settings">Task</el-tab-pane>
     <el-tab-pane label="Info">Role</el-tab-pane>
   </el-tabs>
@@ -11,10 +13,12 @@
 
 <script>
 import AdminProducts from './products/AdminProducts'
+import AdminOrders from './orders/AdminOrders'
 export default {
   name: 'NavMenu',
   components: {
-    AdminProducts
+    AdminProducts,
+    AdminOrders
   },
   data () {
     return {

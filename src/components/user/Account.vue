@@ -40,8 +40,8 @@
                     {{ order.item_name1 }}  {{ order.item_name2 }}  {{ order.item_name3 }}
                     <i class="header-icon el-icon-info"></i>
                   </template>
-                  <div v-for="el in order" :key="el.tnx_id">
-                    {{ el }}
+                  <div v-for="(el, key) in order" :key="el.tnx_id">
+                    {{ key }}:  <span class="primary--text">{{ el }}</span>
                   </div>
                 </el-collapse-item>
               </el-collapse>

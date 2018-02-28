@@ -13,6 +13,13 @@
                 <div class="img_wrapper">
                   <img src="@/assets/placeholders/man_placeholder.png" class="main_img"/>
                 </div>
+                <el-row style="margin-top: 80px">
+                  <p style="font-size: 24px">
+                    <i class="el-icon-minus"></i>
+                    Re<span class="primary--text">High</span> Store
+                    <i class="el-icon-minus"></i>
+                  </p>
+                </el-row>
               </el-col>
               <el-col :span="12" v-model="product">
                 <h2 class="mt-3">Info</h2>
@@ -69,13 +76,6 @@
                   </el-button>
                 </div>
               </el-col>
-            </el-row>
-            <el-row style="margin-top: 80px">
-              <p style="font-size: 24px">
-                <i class="el-icon-minus"></i>
-                Re<span class="primary--text">High</span> Store
-                <i class="el-icon-minus"></i>
-              </p>
             </el-row>
           </el-card>
         </el-col>
