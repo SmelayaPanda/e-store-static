@@ -20,10 +20,14 @@ export default {
           commit('LOADING', false)
           return
         }
+        let cartId
         firebase.database().ref(`users/${user.uid}/carts`).push(payload)
           .then((data) => {
-            let cartId = data.key
+            cartId = data.key
             payload.cartId = cartId
+            return firebase.database().ref(`users/${user.uid}/carts`).child(cartId).update({cartId: cartId})
+          })
+          .then(() => {
             return firebase.database().ref('cart_user').update({[cartId]: user.uid})
           })
           .then(() => {
@@ -86,7 +90,9 @@ export default {
   getters: {
     cart:
       state => {
-        return state.cart.filter(obj => { return obj.isPayed !== true })
+        return state.cart.filter(obj => {
+          return obj.isPayed !== true
+        })
       }
   }
 }

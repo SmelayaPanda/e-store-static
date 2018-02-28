@@ -6,7 +6,7 @@
       :data="products"
       size="small"
       :highlight-current-row="true"
-      style="width: 85vw; text-align: left"
+      style="width: 90vw; text-align: left"
     >
       <!--ID-->
       <el-table-column
