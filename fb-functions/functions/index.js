@@ -27,14 +27,16 @@ exports.processPayPal = functions.https.onRequest((req, res) => {
     })
     .then(() => {
       cartIds.forEach(cartId => {
-        admin.database().ref(`users/${userId}/carts`).child(cartId).update({isPayed: true, orderId: orderId})
+        if (cartId) { // can be empty string
+          admin.database().ref(`users/${userId}/carts`).child(cartId).update({isPayed: true, orderId: orderId})
+        }
       })
       logPaymentInfo(payInfo, orderId);
       return res.sendStatus(200)
     })
     .catch(err => {
       console.log(err)
-      return res.sendStatus(200) // temporary for old requests
+      return res.sendStatus(200) // temporary for old requests -> 500
     })
 })
 

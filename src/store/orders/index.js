@@ -56,7 +56,6 @@ export default {
                 }
               }
             }
-            console.log(allOrders)
             console.log('All Orders data fetched')
             commit('setAllOrders', allOrders)
             commit('LOADING', false)
