@@ -49,14 +49,16 @@ export default {
           return
         }
         firebase.database().ref(`users/${user.uid}/carts`).child(payload).remove()
-          .then(
-            () => {
-              let cart = getters.cart
-              let idx = cart.findIndex(el => el.cartId === payload)
-              cart.splice(idx, 1)
-              commit('setCart', cart)
-              commit('LOADING', false)
-            })
+          .then(() => {
+            return firebase.database().ref('cart_user').child(payload).remove()
+          })
+          .then(() => {
+            let cart = getters.cart
+            let idx = cart.findIndex(el => el.cartId === payload)
+            cart.splice(idx, 1)
+            commit('setCart', cart)
+            commit('LOADING', false)
+          })
           .catch(
             error => {
               console.log(error)
