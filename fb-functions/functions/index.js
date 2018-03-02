@@ -1,6 +1,6 @@
 // Function for Handle IPN Notification
 'use strict'
-const processPayPal = require('./paypal/index')
+const processPayPal = require('./sub_functions/processPayPal')
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
