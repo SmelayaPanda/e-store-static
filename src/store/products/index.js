@@ -35,54 +35,22 @@ export default {
       },
     filterProducts:
       ({commit}, payload) => {
+        console.log(payload.page)
         let query = firebase.firestore().collection('products').orderBy('price')
-        // TODO: How I can rewrite it?
-        if (payload.category && payload.size && payload.color) {
-          query = query
-            .where('category', '==', payload.category)
-            .where('color', '==', payload.color)
-            .where('size', '==', payload.size)
-            .where('price', '>=', payload.minPrice)
-            .where('price', '<=', payload.maxPrice)
-        } else if (payload.size && payload.color) {
-          query = query
-            .where('color', '==', payload.color)
-            .where('size', '==', payload.size)
-            .where('price', '>=', payload.minPrice)
-            .where('price', '<=', payload.maxPrice)
-        } else if (payload.category && payload.color) {
-          query = query
-            .where('category', '==', payload.category)
-            .where('color', '==', payload.color)
-            .where('price', '>=', payload.minPrice)
-            .where('price', '<=', payload.maxPrice)
-        } else if (payload.size && payload.category) {
-          query = query
-            .where('category', '==', payload.category)
-            .where('size', '==', payload.size)
-            .where('price', '>=', payload.minPrice)
-            .where('price', '<=', payload.maxPrice)
-        } else if (payload.size) {
-          query = query
-            .where('size', '==', payload.size)
-            .where('price', '>=', payload.minPrice)
-            .where('price', '<=', payload.maxPrice)
-        } else if (payload.category) {
-          query = query
-            .where('category', '==', payload.category)
-            .where('price', '>=', payload.minPrice)
-            .where('price', '<=', payload.maxPrice)
-        } else if (payload.color) {
-          query = query
-            .where('color', '==', payload.color)
-            .where('price', '>=', payload.minPrice)
-            .where('price', '<=', payload.maxPrice)
-        } else {
+        if (payload.minPrice) {
           query = query
             .where('price', '>=', payload.minPrice)
             .where('price', '<=', payload.maxPrice)
         }
-
+        if (payload.size) {
+          query = query.where('size', '==', payload.size)
+        }
+        if (payload.category) {
+          query = query.where('category', '==', payload.category)
+        }
+        if (payload.color) {
+          query = query.where('color', '==', payload.color)
+        }
         query.get()
           .then(
             (snapshot) => {
