@@ -39,7 +39,7 @@ export default {
         if (payload.color) {
           query = query.where('color', '==', payload.color)
         }
-        query = query.orderBy('price')
+        query = query.orderBy('price', payload.sortAsc ? 'asc' : 'desc')
         if (getters.lastVisibleId) {
           query = query.startAfter(getters.lastVisibleId)
         }

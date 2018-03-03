@@ -52,7 +52,13 @@
           <el-collapse v-model="activeName" accordion style="margin-left: 12px; margin-right: 12px">
             <!--PRICE FILTER-->
             <el-collapse-item title="Filter" name="1">
-              <span class="pr-4">Price</span>
+              <el-button type="text" class="pr-4 pb-0" @click="sortByPrice">
+                <span class="ml-3">Price</span>
+                <el-tag size="mini">
+                  <i class="el-icon-caret-top" v-if="!this.sortAsc"></i>
+                  <i class="el-icon-caret-bottom" v-else></i>
+                </el-tag>
+              </el-button>
               <div class="ml-3 mr-3">
                 <el-slider
                   v-model="sliderValues"
@@ -124,6 +130,7 @@ export default {
   name: 'Men',
   data () {
     return {
+      sortAsc: true,
       activeName: 1,
       isCollapse: false,
       sliderValues: [1, 1000],
@@ -133,6 +140,10 @@ export default {
     }
   },
   methods: {
+    sortByPrice () {
+      this.sortAsc = !this.sortAsc
+      this.filterProducts()
+    },
     viewProduct (id) {
       this.$router.push('/product/' + id)
     },
@@ -149,6 +160,7 @@ export default {
     filter (loadMore) {
       return this.$store.dispatch('fetchProducts', {
         loadMore: loadMore,
+        sortAsc: this.sortAsc,
         minPrice: this.sliderValues[0],
         maxPrice: this.sliderValues[1],
         category: this.selectedCategory === 'All groups' ? null : this.selectedCategory,

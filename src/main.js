@@ -90,7 +90,7 @@ new Vue({
           this.$store.dispatch('autoSignIn', user)
           // console.log(user)
         }
-        this.$store.dispatch('fetchProducts', {})
+        this.$store.dispatch('fetchProducts', {sortAsc: true})
         this.$store.dispatch('fetchUserCart')
         this.$store.dispatch('fetchUserOrders')
         this.$store.dispatch('fetchAllOrders')
