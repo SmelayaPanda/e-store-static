@@ -35,29 +35,54 @@ export default {
       },
     filterProducts:
       ({commit}, payload) => {
-        console.log(payload.size)
         let query = firebase.firestore().collection('products').orderBy('price')
-          .where('price', '>=', payload.minPrice)
-          .where('price', '<=', payload.maxPrice)
-        if (payload.size !== null) {
-          query = firebase.firestore().collection('products').orderBy('price')
-            .where('price', '>=', payload.minPrice)
-            .where('price', '<=', payload.maxPrice)
-            .where('size', '==', payload.size)
-        }
-        if (payload.color !== null) {
-          query = firebase.firestore().collection('products').orderBy('price')
-            .where('price', '>=', payload.minPrice)
-            .where('price', '<=', payload.maxPrice)
+        // TODO: How I can rewrite it?
+        if (payload.category && payload.size && payload.color) {
+          query = query
+            .where('category', '==', payload.category)
             .where('color', '==', payload.color)
-        }
-        if (payload.size !== null && payload.color !== null) {
-          query = firebase.firestore().collection('products').orderBy('price')
+            .where('size', '==', payload.size)
             .where('price', '>=', payload.minPrice)
             .where('price', '<=', payload.maxPrice)
-            .where('size', '==', payload.size)
+        } else if (payload.size && payload.color) {
+          query = query
             .where('color', '==', payload.color)
+            .where('size', '==', payload.size)
+            .where('price', '>=', payload.minPrice)
+            .where('price', '<=', payload.maxPrice)
+        } else if (payload.category && payload.color) {
+          query = query
+            .where('category', '==', payload.category)
+            .where('color', '==', payload.color)
+            .where('price', '>=', payload.minPrice)
+            .where('price', '<=', payload.maxPrice)
+        } else if (payload.size && payload.category) {
+          query = query
+            .where('category', '==', payload.category)
+            .where('size', '==', payload.size)
+            .where('price', '>=', payload.minPrice)
+            .where('price', '<=', payload.maxPrice)
+        } else if (payload.size) {
+          query = query
+            .where('size', '==', payload.size)
+            .where('price', '>=', payload.minPrice)
+            .where('price', '<=', payload.maxPrice)
+        } else if (payload.category) {
+          query = query
+            .where('category', '==', payload.category)
+            .where('price', '>=', payload.minPrice)
+            .where('price', '<=', payload.maxPrice)
+        } else if (payload.color) {
+          query = query
+            .where('color', '==', payload.color)
+            .where('price', '>=', payload.minPrice)
+            .where('price', '<=', payload.maxPrice)
+        } else {
+          query = query
+            .where('price', '>=', payload.minPrice)
+            .where('price', '<=', payload.maxPrice)
         }
+
         query.get()
           .then(
             (snapshot) => {
@@ -65,7 +90,6 @@ export default {
               snapshot.forEach(doc => {
                 products.push(doc.data())
               })
-              console.log(products)
               commit('setProducts', products)
             })
           .catch(

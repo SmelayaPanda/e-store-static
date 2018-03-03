@@ -8,7 +8,9 @@
       <el-form :model="product">
         <el-form-item label="Category" :label-width="formLabelWidth">
           <el-select v-model="product.category" placeholder="Select a currency">
-            <el-option label="Category A" value="Category A"></el-option>
+            <el-option label="Category A1" value="Category A1"></el-option>
+            <el-option label="Category A2" value="Category A2"></el-option>
+            <el-option label="Category A3" value="Category A3"></el-option>
             <el-option label="Category B" value="Category B"></el-option>
             <el-option label="Category C" value="Category C"></el-option>
             <el-option label="Category D" value="Category D"></el-option>
@@ -87,7 +89,7 @@ export default {
     return {
       dialogFormVisible: false,
       product: {
-        category: 'Category A',
+        category: 'Category A1',
         title: 'Some product name',
         description: 'And awesome description',
         priority: 1,

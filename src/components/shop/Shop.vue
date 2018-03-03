@@ -5,8 +5,49 @@
       <app-loader></app-loader>
     </v-container>
     <div v-else>
-      <el-row el-row type="flex" justify="center">
-        <el-col :xs="24" :sm="20" :md="18" :lg="16" :xl="14" type="flex" align="middle">
+      <el-row type="flex" justify="left" style="flex-wrap: wrap">
+        <el-col :xs="24" :sm="24" :md="6" :lg="4" :xl="4">
+          <el-radio-group v-model="isCollapse" style="margin-bottom: 20px; margin-top: 4px; margin-left: 10px;">
+            <el-radio-button :label="false">expand</el-radio-button>
+            <el-radio-button :label="true">collapse</el-radio-button>
+          </el-radio-group>
+          <el-menu default-active="2"
+                   class="el-menu-vertical-demo"
+                   @select="handleSelect"
+                   :collapse="isCollapse">
+            <el-menu-item index="All groups" @click="filterProducts">
+              <i class="el-icon-star-on"></i>
+              <span slot="title">All groups</span>
+            </el-menu-item>
+            <el-submenu index="Category A">
+              <template slot="title" >
+                <i class="el-icon-news"></i>
+                <span slot="title">Category A</span>
+              </template>
+              <el-menu-item-group>
+                <span slot="title">Group One</span>
+                <el-menu-item index="Category A1" @click="filterProducts">Category A1</el-menu-item>
+                <el-menu-item index="Category A2" @click="filterProducts">Category A2</el-menu-item>
+              </el-menu-item-group>
+              <el-menu-item-group title="Group Two">
+                <el-menu-item index="Category A3" @click="filterProducts">Category A3</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
+            <el-menu-item index="Category B" @click="filterProducts">
+              <i class="el-icon-picture-outline"></i>
+              <span slot="title">Category B</span>
+            </el-menu-item>
+            <el-menu-item index="Category C" @click="filterProducts">
+              <i class="el-icon-location"></i>
+              <span slot="title">Category C</span>
+            </el-menu-item>
+            <el-menu-item index="Category D" @click="filterProducts">
+              <i class="el-icon-view"></i>
+              <span slot="title">Category D</span>
+            </el-menu-item>
+          </el-menu>
+        </el-col>
+        <el-col :xs="24" :sm="24" :md="18" :lg="16" :xl="14" type="flex" align="middle">
           <!--FILTER-->
           <el-collapse v-model="activeName" accordion style="margin-left: 12px; margin-right: 12px">
             <!--PRICE FILTER-->
@@ -81,9 +122,11 @@ export default {
   data () {
     return {
       activeName: 1,
+      isCollapse: false,
       sliderValues: [0, 100000],
       selectedSize: 'All sizes',
-      selectedColor: 'All colors'
+      selectedColor: 'All colors',
+      selectedCategory: 'Category C'
     }
   },
   methods: {
@@ -94,9 +137,13 @@ export default {
       return this.$store.dispatch('filterProducts', {
         minPrice: this.sliderValues[0],
         maxPrice: this.sliderValues[1],
+        category: this.selectedCategory === 'All groups' ? null : this.selectedCategory,
         color: this.selectedColor === 'All colors' ? null : this.selectedColor,
         size: this.selectedSize === 'All sizes' ? null : this.selectedSize
       })
+    },
+    handleSelect (key) {
+      this.selectedCategory = key
     }
   },
   computed: {
