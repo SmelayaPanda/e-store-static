@@ -33,7 +33,6 @@
                   <p>Color: {{ product.color }} </p>
                   <p>Size: {{ product.size }} </p>
                   <p>Weight: {{ product.weight }} {{ product.weightMeasure }}</p>
-                  <p>Date: {{ product.date | date }}</p>
                 </div>
                 <v-divider class="mb-3 mt-4"></v-divider>
                 <!--Authentication dialog-->

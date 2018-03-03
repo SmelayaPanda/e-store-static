@@ -6,6 +6,14 @@
 
     <el-dialog title="Edit product info" :visible.sync="dialogFormVisible" width="100%" :fullscreen="true">
       <el-form :model="product">
+        <el-form-item label="Category" :label-width="formLabelWidth">
+          <el-select v-model="product.category" placeholder="Select a currency">
+            <el-option label="Category A" value="Category A"></el-option>
+            <el-option label="Category B" value="Category B"></el-option>
+            <el-option label="Category C" value="Category C"></el-option>
+            <el-option label="Category D" value="Category D"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="Title" :label-width="formLabelWidth">
           <el-input v-model="product.title"></el-input>
         </el-form-item>
@@ -82,20 +90,21 @@ export default {
   },
   methods: {
     edit () {
-      let creationDate = new Date()
       let editedObj = {
+        category: this.product.category,
         productId: this.editProduct.id,
         title: this.product.title,
         description: this.product.description,
         priority: this.product.priority,
+        price: parseFloat(this.product.price),
         currency: this.product.currency,
-        price: this.product.price,
         qty: this.product.qty,
         color: this.product.color,
         size: this.product.size,
         weight: this.product.weight,
         weightMeasure: this.product.weightMeasure,
-        date: creationDate.toISOString()
+        creationDate: this.product.creationDate,
+        editDate: new Date()
       }
       console.log(editedObj)
       this.$store.dispatch('editProduct', editedObj)

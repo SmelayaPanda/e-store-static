@@ -8,5 +8,6 @@ admin.initializeApp(functions.config().firebase);
 const db = admin.database();
 
 exports.processPayPal = functions.https.onRequest((req, res) => {
+  console.log(req.body)
   processPayPal.handler(req, res, db)
 })

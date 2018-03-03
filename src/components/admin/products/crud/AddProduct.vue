@@ -6,6 +6,14 @@
 
     <el-dialog title="New product info" :visible.sync="dialogFormVisible" width="100%" :fullscreen="true">
       <el-form :model="product">
+        <el-form-item label="Category" :label-width="formLabelWidth">
+          <el-select v-model="product.category" placeholder="Select a currency">
+            <el-option label="Category A" value="Category A"></el-option>
+            <el-option label="Category B" value="Category B"></el-option>
+            <el-option label="Category C" value="Category C"></el-option>
+            <el-option label="Category D" value="Category D"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="Title" :label-width="formLabelWidth">
           <el-input v-model="product.title"></el-input>
         </el-form-item>
@@ -43,10 +51,13 @@
           </el-form-item>
           <el-form-item label="Size" :label-width="formLabelWidth">
             <el-select v-model="product.size" placeholder="Select a size">
-              <el-option label="Small" value="small"></el-option>
-              <el-option label="Medium" value="medium"></el-option>
-              <el-option label="Big" value="big"></el-option>
-              <el-option label="Large" value="large"></el-option>
+              <el-option label="XXS" value="XXS"></el-option>
+              <el-option label="XS" value="XS" ></el-option>
+              <el-option label="S" value="S"></el-option>
+              <el-option label="M" value="M"></el-option>
+              <el-option label="L" value="L"></el-option>
+              <el-option label="XL" value="XL"></el-option>
+              <el-option label="XXL" value="XXL"></el-option>
             </el-select>
           </el-form-item>
         </el-row>
@@ -76,6 +87,7 @@ export default {
     return {
       dialogFormVisible: false,
       product: {
+        category: 'Category A',
         title: 'Some product name',
         description: 'And awesome description',
         priority: 1,
@@ -83,7 +95,7 @@ export default {
         price: '100',
         qty: 10,
         color: 'green',
-        size: 'big',
+        size: 'XL',
         weight: 0.5,
         weightMeasure: 'kg',
         date: '2016-05-03'
@@ -93,21 +105,19 @@ export default {
   },
   methods: {
     addNewProduct () {
-      let creationDate = new Date()
-      let price = this.product.price
-      price = parseFloat(price).toFixed(2)
       let newProduct = {
+        category: this.product.category,
         title: this.product.title,
         description: this.product.description,
         priority: this.product.priority,
+        price: parseFloat(this.product.price),
         currency: this.product.currency,
-        price: price,
         qty: this.product.qty,
         color: this.product.color,
         size: this.product.size,
         weight: this.product.weight,
         weightMeasure: this.product.weightMeasure,
-        date: creationDate.toISOString()
+        creationDate: new Date()
       }
       console.log(newProduct)
       this.dialogFormVisible = false

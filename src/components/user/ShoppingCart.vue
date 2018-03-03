@@ -18,7 +18,7 @@
             <p class="mb-0">Size: {{ product.size }}</p>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" align="right">
-            <p>{{ product.qty * product.price }} {{ product.currency }}</p>
+            <p>{{ parseFloat(product.qty * product.price).toFixed(2) }} {{ product.currency }}</p>
             <el-input-number size="small"
                              v-model="product.qty"
                              :min="0"

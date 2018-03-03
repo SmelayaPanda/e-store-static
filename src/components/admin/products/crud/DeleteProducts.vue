@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-button size="mini"
-               type="danger"
+               type="info"
                style="margin-left: 2px"
                @click="centerDialogVisible = true">
       <i class="el-icon-delete"></i>

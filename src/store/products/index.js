@@ -1,4 +1,5 @@
 import * as firebase from 'firebase'
+import 'firebase/firestore'
 
 export default {
   state: {
@@ -14,11 +15,16 @@ export default {
     fetchProducts:
       ({commit}) => {
         commit('LOADING', true)
-        firebase.database().ref('products').once('value')
+        firebase.firestore().collection('products').orderBy('price').limit(6).get()
           .then(
-            (data) => {
+            (snapshot) => {
+              let products = []
+              snapshot.forEach(doc => {
+                products.push(doc.data())
+              })
+              console.log(products)
               console.log('Products data fetched')
-              commit('setProducts', data.val())
+              commit('setProducts', products)
               commit('LOADING', false)
             })
           .catch(
@@ -27,18 +33,58 @@ export default {
               commit('LOADING', false)
             })
       },
+    filterProducts:
+      ({commit}, payload) => {
+        console.log(payload.size)
+        let query = firebase.firestore().collection('products').orderBy('price')
+          .where('price', '>=', payload.minPrice)
+          .where('price', '<=', payload.maxPrice)
+        if (payload.size !== null) {
+          query = firebase.firestore().collection('products').orderBy('price')
+            .where('price', '>=', payload.minPrice)
+            .where('price', '<=', payload.maxPrice)
+            .where('size', '==', payload.size)
+        }
+        if (payload.color !== null) {
+          query = firebase.firestore().collection('products').orderBy('price')
+            .where('price', '>=', payload.minPrice)
+            .where('price', '<=', payload.maxPrice)
+            .where('color', '==', payload.color)
+        }
+        if (payload.size !== null && payload.color !== null) {
+          query = firebase.firestore().collection('products').orderBy('price')
+            .where('price', '>=', payload.minPrice)
+            .where('price', '<=', payload.maxPrice)
+            .where('size', '==', payload.size)
+            .where('color', '==', payload.color)
+        }
+        query.get()
+          .then(
+            (snapshot) => {
+              let products = []
+              snapshot.forEach(doc => {
+                products.push(doc.data())
+              })
+              console.log(products)
+              commit('setProducts', products)
+            })
+          .catch(
+            error => {
+              console.log(error)
+            })
+      },
     addNewProduct:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
         let products = getters.products ? getters.products : {}
-        firebase.database().ref('products').push(payload)
+        firebase.firestore().collection('products').add(payload)
           .then(data => {
-            return data.key
+            return data.id
           })
-          .then(key => {
-            payload.productId = key
-            products[key] = payload
-            return firebase.database().ref('products').child(key).update(payload)
+          .then(id => {
+            payload.productId = id
+            products[id] = payload
+            return firebase.firestore().collection('products').doc(id).set(payload)
           })
           .then(() => {
             commit('setProducts', products)
@@ -53,7 +99,7 @@ export default {
     editProduct:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
-        firebase.database().ref('products').child(payload.productId).update(payload)
+        firebase.firestore().collection('products').doc(payload.productId).set(payload)
           .then(() => {
             console.log('success')
             let products = getters.products
@@ -71,12 +117,13 @@ export default {
         commit('LOADING', true)
         let products = getters.products
         delete products[payload]
-        firebase.database().ref('products').child(payload).remove()
+        console.log(payload)
+        firebase.firestore().collection('products').doc(payload).delete()
           .then(() => {
             commit('setProducts', products)
             console.log('Product was removed')
             commit('LOADING', false)
-            window.location.reload()
+            // window.location.reload()
           })
           .catch(err => {
             console.log(err)

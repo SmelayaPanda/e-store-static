@@ -14,10 +14,10 @@
         width="100">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>Id: {{ scope.row.id }}</p>
+            <p>Id: {{ scope.row.productId }}</p>
             <span>* unique database parameter</span>
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.id | snippet(6) }}</el-tag>
+              <el-tag size="medium">{{ scope.row.productId | snippet(6) }}</el-tag>
             </div>
           </el-popover>
         </template>
@@ -98,7 +98,7 @@
         <template slot-scope="scope">
           <el-row type="flex">
             <edit-product :editProduct="scope.row"></edit-product>
-            <delete-product :id="scope.row.id" :title="scope.row.title"></delete-product>
+            <delete-product :id="scope.row.productId" :title="scope.row.title"></delete-product>
           </el-row>
         </template>
       </el-table-column>

@@ -1,7 +1,6 @@
 exports.handler = function (req, res, db) {
   console.log('-------------------------------------------------------------------------------------------------------');
   const payInfo = req.body;
-  console.log(payInfo);
 
   let handlePaymentOrder = new Promise((resolve, reject) => {
     if (!payInfo.txn_id) {
@@ -42,7 +41,7 @@ exports.handler = function (req, res, db) {
     })
     .catch(err => {
       console.log(err);
-      return res.sendStatus(200) // temporary for old requests -> 500
+      return res.sendStatus(500)
     })
 };
 
