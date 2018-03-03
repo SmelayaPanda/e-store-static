@@ -3,41 +3,29 @@ import 'firebase/firestore'
 
 export default {
   state: {
-    products: {}
+    products: {},
+    lastVisibleId: '',
+    isAllLoaded: false
   },
   mutations: {
     setProducts:
       (state, payload) => {
         state.products = payload
+      },
+    setLastVisible:
+      (state, payload) => {
+        state.lastVisibleId = payload
+      },
+    isAllLoaded: // to avoid infinitive load more
+      (state, payload) => {
+        state.isAllLoaded = payload
       }
   },
   actions: {
     fetchProducts:
-      ({commit}) => {
-        commit('LOADING', true)
-        firebase.firestore().collection('products').orderBy('price').limit(6).get()
-          .then(
-            (snapshot) => {
-              let products = []
-              snapshot.forEach(doc => {
-                products.push(doc.data())
-              })
-              console.log(products)
-              console.log('Products data fetched')
-              commit('setProducts', products)
-              commit('LOADING', false)
-            })
-          .catch(
-            error => {
-              console.log(error)
-              commit('LOADING', false)
-            })
-      },
-    filterProducts:
-      ({commit}, payload) => {
-        console.log(payload.page)
-        let query = firebase.firestore().collection('products').orderBy('price')
-        if (payload.minPrice) {
+      ({commit, getters}, payload) => {
+        let query = firebase.firestore().collection('products')
+        if (payload.maxPrice) {
           query = query
             .where('price', '>=', payload.minPrice)
             .where('price', '<=', payload.maxPrice)
@@ -51,19 +39,37 @@ export default {
         if (payload.color) {
           query = query.where('color', '==', payload.color)
         }
-        query.get()
-          .then(
-            (snapshot) => {
-              let products = []
+        query = query.orderBy('price')
+        if (getters.lastVisibleId) {
+          query = query.startAfter(getters.lastVisibleId)
+        }
+
+        query
+          .limit(3)
+          .get()
+          .then((snapshot) => {
+            let products = payload.loadMore ? getters.products : []
+            if (!getters.isAllLoaded) {
+              if (snapshot.size < 3) {
+                commit('isAllLoaded', true)
+              }
               snapshot.forEach(doc => {
                 products.push(doc.data())
               })
-              commit('setProducts', products)
-            })
+              let lastVisible = snapshot.docs[snapshot.docs.length - 1]
+              commit('setLastVisible', lastVisible)
+            }
+            commit('setProducts', products)
+          })
           .catch(
             error => {
               console.log(error)
             })
+      },
+    resetLastVisible:
+      ({commit}) => {
+        commit('isAllLoaded', false)
+        commit('setLastVisible', null)
       },
     addNewProduct:
       ({commit, getters}, payload) => {
@@ -128,6 +134,14 @@ export default {
     products:
       state => {
         return state.products
+      },
+    lastVisibleId:
+      state => {
+        return state.lastVisibleId
+      },
+    isAllLoaded:
+      state => {
+        return state.isAllLoaded
       },
     productById:
       state => (productId) => {

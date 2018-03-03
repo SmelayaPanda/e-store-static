@@ -25,7 +25,7 @@
                 <h2 class="mt-3">Info</h2>
                 <v-divider class="mb-3 mt-3"></v-divider>
                 <div style="text-align: left; margin-left: 40px;">
-                  <p>Id: {{ this.id }}</p>
+                  <p>Id: {{ product.productId }}</p>
                   <p>Title: {{ product.title }} </p>
                   <p>Description: {{ product.description }} </p>
                   <p>Price: {{ product.price }} {{ product.currency }}</p>

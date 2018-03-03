@@ -11,11 +11,11 @@
             <el-radio-button :label="false">expand</el-radio-button>
             <el-radio-button :label="true">collapse</el-radio-button>
           </el-radio-group>
-          <el-menu default-active="2"
+          <el-menu default-active="All groups"
                    class="el-menu-vertical-demo"
                    @select="changeCategory"
                    :collapse="isCollapse">
-            <el-menu-item index="All groups" @click="filterProducts(1)">
+            <el-menu-item index="All groups" @click="filterProducts">
               <i class="el-icon-star-on"></i>
               <span slot="title">All groups</span>
             </el-menu-item>
@@ -26,22 +26,22 @@
               </template>
               <el-menu-item-group>
                 <span slot="title">Group One</span>
-                <el-menu-item index="Category A1" @click="filterProducts(1)">Category A1</el-menu-item>
-                <el-menu-item index="Category A2" @click="filterProducts(1)">Category A2</el-menu-item>
+                <el-menu-item index="Category A1" @click="filterProducts">Category A1</el-menu-item>
+                <el-menu-item index="Category A2" @click="filterProducts">Category A2</el-menu-item>
               </el-menu-item-group>
               <el-menu-item-group title="Group Two">
-                <el-menu-item index="Category A3" @click="filterProducts(1)">Category A3</el-menu-item>
+                <el-menu-item index="Category A3" @click="filterProducts">Category A3</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
-            <el-menu-item index="Category B" @click="filterProducts(1)">
+            <el-menu-item index="Category B" @click="filterProducts">
               <i class="el-icon-picture-outline"></i>
               <span slot="title">Category B</span>
             </el-menu-item>
-            <el-menu-item index="Category C" @click="filterProducts(1)">
+            <el-menu-item index="Category C" @click="filterProducts">
               <i class="el-icon-location"></i>
               <span slot="title">Category C</span>
             </el-menu-item>
-            <el-menu-item index="Category D" @click="filterProducts(1)">
+            <el-menu-item index="Category D" @click="filterProducts">
               <i class="el-icon-view"></i>
               <span slot="title">Category D</span>
             </el-menu-item>
@@ -56,7 +56,7 @@
               <div class="ml-3 mr-3">
                 <el-slider
                   v-model="sliderValues"
-                  @change="filterProducts(1)"
+                  @change="filterProducts"
                   range
                   :step="100"
                   :min="0"
@@ -65,7 +65,7 @@
               </div>
               <!--SIZE FILTER-->
               <div>
-                <el-radio-group v-model="selectedSize" size="small" @change="filterProducts(1)" class="mb-2">
+                <el-radio-group v-model="selectedSize" size="small" @change="filterProducts" class="mb-2">
                   <el-radio-button label="All sizes"></el-radio-button>
                   <el-radio-button label="XXS"></el-radio-button>
                   <el-radio-button label="XS"></el-radio-button>
@@ -78,7 +78,7 @@
               </div>
               <!--COLOR FILTER-->
               <div>
-                <el-radio-group v-model="selectedColor" size="small" @change="filterProducts(1)">
+                <el-radio-group v-model="selectedColor" size="small" @change="filterProducts">
                   <el-radio-button label="All colors"></el-radio-button>
                   <el-radio-button label="red"></el-radio-button>
                   <el-radio-button label="green"></el-radio-button>
@@ -95,7 +95,7 @@
             <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8"
                     v-for="(p,key) in products" :key="key"
             >
-              <div @click="viewId(key)" class="card_wrapper">
+              <div @click="viewProduct(key)" class="card_wrapper">
                 <el-card class="main_card"
                          :body-style="{ padding: '0px' }">
                   <img src="@/assets/placeholders/man_placeholder.png"
@@ -111,14 +111,7 @@
             </el-col>
           </el-row>
           <div class="mb-4 mt-3">
-            <span class="demonstration">Next</span>
-            <el-pagination
-              v-on:current-change="changePage"
-              :page-size="4"
-              :current-page.sync="currentPage"
-              layout="prev, pager, next"
-              :total="100">
-            </el-pagination>
+            <el-button type="text" @click="loadMore" v-if="!this.$store.getters.isAllLoaded">Load more</el-button>
           </div>
         </el-col>
       </el-row>
@@ -132,33 +125,36 @@ export default {
   data () {
     return {
       activeName: 1,
-      currentPage: 1,
       isCollapse: false,
-      sliderValues: [0, 100000],
+      sliderValues: [1, 1000],
       selectedSize: 'All sizes',
       selectedColor: 'All colors',
-      selectedCategory: 'Category C'
+      selectedCategory: 'All groups'
     }
   },
   methods: {
-    viewId (id) {
+    viewProduct (id) {
       this.$router.push('/product/' + id)
     },
-    filterProducts (page) {
-      return this.$store.dispatch('filterProducts', {
-        page: page,
+    changeCategory (key) {
+      this.selectedCategory = key
+    },
+    filterProducts () {
+      this.$store.dispatch('resetLastVisible')
+      this.filter(false)
+    },
+    loadMore () {
+      this.filter(true)
+    },
+    filter (loadMore) {
+      return this.$store.dispatch('fetchProducts', {
+        loadMore: loadMore,
         minPrice: this.sliderValues[0],
         maxPrice: this.sliderValues[1],
         category: this.selectedCategory === 'All groups' ? null : this.selectedCategory,
         color: this.selectedColor === 'All colors' ? null : this.selectedColor,
         size: this.selectedSize === 'All sizes' ? null : this.selectedSize
       })
-    },
-    changeCategory (key) {
-      this.selectedCategory = key
-    },
-    changePage () {
-      this.filterProducts(this.currentPage)
     }
   },
   computed: {
