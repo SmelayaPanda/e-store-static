@@ -81,7 +81,7 @@ export default {
           .then(data => {
             productId = data.id
             console.log(productId)
-            return firebase.storage().ref('products/' + productId).put(image)
+            return firebase.storage().ref('products/' + productId + '/main').put(image)
           })
           .then((fileData) => {
             imageUrl = fileData.metadata.downloadURLs[0]
@@ -118,7 +118,7 @@ export default {
       ({commit, getters}, payload) => {
         commit('LOADING', true)
         let newImageUrl
-        firebase.storage().ref('products/' + payload.productId).put(payload.image)
+        firebase.storage().ref('products/' + payload.productId + '/main').put(payload.image)
           .then(
             fileData => {
               newImageUrl = fileData.metadata.downloadURLs[0]
@@ -139,7 +139,7 @@ export default {
         commit('LOADING', true)
         firebase.firestore().collection('products').doc(payload).delete()
           .then(() => {
-            return firebase.storage().ref('products/' + payload).delete()
+            return firebase.storage().ref('products/' + payload + '/main').delete()
           })
           .then(() => {
             console.log('Product was removed')

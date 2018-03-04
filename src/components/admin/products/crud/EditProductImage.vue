@@ -23,7 +23,7 @@
           <img :src="imageUrl" :height="this.imageHeight">
         </el-row>
         <el-row type="flex" justify="center">
-          <el-button type="primary" @click="edit" :disabled="!isValidForm">Create</el-button>
+          <el-button type="primary" @click="edit" :disabled="!isValidForm">Edit</el-button>
           <el-button @click="dialogFormVisible = false">Cancel</el-button>
         </el-row>
     </el-dialog>

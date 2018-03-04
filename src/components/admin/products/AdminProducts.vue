@@ -7,15 +7,23 @@
       :highlight-current-row="true"
       empty-text="No data"
       size="small"
-      style="width: 90vw; text-align: left"
+      style="width: 100vw; text-align: left"
     >
+      <!--THUMBNAIL-->
+      <el-table-column
+        label="Image"
+        width="70">
+        <template slot-scope="scope">
+          <img :src="scope.row.imageUrl" height="40px" width="auto">
+        </template>
+      </el-table-column>
       <!--ID-->
       <el-table-column
         label="id"
         width="100">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <!--<p>Id: {{ scope.row.productId }}</p>-->
+            <p>Id: {{ scope.row.productId }}</p>
             <span>* unique database parameter</span>
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">{{ scope.row.productId | snippet(6) }}</el-tag>
