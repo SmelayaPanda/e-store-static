@@ -45,12 +45,12 @@ export default {
         }
 
         query
-          .limit(3)
+          .limit(9)
           .get()
           .then((snapshot) => {
             let products = payload.loadMore ? getters.products : []
             if (!getters.isAllLoaded) {
-              if (snapshot.size < 3) {
+              if (snapshot.size < 9) {
                 commit('isAllLoaded', true)
               }
               snapshot.forEach(doc => {
