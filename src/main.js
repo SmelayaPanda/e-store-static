@@ -9,8 +9,8 @@ import {store} from './store'
 import * as firebase from 'firebase'
 // UI
 import ElementUI from 'element-ui'
-import Vuetify from 'vuetify'
 import 'element-ui/lib/theme-chalk/index.css'
+import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 // FILTERS
 import DateFilter from './filters/date'

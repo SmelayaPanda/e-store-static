@@ -171,7 +171,8 @@ export default {
   },
   computed: {
     isValidForm () {
-      return this.imageUrl !== '' && this.title !== '' && this.description !== '' && this.color !== ''
+      return this.imageUrl !== '' && this.product.title !== '' &&
+        this.product.description !== '' && this.product.color !== ''
     }
   }
 }
