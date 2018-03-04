@@ -102,17 +102,13 @@
                     v-for="(p,key) in products" :key="key"
             >
               <div @click="viewProduct(key)" class="card_wrapper">
-                <el-card class="main_card"
-                         :body-style="{ padding: '0px' }">
-                  <img src="@/assets/placeholders/man_placeholder.png"
-                       class="image" height="300px">
-                  <div class="card_body">
-                    <span>{{ p.title }}</span>
-                    <div>
-                      <time class="time">{{ p.price }} {{ p.currency }}</time>
-                    </div>
-                  </div>
-                </el-card>
+                <v-card class="main_card" height="410px">
+                  <v-card-media :src="p.imageUrl" height="300px"></v-card-media>
+                    <v-card-title>
+                      <span class="grey--text">{{ p.price }} {{ p.currency }}</span>
+                    </v-card-title>
+                    <p>{{ p.title | snippet(60) }}</p>
+                </v-card>
               </div>
             </el-col>
           </el-row>
@@ -121,7 +117,7 @@
           </div>
         </el-col>
       </el-row>
-      <back-to-top visibleOffset="500">
+      <back-to-top visibleOffset="500" :right="60" :bottom="30">
         <el-button round><el-icon class="el-icon-arrow-up"></el-icon></el-button>
       </back-to-top>
     </div>
@@ -198,10 +194,6 @@ export default {
   .main_card {
     margin: 10px;
     padding: 0 0 10px;
-  }
-
-  .card_body {
-    padding: 10px;
   }
 
   .card_wrapper:hover {

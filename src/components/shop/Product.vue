@@ -11,7 +11,7 @@
             <el-row type="flex">
               <el-col :span="12">
                 <div class="img_wrapper">
-                  <img src="@/assets/placeholders/man_placeholder.png" class="main_img"/>
+                  <img :src="product.imageUrl" class="main_img"/>
                 </div>
                 <el-row style="margin-top: 80px">
                   <p style="font-size: 24px">
@@ -136,7 +136,7 @@ export default {
   img {
     width: 100%;
     height: 500px;
-    border: 1px solid grey;
+    /*border: 1px solid grey;*/
     object-fit: cover;
   }
 
@@ -148,6 +148,5 @@ export default {
 
   .main_img {
     object-fit: cover;
-    padding: 10px;
   }
 </style>

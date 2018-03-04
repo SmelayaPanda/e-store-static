@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div v-if="products">
     <h1 class="mb-2">All products</h1>
     <add-product></add-product>
     <el-table
       :data="products"
-      size="small"
       :highlight-current-row="true"
+      empty-text="No data"
+      size="small"
       style="width: 90vw; text-align: left"
     >
       <!--ID-->
@@ -14,7 +15,7 @@
         width="100">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>Id: {{ scope.row.productId }}</p>
+            <!--<p>Id: {{ scope.row.productId }}</p>-->
             <span>* unique database parameter</span>
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">{{ scope.row.productId | snippet(6) }}</el-tag>
@@ -34,14 +35,6 @@
               <el-tag size="medium">{{ scope.row.title | snippet(32) }}</el-tag>
             </div>
           </el-popover>
-        </template>
-      </el-table-column>
-      <!--Priority-->
-      <el-table-column
-        label="Priority"
-        width="80">
-        <template slot-scope="scope">
-          <span>{{ scope.row.priority }}</span>
         </template>
       </el-table-column>
       <!--PRICE-->
@@ -86,17 +79,19 @@
       </el-table-column>
       <!--DATE-->
       <el-table-column
-        label="Date"
+        label="Creation Date"
         width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.date | date }}</span>
+          <span>{{ scope.row.creationDate | date }}</span>
         </template>
       </el-table-column>
       <!--EDIT/DELETE-->
       <el-table-column
+        width="150"
         label="Operations">
         <template slot-scope="scope">
           <el-row type="flex">
+            <edit-product-image :id="scope.row.productId"></edit-product-image>
             <edit-product :editProduct="scope.row"></edit-product>
             <delete-product :id="scope.row.productId" :title="scope.row.title"></delete-product>
           </el-row>
@@ -109,10 +104,12 @@
 <script>
 import AddProduct from './crud/AddProduct'
 import EditProduct from './crud/EditProduct'
+import EditProductImage from './crud/EditProductImage'
 import DeleteProduct from './crud/DeleteProducts'
 
 export default {
   components: {
+    EditProductImage,
     EditProduct,
     AddProduct,
     DeleteProduct

@@ -61,10 +61,9 @@ export default {
             }
             commit('setProducts', products)
           })
-          .catch(
-            error => {
-              console.log(error)
-            })
+          .catch(err => {
+            console.log(err)
+          })
       },
     resetLastVisible:
       ({commit}) => {
@@ -74,18 +73,23 @@ export default {
     addNewProduct:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
-        let products = getters.products ? getters.products : {}
+        let productId
+        let imageUrl
+        let image = payload.image
+        delete payload.image
         firebase.firestore().collection('products').add(payload)
           .then(data => {
-            return data.id
+            productId = data.id
+            console.log(productId)
+            return firebase.storage().ref('products/' + productId).put(image)
           })
-          .then(id => {
-            payload.productId = id
-            products[id] = payload
-            return firebase.firestore().collection('products').doc(id).set(payload)
+          .then((fileData) => {
+            imageUrl = fileData.metadata.downloadURLs[0]
+            payload.imageUrl = imageUrl
+            payload.productId = productId
+            return firebase.firestore().collection('products').doc(productId).set(payload)
           })
           .then(() => {
-            commit('setProducts', products)
             commit('LOADING', false)
             window.location.reload()
           })
@@ -110,18 +114,37 @@ export default {
             commit('LOADING', false)
           })
       },
+    editProductImage:
+      ({commit, getters}, payload) => {
+        commit('LOADING', true)
+        let newImageUrl
+        firebase.storage().ref('products/' + payload.productId).put(payload.image)
+          .then(
+            fileData => {
+              newImageUrl = fileData.metadata.downloadURLs[0]
+              console.log('New Image uploaded to storage.')
+              return firebase.firestore().collection('products').doc(payload.productId).update({imageUrl: newImageUrl})
+            })
+          .then(() => {
+            commit('LOADING', false)
+            window.location.reload()
+          })
+          .catch((error) => {
+            console.log(error)
+            commit('LOADING', false)
+          })
+      },
     deleteProduct:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
-        let products = getters.products
-        delete products[payload]
-        console.log(payload)
         firebase.firestore().collection('products').doc(payload).delete()
           .then(() => {
-            commit('setProducts', products)
+            return firebase.storage().ref('products/' + payload).delete()
+          })
+          .then(() => {
             console.log('Product was removed')
             commit('LOADING', false)
-            // window.location.reload()
+            window.location.reload()
           })
           .catch(err => {
             console.log(err)
