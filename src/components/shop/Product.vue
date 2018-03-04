@@ -5,7 +5,7 @@
       <app-loader></app-loader>
     </v-container>
     <div v-else>
-      <el-row el-row type="flex" justify="center">
+      <el-row el-row type="flex" justify="center" v-if="product">
         <el-col :xs="24" :sm="20" :md="18" :lg="16" :xl="14" type="flex" align="middle">
           <el-card style="height: 700px">
             <el-row type="flex">

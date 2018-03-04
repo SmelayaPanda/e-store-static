@@ -3,7 +3,7 @@ import 'firebase/firestore'
 
 export default {
   state: {
-    products: {},
+    products: [],
     lastVisibleId: '',
     isAllLoaded: false
   },
@@ -168,7 +168,7 @@ export default {
       },
     productById:
       state => (productId) => {
-        return state.products[productId] ? state.products[productId] : {}
+        return state.products.find(p => { return p.productId === productId })
       }
   }
 }

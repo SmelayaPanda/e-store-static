@@ -101,7 +101,7 @@
             <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8"
                     v-for="(p,key) in products" :key="key"
             >
-              <div @click="viewProduct(key)" class="card_wrapper">
+              <div @click="viewProduct(p.productId)" class="card_wrapper">
                 <v-card class="main_card" height="410px">
                   <v-card-media :src="p.imageUrl" height="300px"></v-card-media>
                     <v-card-title>
