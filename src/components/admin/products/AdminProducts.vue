@@ -16,7 +16,7 @@
         </el-select>
       </el-col>
       <el-col class="left" style="width: 100px;">
-      <add-product></add-product>
+      <add-product :category="productCategory"></add-product>
       </el-col>
     </el-row>
     <el-table
@@ -116,7 +116,7 @@
         width="150"
         label="Operations">
         <template slot-scope="scope">
-          <el-row type="flex">
+          <el-row type="flex" justify="center">
             <edit-product-image :id="scope.row.productId"></edit-product-image>
             <edit-product :editProduct="scope.row"></edit-product>
             <delete-product :id="scope.row.productId" :title="scope.row.title"></delete-product>

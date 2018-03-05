@@ -4,28 +4,28 @@
       <i class="el-icon-picture-outline"></i>
     </el-button>
     <!--Image-->
-    <el-dialog title="Edit product image" :visible.sync="dialogFormVisible" width="100%" :fullscreen="true">
+    <el-dialog title="Edit product image" :visible.sync="dialogFormVisible" width="100%" :fullscreen="true" center>
+      <el-row type="flex" justify="center" class="mb-3">
+        <el-button @click="onPickFile">
+          Image
+          <i class="el-icon-picture-outline ml-2" style="transform: scale(1.7)"></i>
+        </el-button>
+        <input
+          type="file"
+          style="display: none;"
+          ref="fileInput"
+          accept="image/*"
+          @change="onFilePicked"
+        >
+      </el-row>
+      <!--Image preview-->
+      <el-row type="flex" justify="center" class="mb-3">
+        <img :src="imageUrl" :height="this.imageHeight">
+      </el-row>
       <el-row type="flex" justify="center">
-          <el-button @click="onPickFile">
-            Image
-            <i class="el-icon-picture-outline ml-2" style="transform: scale(1.7)"></i>
-          </el-button>
-          <input
-            type="file"
-            style="display: none;"
-            ref="fileInput"
-            accept="image/*"
-            @change="onFilePicked"
-          >
-        </el-row>
-        <!--Image preview-->
-        <el-row>
-          <img :src="imageUrl" :height="this.imageHeight">
-        </el-row>
-        <el-row type="flex" justify="center">
-          <el-button type="primary" @click="edit" :disabled="!isValidForm">Edit</el-button>
-          <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        </el-row>
+        <el-button type="primary" @click="edit" :disabled="!isValidForm">Edit</el-button>
+        <el-button @click="dialogFormVisible = false">Cancel</el-button>
+      </el-row>
     </el-dialog>
   </div>
 </template>
