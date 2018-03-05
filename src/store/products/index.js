@@ -84,7 +84,7 @@ export default {
           .then(() => {
             let updateData = {
               productId: productId,
-              mainImage: {original: '', thumbnail: ''}
+              mainImage: {original: '', thumbnail: '', card: ''}
             }
             return firebase.firestore().collection('products').doc(productId).update(updateData)
           })
