@@ -139,6 +139,12 @@ export default {
         firebase.firestore().collection('products').doc(payload).delete()
           .then(() => {
             return firebase.storage().ref('products/' + payload + '/main').delete()
+              .then(() => {
+                return firebase.storage().ref('products/' + payload + '/card_main').delete()
+                  .then(() => {
+                    return firebase.storage().ref('products/' + payload + '/thumb_main').delete()
+                  })
+              })
           })
           .then(() => {
             console.log('Product was removed')
@@ -167,7 +173,9 @@ export default {
       },
     productById:
       state => (productId) => {
-        return state.products.find(p => { return p.productId === productId })
+        return state.products.find(p => {
+          return p.productId === productId
+        })
       }
   }
 }

@@ -58,13 +58,13 @@ exports.handler = function (event, admin) {
 
   // Exit if the image is already a thumbnail.
   if (originalFileName.startsWith(THUMB_PREFIX) || originalFileName.startsWith(CARD_PREFIX)) {
-    // console.log('Already a Thumbnail.');
+    console.log('Already a Thumbnail.');
     return true;
   }
 
   // Exit if this is a move or deletion event.
   if (event.data.resourceState === 'not_exists') {
-    // console.log('This is a deletion event.');
+    console.log('This is a deletion event.');
     return true;
   }
 
