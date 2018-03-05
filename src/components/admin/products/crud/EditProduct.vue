@@ -103,6 +103,7 @@ export default {
   methods: {
     edit () {
       let editObj = {
+        productId: this.editProduct.productId,
         category: this.product.category,
         title: this.product.title,
         description: this.product.description,
@@ -113,9 +114,7 @@ export default {
         size: this.product.size,
         weight: this.product.weight,
         weightMeasure: this.product.weightMeasure,
-        editDate: new Date(), // old fields ->
-        productId: this.editProduct.productId,
-        creationDate: this.editProduct.creationDate
+        editDate: new Date()
       }
       this.dialogFormVisible = false
       this.$store.dispatch('editProduct', editObj)

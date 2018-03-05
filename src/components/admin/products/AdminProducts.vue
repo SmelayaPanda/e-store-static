@@ -1,8 +1,26 @@
 <template>
   <div v-if="products">
-    <h1 class="mb-2">All products</h1>
-    <add-product></add-product>
+    <el-row type="flex" justify="start" align="middle" class="mb-4">
+      <el-col style="width: 220px">
+        <el-select v-model="productCategory"
+                   default-first-option
+                   placeholder="Select a category"
+                   @change="loadCategoryProducts"
+        >
+          <el-option label="Category A1" value="Category A1"></el-option>
+          <el-option label="Category A2" value="Category A2"></el-option>
+          <el-option label="Category A3" value="Category A3"></el-option>
+          <el-option label="Category B" value="Category B"></el-option>
+          <el-option label="Category C" value="Category C"></el-option>
+          <el-option label="Category D" value="Category D"></el-option>
+        </el-select>
+      </el-col>
+      <el-col class="left" style="width: 100px;">
+      <add-product></add-product>
+      </el-col>
+    </el-row>
     <el-table
+      ref="categoryTable"
       :data="products"
       :highlight-current-row="true"
       empty-text="No data"
@@ -125,9 +143,18 @@ export default {
   name: 'AdminProducts',
   data () {
     return {
+      productCategory: 'Category A1' // don't fordet change main js
     }
   },
-  methods: {},
+  methods: {
+    loadCategoryProducts () {
+      this.$store.dispatch('resetLastVisible')
+      this.$store.dispatch('fetchProducts', {
+        category: this.productCategory,
+        sortAsc: true
+      })
+    }
+  },
   computed: {
     products () {
       let arr = []

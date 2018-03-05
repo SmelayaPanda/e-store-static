@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn class="primary" fab @click="dialogFormVisible = true">
+    <v-btn class="primary" @click="dialogFormVisible = true">
       <v-icon class="white--text">add</v-icon>
     </v-btn>
 
@@ -8,7 +8,7 @@
       <el-form :model="product">
         <el-row type="flex" justify="center">
           <el-form-item>
-            <el-select v-model="product.category" placeholder="Select a currency">
+            <el-select v-model="product.category" placeholder="Select a category">
               <el-option label="Category A1" value="Category A1"></el-option>
               <el-option label="Category A2" value="Category A2"></el-option>
               <el-option label="Category A3" value="Category A3"></el-option>

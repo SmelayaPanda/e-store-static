@@ -90,7 +90,10 @@ new Vue({
           this.$store.dispatch('autoSignIn', user)
           // console.log(user)
         }
-        this.$store.dispatch('fetchProducts', {sortAsc: true})
+        this.$store.dispatch('fetchProducts', {
+          sortAsc: true,
+          category: this.$router.history.current.name === 'admin' ? 'Category A1' : null
+        })
         this.$store.dispatch('fetchUserCart')
         this.$store.dispatch('fetchUserOrders')
         this.$store.dispatch('fetchAllOrders')
