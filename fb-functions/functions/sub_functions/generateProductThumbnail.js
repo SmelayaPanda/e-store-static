@@ -24,11 +24,11 @@ const THUMB_PREFIX = 'thumb_';
 exports.handler = function (event, admin) {
   console.log('>-------------------------------------------------------------------------------------------------------');
   // File and directory paths.
-  const originalFilePath = event.data.name;
   const contentType = event.data.contentType; // This is the image Mime type
-  const fileDir = path.dirname(originalFilePath);
-  const fileName = path.basename(originalFilePath);
-  const thumbFilePath = path.normalize(path.join(fileDir, `${THUMB_PREFIX}${fileName}`));
+  const originalFilePath = event.data.name;
+  const originalFileDir = path.dirname(originalFilePath);
+  const originalFileName = path.basename(originalFilePath);
+  const thumbFilePath = path.normalize(path.join(originalFileDir, `${THUMB_PREFIX}${originalFileName}`));
   const tempLocalFile = path.join(os.tmpdir(), originalFilePath);
   const tempLocalDir = path.dirname(tempLocalFile);
   const tempLocalThumbFile = path.join(os.tmpdir(), thumbFilePath);
@@ -44,7 +44,7 @@ exports.handler = function (event, admin) {
   }
 
   // Exit if the image is already a thumbnail.
-  if (fileName.startsWith(THUMB_PREFIX)) {
+  if (originalFileName.startsWith(THUMB_PREFIX)) {
     console.log('Already a Thumbnail.');
     return true;
   }
@@ -57,14 +57,14 @@ exports.handler = function (event, admin) {
 
   // Cloud Storage files.
   const bucket = gcs.bucket(event.data.bucket);
-  const file = bucket.file(originalFilePath);
+  const originalFile = bucket.file(originalFilePath);
   const thumbFile = bucket.file(thumbFilePath);
   const metadata = {contentType: contentType};
 
   // Create the temp directory where the storage file will be downloaded.
   return mkdirp(tempLocalDir).then(() => {
     // Download file from bucket.
-    return file.download({destination: tempLocalFile});
+    return originalFile.download({destination: tempLocalFile});
   }).then(() => {
     console.log('The file has been downloaded to', tempLocalFile);
     // Generate a thumbnail using ImageMagick.
@@ -85,20 +85,22 @@ exports.handler = function (event, admin) {
     };
     return Promise.all([
       thumbFile.getSignedUrl(config),
-      file.getSignedUrl(config),
+      originalFile.getSignedUrl(config),
     ]);
   }).then((results) => {
     console.log('Got Signed URLs.');
     const thumbResult = results[0];
-    const originalResult = results[1];
     const thumbFileUrl = thumbResult[0];
-    const fileUrl = originalResult[0];
+    const originalResult = results[1];
+    const originalFileUrl = originalResult[0];
     // products/OIe9aAx6sceVylH8ozrH/main
     const productId = originalFilePath.split('/')[1]
     console.log(productId)
     // Add the URLs to the Database
-    return admin.firestore().collection('products').doc(productId)
-      .update({mainImage: {original: fileUrl, thumbnail: thumbFileUrl}});
+    let updateData = {
+      mainImage: {original: originalFileUrl, thumbnail: thumbFileUrl}
+    };
+    return admin.firestore().collection('products').doc(productId).update(updateData);
   }).then(() => {
     console.log('Thumbnail URLs saved to database.');
     return true;
