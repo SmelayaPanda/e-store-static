@@ -100,7 +100,7 @@ export default {
     editProduct:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
-        firebase.firestore().collection('products').doc(payload.productId).set(payload)
+        firebase.firestore().collection('products').doc(payload.productId).update(payload)
           .then(() => {
             console.log('success')
             let products = getters.products

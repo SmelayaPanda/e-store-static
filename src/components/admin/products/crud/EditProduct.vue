@@ -115,7 +115,6 @@ export default {
         weightMeasure: this.product.weightMeasure,
         editDate: new Date(), // old fields ->
         productId: this.editProduct.productId,
-        imageUrl: this.editProduct.imageUrl,
         creationDate: this.editProduct.creationDate
       }
       this.dialogFormVisible = false
