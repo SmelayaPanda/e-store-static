@@ -10,13 +10,19 @@
           <el-form :model="product">
             <el-row type="flex" justify="center">
               <el-form-item>
-                <el-select v-model="product.category" placeholder="Select a currency">
-                  <el-option label="Category A1" value="Category A1"></el-option>
-                  <el-option label="Category A2" value="Category A2"></el-option>
-                  <el-option label="Category A3" value="Category A3"></el-option>
-                  <el-option label="Category B" value="Category B"></el-option>
-                  <el-option label="Category C" value="Category C"></el-option>
-                  <el-option label="Category D" value="Category D"></el-option>
+                <el-select v-model="product.category"
+                           filterable
+                           placeholder="Select"
+                           default-first-option
+                           no-data-text="No data">
+                  <el-option
+                    v-for="item in productCategories"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                    :selected="product.category === item.value"
+                  >
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-row>
@@ -99,7 +105,26 @@ export default {
     return {
       product: this.editProduct,
       dialogFormVisible: false,
-      formLabelWidth: '120px'
+      formLabelWidth: '120px',
+      productCategories: [{
+        value: 'Category A1',
+        label: 'Category A1'
+      }, {
+        value: 'Category A2',
+        label: 'Category A2'
+      }, {
+        value: 'Category A3',
+        label: 'Category A3'
+      }, {
+        value: 'Category B',
+        label: 'Category B'
+      }, {
+        value: 'Category C',
+        label: 'Category C'
+      }, {
+        value: 'Category D',
+        label: 'Category D'
+      }]
     }
   },
   methods: {
