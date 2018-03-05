@@ -14,7 +14,7 @@
         label="Image"
         width="70">
         <template slot-scope="scope">
-          <img :src="scope.row.imageUrl" height="40px" width="auto">
+          <img :src="scope.row.mainImage.thumbnail" height="40px" width="auto">
         </template>
       </el-table-column>
       <!--ID-->

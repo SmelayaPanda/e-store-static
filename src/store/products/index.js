@@ -74,20 +74,19 @@ export default {
       ({commit, getters}, payload) => {
         commit('LOADING', true)
         let productId
-        let imageUrl
         let image = payload.image
         delete payload.image
         firebase.firestore().collection('products').add(payload)
           .then(data => {
             productId = data.id
-            console.log(productId)
             return firebase.storage().ref('products/' + productId + '/main').put(image)
-          })
-          .then((fileData) => {
-            imageUrl = fileData.metadata.downloadURLs[0]
-            payload.imageUrl = imageUrl
-            payload.productId = productId
-            return firebase.firestore().collection('products').doc(productId).set(payload)
+          }) // images Urls will be automatically uploaded - see cloud function!
+          .then(() => {
+            let updateData = {
+              productId: productId,
+              mainImage: {original: '', thumbnail: ''}
+            }
+            return firebase.firestore().collection('products').doc(productId).update(updateData)
           })
           .then(() => {
             commit('LOADING', false)
