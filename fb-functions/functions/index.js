@@ -13,5 +13,5 @@ exports.processPayPal = functions.https.onRequest((req, res) => {
 })
 
 exports.generateProductThumbnail = functions.storage.object().onChange((event) => {
-  generateProductThumbnail.handler(event, admin)
+  return generateProductThumbnail.handler(event, admin)
 })
