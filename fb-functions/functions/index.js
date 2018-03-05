@@ -1,7 +1,7 @@
 // Function for Handle IPN Notification
 'use strict'
 const processPayPal = require('./sub_functions/processPayPal')
-const generateProductThumbnail = require('./sub_functions/generateProductThumbnail')
+const generateProductImages = require('./sub_functions/generateProductImages')
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
@@ -12,6 +12,6 @@ exports.processPayPal = functions.https.onRequest((req, res) => {
   processPayPal.handler(req, res, db)
 })
 
-exports.generateProductThumbnail = functions.storage.object().onChange((event) => {
-  return generateProductThumbnail.handler(event, admin)
+exports.generateProductImages = functions.storage.object().onChange((event) => {
+  return generateProductImages.handler(event, admin)
 })

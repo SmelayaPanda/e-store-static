@@ -157,9 +157,11 @@ export default {
     onFilePicked:
         function (event) {
           const files = event.target.files // files[0] because it may be multiselect of files, take first
-          const filename = files[0].name
-          if (filename.indexOf('.') <= 0) { // file have an extension
-            return alert('Please, pick a valid file')
+          if (files[0].name.indexOf('.') <= 0) { // file have an extension
+            return alert('File name without extension!')
+          }
+          if (files[0].size > 1500000) {
+            return alert('File size must be less than 1.5 MB!')
           }
           const fileReader = new FileReader() // native js future for client file work
           fileReader.addEventListener('load', () => {
