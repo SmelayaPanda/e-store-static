@@ -142,13 +142,12 @@ export default {
         commit('LOADING', true)
         firebase.firestore().collection('products').doc(payload).delete()
           .then(() => {
-            return firebase.storage().ref('products/' + payload + '/main').delete()
-              .then(() => {
-                return firebase.storage().ref('products/' + payload + '/card_main').delete()
-                  .then(() => {
-                    return firebase.storage().ref('products/' + payload + '/thumb_main').delete()
-                  })
-              })
+            let deleteImage = function (name) {
+              return firebase.storage().ref('products/' + payload + '/' + name).delete()
+            }
+            let images = ['main', 'card_main', 'thumb_main']
+            let actions = images.map(deleteImage)
+            return Promise.all(actions)
           })
           .then(() => {
             console.log('Product was removed')
