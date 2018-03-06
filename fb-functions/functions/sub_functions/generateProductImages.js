@@ -123,15 +123,13 @@ exports.handler = function (event, admin) {
       const originalFileUrl = originalResult[0];
       // originalFilePath = products/OIe9aAx6sceVylH8ozrH/main
       const productId = originalFilePath.split('/')[1]
-      console.log('---> Product id = ' + productId)
+      console.log('$*****---> Product id = ' + productId)
       // Add the URLs to the Database
       let updateData = {
-        images: {
-          [originalFileName]: { // main, add1, add2, add3, add4
-            original: originalFileUrl,
-            thumbnail: thumbFileUrl,
-            card: cardFileUrl
-          }
+        [originalFileName]: { // main, add1, add2, add3, add4
+          original: originalFileUrl,
+          thumbnail: thumbFileUrl,
+          card: cardFileUrl
         }
       }
       return admin.firestore().collection('products').doc(productId).update(updateData);
