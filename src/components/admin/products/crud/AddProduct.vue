@@ -69,23 +69,12 @@
               </el-form-item>
             </el-row>
             <!--Image-->
-            <el-row type="flex" justify="center" class="mb-2">
-              <el-button @click="onPickFile">
-                Image
-                <i class="el-icon-picture-outline ml-2" style="transform: scale(1.7)"></i>
-              </el-button>
-              <input
-                type="file"
-                style="display: none;"
-                ref="fileInput"
-                accept="image/*"
-                @change="onFilePicked"
-              >
-            </el-row>
-            <!--Image preview-->
-            <el-row>
-              <img :src="imageUrl" :height="this.imageHeight">
-            </el-row>
+            <!-- fileUploaded custom event from UploadProductImage.vue-->
+            <upload-product-image img-name="img_0" @fileUploaded="loadFileData" img-btn-name="Main Image"/>
+            <upload-product-image img-name="img_1" @fileUploaded="loadFileData" img-btn-name="Add Image 1"/>
+            <upload-product-image img-name="img_2" @fileUploaded="loadFileData" img-btn-name="Add Image 2"/>
+            <upload-product-image img-name="img_3" @fileUploaded="loadFileData" img-btn-name="Add Image 3"/>
+            <upload-product-image img-name="img_4" @fileUploaded="loadFileData" img-btn-name="Add Image 4"/>
           </el-form>
             <el-button type="primary" @click="addNewProduct" :disabled="!isValidForm">Create</el-button>
             <el-button @click="dialogFormVisible = false">Cancel</el-button>
@@ -96,14 +85,15 @@
 </template>
 
 <script>
+import UploadProductImage from './UploadProductImage'
+
 export default {
   name: 'AddProduct',
+  components: {UploadProductImage},
   props: ['category'],
   data () {
     return {
       dialogFormVisible: false,
-      image: null,
-      imageUrl: '',
       product: {
         category: 'Category A1',
         title: '',
@@ -115,7 +105,8 @@ export default {
         size: 'XL',
         weight: 0.5,
         weightMeasure: 'kg',
-        date: new Date()
+        date: new Date(),
+        images: {}
       },
       formLabelWidth: '120px'
     }
@@ -134,31 +125,15 @@ export default {
         weight: this.product.weight,
         weightMeasure: this.product.weightMeasure,
         creationDate: new Date(),
-        image: this.image
+        images: this.product.images
       }
       this.dialogFormVisible = false
       this.$store.dispatch('addNewProduct', newProduct)
     },
-    onPickFile:
-        function () {
-          this.$refs.fileInput.click()
-        },
-    onFilePicked:
-        function (event) {
-          const files = event.target.files // files[0] because it may be multiselect of files, take first
-          if (files[0].name.indexOf('.') <= 0) { // file have an extension
-            return alert('File name without extension!')
-          }
-          if (files[0].size > 1500000) {
-            return alert('File size must be less than 1.5 MB!')
-          }
-          const fileReader = new FileReader() // native js future for client file work
-          fileReader.addEventListener('load', () => {
-            this.imageUrl = fileReader.result
-          })
-          fileReader.readAsDataURL(files[0])
-          this.image = files[0]
-        }
+    loadFileData (val) {
+      // val.imgName="img_0 ... 4"
+      this.product.images[val.imgName] = val.image
+    }
   },
   computed: {
     isValidForm () {
@@ -168,7 +143,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

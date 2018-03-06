@@ -103,7 +103,7 @@
             >
               <div @click="viewProduct(p.productId)" class="card_wrapper">
                 <v-card class="main_card" height="410px">
-                  <v-card-media :src="p.images.main.card" height="300px"></v-card-media>
+                  <v-card-media :src="p.img_0.card" height="300px"></v-card-media>
                     <v-card-title>
                       <span class="grey--text">{{ p.price }} {{ p.currency }}</span>
                     </v-card-title>

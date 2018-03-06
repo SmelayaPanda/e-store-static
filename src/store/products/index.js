@@ -74,21 +74,30 @@ export default {
       ({commit, getters}, payload) => {
         commit('LOADING', true)
         let productId
-        let image = payload.image
-        delete payload.image
+        let images = payload.images
+        delete payload.images
         firebase.firestore().collection('products').add(payload)
           .then(data => {
             productId = data.id
-            return firebase.storage().ref('products/' + productId + '/main').put(image)
+            let uploadImage = function (name, image) {
+              return firebase.storage().ref('products/' + productId + '/' + name).put(image)
+            }
+            let actions = []
+            for (let img in images) {
+              actions.push(uploadImage(img, images[img]))
+            }
+            console.log(actions)
+            return Promise.all(actions)
           }) // images Urls will be automatically uploaded - see cloud function!
           .then(() => {
             let updateData = {
               productId: productId,
-              images: {
-                main: {
-                  original: '', thumbnail: '', card: ''
-                }
-              }
+              // for quick access in admin table
+              img_0: {original: '', thumbnail: '', card: ''},
+              img_1: {original: '', thumbnail: '', card: ''},
+              img_2: {original: '', thumbnail: '', card: ''},
+              img_3: {original: '', thumbnail: '', card: ''},
+              img_4: {original: '', thumbnail: '', card: ''}
             }
             return firebase.firestore().collection('products').doc(productId).update(updateData)
           })
