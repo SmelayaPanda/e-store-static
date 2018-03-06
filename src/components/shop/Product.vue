@@ -10,8 +10,12 @@
           <el-card>
             <el-row type="flex" style="flex-wrap: wrap">
               <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-                <img :src="viewImage ? viewImage : product.img_0.original" class="main_img"/>
-                <el-row>
+                <!--<img :src="viewImage ? viewImage : product.img_0.original" class="main_img"/>-->
+                <zoom-on-hover :img-normal="viewImage ? viewImage : product.img_0.original"
+                               :img-zoom="viewImage ? viewImage : product.img_0.original"
+                               class="main_img">
+                </zoom-on-hover>
+                <el-row class="mt-3">
                   <img v-if="product.img_0.thumbnail" :src="product.img_0.thumbnail" @click="loadOriginal('img_0')" ref="img_0" class="thumb_img active"/>
                   <img v-if="product.img_1.thumbnail" :src="product.img_1.thumbnail" @click="loadOriginal('img_1')" ref="img_1" class="thumb_img"/>
                   <img v-if="product.img_2.thumbnail" :src="product.img_2.thumbnail" @click="loadOriginal('img_2')" ref="img_2" class="thumb_img"/>
@@ -90,10 +94,11 @@
 </template>
 
 <script>
-
+import ZoomOnHover from '@/components/shared/ZoomOnHover.vue'
 export default {
   props: ['id'],
   name: 'ManId',
+  components: {ZoomOnHover},
   data () {
     return {
       dialogVisible: false,
@@ -151,8 +156,7 @@ export default {
 <style scoped>
   .main_img {
     width: 100%;
-    height: 500px;
-    padding: 10px;
+    height: 480px;
     object-fit: cover;
   }
 
