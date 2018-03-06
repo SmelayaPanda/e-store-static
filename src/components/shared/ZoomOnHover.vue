@@ -74,6 +74,7 @@ export default {
   }
 
   .zoom-on-hover .zoom {
+    cursor: crosshair;
     position: absolute;
     opacity: 0;
     transform-origin: top left;
