@@ -5,15 +5,20 @@
       <app-loader></app-loader>
     </v-container>
     <div v-else>
-      <el-row el-row type="flex" justify="center" v-if="product">
+      <el-row el-row type="flex" justify="center" v-if="product" style="flex-wrap: wrap">
         <el-col :xs="24" :sm="20" :md="18" :lg="16" :xl="14" type="flex" align="middle">
-          <el-card style="height: 700px">
-            <el-row type="flex">
-              <el-col :span="12">
-                <div class="img_wrapper">
-                  <img :src="product.img_0.original" class="main_img"/>
-                </div>
-                <el-row style="margin-top: 80px">
+          <el-card>
+            <el-row type="flex" style="flex-wrap: wrap">
+              <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+                <img :src="viewImage ? viewImage : product.img_0.original" class="main_img"/>
+                <el-row>
+                  <img v-if="product.img_0.thumbnail" :src="product.img_0.thumbnail" @click="loadOriginal('img_0')" ref="img_0" class="thumb_img active"/>
+                  <img v-if="product.img_1.thumbnail" :src="product.img_1.thumbnail" @click="loadOriginal('img_1')" ref="img_1" class="thumb_img"/>
+                  <img v-if="product.img_2.thumbnail" :src="product.img_2.thumbnail" @click="loadOriginal('img_2')" ref="img_2" class="thumb_img"/>
+                  <img v-if="product.img_3.thumbnail" :src="product.img_3.thumbnail" @click="loadOriginal('img_3')" ref="img_3" class="thumb_img"/>
+                  <img v-if="product.img_4.thumbnail" :src="product.img_4.thumbnail" @click="loadOriginal('img_4')" ref="img_4" class="thumb_img"/>
+                </el-row>
+                <el-row class="mt-4">
                   <p style="font-size: 24px">
                     <i class="el-icon-minus"></i>
                     Re<span class="primary--text">High</span> Store
@@ -21,7 +26,8 @@
                   </p>
                 </el-row>
               </el-col>
-              <el-col :span="12" v-model="product">
+              <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12"
+                      v-model="product">
                 <h2 class="mt-3">Info</h2>
                 <v-divider class="mb-3 mt-3"></v-divider>
                 <div style="text-align: left; margin-left: 40px;">
@@ -90,7 +96,8 @@ export default {
   name: 'ManId',
   data () {
     return {
-      dialogVisible: false
+      dialogVisible: false,
+      viewImage: ''
     }
   },
   computed: {
@@ -127,26 +134,43 @@ export default {
     signInAnonymously () {
       this.dialogVisible = false
       this.$store.dispatch('signInAnonymously')
+    },
+    loadOriginal (name) {
+      for (let i = 0; i < 5; i++) {
+        if (this.$refs['img_' + i]) {
+          this.$refs['img_' + i].classList.remove('active')
+        }
+      }
+      this.$refs[name].classList.add('active')
+      this.viewImage = this.product[name].original
     }
   }
 }
 </script>
 
 <style scoped>
-  img {
-    width: 100%;
-    height: 500px;
-    /*border: 1px solid grey;*/
-    object-fit: cover;
-  }
-
-  .img_wrapper {
+  .main_img {
     width: 100%;
     height: 500px;
     padding: 10px;
+    object-fit: cover;
   }
 
-  .main_img {
+  .thumb_img {
+    height: 90px;
+    width: 78px;
     object-fit: cover;
+    margin-right: 1px;
+    margin-left: 1px;
+  }
+
+  .thumb_img:hover {
+    cursor: pointer;
+  }
+
+  .active {
+    transition: all 0.5s;
+    transform: scale(1.08);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   }
 </style>
