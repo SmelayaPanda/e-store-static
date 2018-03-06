@@ -11,7 +11,7 @@
             <el-row type="flex">
               <el-col :span="12">
                 <div class="img_wrapper">
-                  <img :src="product.mainImage.original" class="main_img"/>
+                  <img :src="product.images.main.original" class="main_img"/>
                 </div>
                 <el-row style="margin-top: 80px">
                   <p style="font-size: 24px">

@@ -46,7 +46,7 @@ exports.handler = function (event, admin) {
   const tempLocalThumbFile = path.join(os.tmpdir(), thumbFilePath);
   const tempLocalCardFile = path.join(os.tmpdir(), cardFilePath);
 
-  if(!originalFilePath.startsWith('products/')){
+  if (!originalFilePath.startsWith('products/')) {
     console.log('This is not an product Image.');
     return true;
   }
@@ -78,63 +78,66 @@ exports.handler = function (event, admin) {
   // Create the temp directory where the storage file will be downloaded.
   return mkdirp(tempLocalDir)
     .then(() => {
-    // Download file from bucket.
-    return originalFile.download({destination: tempLocalFile});
-  }).then(() => {
-    console.log('The file has been downloaded to', tempLocalFile);
-    // Generate a thumbnail using ImageMagick.
-    return spawn('convert', [tempLocalFile, '-thumbnail', `${THUMB_MAX_WIDTH}x${THUMB_MAX_HEIGHT}>`, tempLocalThumbFile], {capture: ['stdout', 'stderr']});
-  }).then(() => {
-    // Generate a card image using ImageMagick.
-    return spawn('convert', [tempLocalFile, '-thumbnail', `${CARD_MAX_WIDTH}x${CARD_MAX_HEIGHT}>`, tempLocalCardFile], {capture: ['stdout', 'stderr']});
-  }).then(() => {
-    console.log('Thumbnail created at', tempLocalThumbFile);
-    console.log('Card image created at', tempLocalCardFile);
-    // Uploading the Thumbnail.
-    return bucket.upload(tempLocalThumbFile, {destination: thumbFilePath, metadata: metadata});
-  }).then(() => {
-    return bucket.upload(tempLocalCardFile, {destination: cardFilePath, metadata: metadata});
-  }).then(() => {
-    console.log('Thumbnail uploaded to Storage at', thumbFilePath);
-    console.log('Card image uploaded to Storage at', cardFilePath);
-    // Once the image has been uploaded delete the local files to free up disk space.
-    fs.unlinkSync(tempLocalFile);
-    fs.unlinkSync(tempLocalThumbFile);
-    fs.unlinkSync(tempLocalCardFile);
-    // Get the Signed URLs for the thumbnail and original image.
-    const config = {
-      action: 'read',
-      expires: '03-01-2500',
-    };
-    return Promise.all([
-      thumbFile.getSignedUrl(config),
-      cardFile.getSignedUrl(config),
-      originalFile.getSignedUrl(config),
-    ]);
-  }).then((results) => {
-    console.log('Got Signed URLs.');
-    const thumbResult = results[0];
-    const thumbFileUrl = thumbResult[0];
+      // Download file from bucket.
+      return originalFile.download({destination: tempLocalFile});
+    }).then(() => {
+      console.log('The file has been downloaded to', tempLocalFile);
+      // Generate a thumbnail using ImageMagick.
+      return spawn('convert', [tempLocalFile, '-thumbnail', `${THUMB_MAX_WIDTH}x${THUMB_MAX_HEIGHT}>`, tempLocalThumbFile], {capture: ['stdout', 'stderr']});
+    }).then(() => {
+      // Generate a card image using ImageMagick.
+      return spawn('convert', [tempLocalFile, '-thumbnail', `${CARD_MAX_WIDTH}x${CARD_MAX_HEIGHT}>`, tempLocalCardFile], {capture: ['stdout', 'stderr']});
+    }).then(() => {
+      console.log('Thumbnail created at', tempLocalThumbFile);
+      console.log('Card image created at', tempLocalCardFile);
+      // Uploading the Thumbnail.
+      return bucket.upload(tempLocalThumbFile, {destination: thumbFilePath, metadata: metadata});
+    }).then(() => {
+      return bucket.upload(tempLocalCardFile, {destination: cardFilePath, metadata: metadata});
+    }).then(() => {
+      console.log('Thumbnail uploaded to Storage at', thumbFilePath);
+      console.log('Card image uploaded to Storage at', cardFilePath);
+      // Once the image has been uploaded delete the local files to free up disk space.
+      fs.unlinkSync(tempLocalFile);
+      fs.unlinkSync(tempLocalThumbFile);
+      fs.unlinkSync(tempLocalCardFile);
+      // Get the Signed URLs for the thumbnail and original image.
+      const config = {
+        action: 'read',
+        expires: '03-01-2500',
+      };
+      return Promise.all([
+        thumbFile.getSignedUrl(config),
+        cardFile.getSignedUrl(config),
+        originalFile.getSignedUrl(config),
+      ]);
+    }).then((results) => {
+      console.log('Got Signed URLs.');
+      const thumbResult = results[0];
+      const thumbFileUrl = thumbResult[0];
 
-    const cardResult = results[1];
-    const cardFileUrl = cardResult[0];
+      const cardResult = results[1];
+      const cardFileUrl = cardResult[0];
 
-    const originalResult = results[2];
-    const originalFileUrl = originalResult[0];
-    // products/OIe9aAx6sceVylH8ozrH/main
-    const productId = originalFilePath.split('/')[1]
-    // Add the URLs to the Database
-    let updateData = {
-      mainImage: {
-        original: originalFileUrl,
-        thumbnail: thumbFileUrl,
-        card: cardFileUrl
+      const originalResult = results[2];
+      const originalFileUrl = originalResult[0];
+      // originalFilePath = products/OIe9aAx6sceVylH8ozrH/main
+      const productId = originalFilePath.split('/')[1]
+      console.log('---> Product id = ' + productId)
+      // Add the URLs to the Database
+      let updateData = {
+        images: {
+          [originalFileName]: { // main, add1, add2, add3, add4
+            original: originalFileUrl,
+            thumbnail: thumbFileUrl,
+            card: cardFileUrl
+          }
+        }
       }
-    };
-    return admin.firestore().collection('products').doc(productId).update(updateData);
-  }).then(() => {
-    console.log('Thumbnail URLs saved to database.');
-    return true;
-  })
+      return admin.firestore().collection('products').doc(productId).update(updateData);
+    }).then(() => {
+      console.log('Thumbnail URLs saved to database.');
+      return true;
+    })
 };
 
