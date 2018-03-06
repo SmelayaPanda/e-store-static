@@ -74,25 +74,13 @@ export default {
       ({commit, getters}, payload) => {
         commit('LOADING', true)
         let productId
-        let images = payload.images
-        delete payload.images
         firebase.firestore().collection('products').add(payload)
           .then(data => {
             productId = data.id
-            let uploadImage = function (name, image) {
-              return firebase.storage().ref('products/' + productId + '/' + name).put(image)
-            }
-            let actions = []
-            for (let img in images) {
-              actions.push(uploadImage(img, images[img]))
-            }
-            console.log(actions)
-            return Promise.all(actions)
-          }) // images Urls will be automatically uploaded - see cloud function!
-          .then(() => {
             let updateData = {
               productId: productId,
-              // for quick access in admin table
+              // For quick access in admin table.
+              // Cloud function fill up it!
               img_0: {original: '', thumbnail: '', card: ''},
               img_1: {original: '', thumbnail: '', card: ''},
               img_2: {original: '', thumbnail: '', card: ''},
@@ -115,10 +103,7 @@ export default {
         commit('LOADING', true)
         firebase.firestore().collection('products').doc(payload.productId).update(payload)
           .then(() => {
-            console.log('success')
-            let products = getters.products
-            products[payload.productId] = payload
-            commit('setProducts', products)
+            console.log('Product edited')
             commit('LOADING', false)
           })
           .catch(err => {
@@ -129,14 +114,17 @@ export default {
     editProductImage:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
-        let newImageUrl
-        firebase.storage().ref('products/' + payload.productId + '/main').put(payload.image)
-          .then(
-            fileData => {
-              newImageUrl = fileData.metadata.downloadURLs[0]
-              console.log('New Image uploaded to storage.')
-              return firebase.firestore().collection('products').doc(payload.productId).update({imageUrl: newImageUrl})
-            })
+        let images = payload.images
+        delete payload.images
+        let uploadImage = function (name, image) {
+          return firebase.storage().ref('products/' + payload.productId + '/' + name).put(image)
+        }
+        let actions = []
+        for (let img in images) {
+          actions.push(uploadImage(img, images[img]))
+        }
+        console.log(actions)
+        return Promise.all(actions)
           .then(() => {
             commit('LOADING', false)
             window.location.reload()
@@ -151,10 +139,18 @@ export default {
         commit('LOADING', true)
         firebase.firestore().collection('products').doc(payload).delete()
           .then(() => {
+            let product = getters.productById(payload)
+            let images = [] // images names
+            for (let i = 0; i < 5; i++) {
+              if (product['img_' + i].original !== '') {
+                images.push('img_' + i)
+                images.push('card_img_' + i)
+                images.push('thumb_img_' + i)
+              }
+            }
             let deleteImage = function (name) {
               return firebase.storage().ref('products/' + payload + '/' + name).delete()
             }
-            let images = ['main', 'card_main', 'thumb_main']
             let actions = images.map(deleteImage)
             return Promise.all(actions)
           })

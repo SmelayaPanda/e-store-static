@@ -4,26 +4,18 @@
       <i class="el-icon-picture-outline"></i>
     </el-button>
     <!--Image-->
-    <el-dialog title="Edit product image" :visible.sync="dialogFormVisible" width="100%" :fullscreen="true" center>
-      <el-row type="flex" justify="center" class="mb-3">
-        <el-button @click="onPickFile">
-          Image
-          <i class="el-icon-picture-outline ml-2" style="transform: scale(1.7)"></i>
-        </el-button>
-        <input
-          type="file"
-          style="display: none;"
-          ref="fileInput"
-          accept="image/*"
-          @change="onFilePicked"
-        >
-      </el-row>
-      <!--Image preview-->
-      <el-row type="flex" justify="center" class="mb-3">
-        <img :src="imageUrl" :height="this.imageHeight">
+    <el-dialog title="Product images" :visible.sync="dialogFormVisible" width="100%" :fullscreen="true" center>
+      <el-row type="flex" justify="center" class="mb-3" style="flex-wrap: wrap">
+        <!--Image-->
+        <!-- fileUploaded custom event from UploadProductImage.vue-->
+        <upload-product-image img-name="img_0" @fileUploaded="loadFileData" img-btn-name="Main Image" :cur-img="editProduct.img_0.thumbnail"/>
+        <upload-product-image img-name="img_1" @fileUploaded="loadFileData" img-btn-name="Add Image 1" :cur-img="editProduct.img_1.thumbnail"/>
+        <upload-product-image img-name="img_2" @fileUploaded="loadFileData" img-btn-name="Add Image 2" :cur-img="editProduct.img_2.thumbnail"/>
+        <upload-product-image img-name="img_3" @fileUploaded="loadFileData" img-btn-name="Add Image 3" :cur-img="editProduct.img_3.thumbnail"/>
+        <upload-product-image img-name="img_4" @fileUploaded="loadFileData" img-btn-name="Add Image 4" :cur-img="editProduct.img_4.thumbnail"/>
       </el-row>
       <el-row type="flex" justify="center">
-        <el-button type="primary" @click="edit" :disabled="!isValidForm">Edit</el-button>
+        <el-button type="primary" @click="edit" :disabled="!isValidForm">Ok</el-button>
         <el-button @click="dialogFormVisible = false">Cancel</el-button>
       </el-row>
     </el-dialog>
@@ -31,39 +23,28 @@
 </template>
 
 <script>
+import UploadProductImage from './UploadProductImage'
+
 export default {
   name: 'EditProductImage',
-  props: ['id'],
+  components: {UploadProductImage},
+  props: ['editProduct'],
   data () {
     return {
       dialogFormVisible: false,
-      image: null,
+      images: {},
       imageUrl: ''
     }
   },
   methods: {
-    onPickFile:
-        function () {
-          this.$refs.fileInput.click()
-        },
-    onFilePicked:
-        function (event) {
-          const files = event.target.files // files[0] because it may be multiselect of files, take first
-          const filename = files[0].name
-          if (filename.indexOf('.') <= 0) { // file have an extension
-            return alert('Please, pick a valid file')
-          }
-          const fileReader = new FileReader() // native js future for client file work
-          fileReader.addEventListener('load', () => {
-            this.imageUrl = fileReader.result
-          })
-          fileReader.readAsDataURL(files[0])
-          this.image = files[0]
-        },
+    loadFileData (val) {
+      // val.imgName="img_0 ... 4"
+      this.images[val.imgName] = val.image
+    },
     edit () {
       let editObj = {
-        productId: this.id,
-        image: this.image
+        productId: this.editProduct.productId,
+        images: this.images
       }
       this.dialogFormVisible = false
       this.$store.dispatch('editProductImage', editObj)
@@ -71,7 +52,7 @@ export default {
   },
   computed: {
     isValidForm () {
-      return this.imageUrl !== ''
+      return true
     }
   }
 }

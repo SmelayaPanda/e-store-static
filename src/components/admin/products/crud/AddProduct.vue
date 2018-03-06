@@ -68,13 +68,6 @@
                 <el-input-number v-model="product.qty" :min="0" :max="1000000"></el-input-number>
               </el-form-item>
             </el-row>
-            <!--Image-->
-            <!-- fileUploaded custom event from UploadProductImage.vue-->
-            <upload-product-image img-name="img_0" @fileUploaded="loadFileData" img-btn-name="Main Image"/>
-            <upload-product-image img-name="img_1" @fileUploaded="loadFileData" img-btn-name="Add Image 1"/>
-            <upload-product-image img-name="img_2" @fileUploaded="loadFileData" img-btn-name="Add Image 2"/>
-            <upload-product-image img-name="img_3" @fileUploaded="loadFileData" img-btn-name="Add Image 3"/>
-            <upload-product-image img-name="img_4" @fileUploaded="loadFileData" img-btn-name="Add Image 4"/>
           </el-form>
             <el-button type="primary" @click="addNewProduct" :disabled="!isValidForm">Create</el-button>
             <el-button @click="dialogFormVisible = false">Cancel</el-button>
@@ -85,11 +78,9 @@
 </template>
 
 <script>
-import UploadProductImage from './UploadProductImage'
 
 export default {
   name: 'AddProduct',
-  components: {UploadProductImage},
   props: ['category'],
   data () {
     return {
@@ -105,8 +96,7 @@ export default {
         size: 'XL',
         weight: 0.5,
         weightMeasure: 'kg',
-        date: new Date(),
-        images: {}
+        date: new Date()
       },
       formLabelWidth: '120px'
     }
@@ -124,21 +114,15 @@ export default {
         size: this.product.size,
         weight: this.product.weight,
         weightMeasure: this.product.weightMeasure,
-        creationDate: new Date(),
-        images: this.product.images
+        creationDate: new Date()
       }
       this.dialogFormVisible = false
       this.$store.dispatch('addNewProduct', newProduct)
-    },
-    loadFileData (val) {
-      // val.imgName="img_0 ... 4"
-      this.product.images[val.imgName] = val.image
     }
   },
   computed: {
     isValidForm () {
-      return this.imageUrl !== '' && this.product.title !== '' &&
-          this.product.description !== '' && this.product.color !== ''
+      return this.product.title !== '' && this.product.description !== '' && this.product.color !== ''
     }
   }
 }

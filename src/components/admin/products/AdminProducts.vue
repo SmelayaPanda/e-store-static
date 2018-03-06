@@ -125,7 +125,7 @@
           label="Operations">
           <template slot-scope="scope">
             <el-row type="flex" justify="center">
-              <edit-product-image :id="scope.row.productId"></edit-product-image>
+              <edit-product-image :editProduct="scope.row"></edit-product-image>
               <edit-product :editProduct="scope.row"></edit-product>
               <delete-product :id="scope.row.productId" :title="scope.row.title"></delete-product>
             </el-row>
