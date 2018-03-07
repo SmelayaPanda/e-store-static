@@ -1,22 +1,24 @@
 <template>
   <span style="text-align: center">
     <el-button size="small" type="primary" @click="dialogFormVisible = true">
-      Buy
+      {{ btnName }}
     </el-button>
     <el-dialog title="CHECKOUT FORM"
-               v-if="this.orderItem"
+               v-if="orderItems"
                width="100%"
                :visible.sync="dialogFormVisible"
                :fullscreen="true">
-      <div style="font-size: 18px; margin-bottom: 20px;: 0; padding-top: 0;">
-        <span style="font-weight: bold;">{{ this.orderItem.items.name }}: </span>
-        <el-tag>{{ this.orderItem.items.price }}</el-tag>
+      <div style="font-size: 18px; margin-bottom: 20px;: 0; padding-top: 0;"
+           v-for="item in orderItems" :key="item.description"
+      >
+        <span style="font-weight: bold;">{{ item.name }}: </span>
+        <el-tag>{{ item.price }}</el-tag>
         x
-        <el-tag>{{ this.orderItem.items.quantity }}</el-tag>
+        <el-tag>{{ item.quantity }}</el-tag>
         =
-        <el-tag class="mb-2">{{ this.orderItem.amount }} {{ this.orderItem.currency }}</el-tag>
+        <el-tag class="mb-2">{{ parseFloat(item.price * item.quantity).toFixed(2) }} {{ currency }}</el-tag>
       </div>
-      <!--{{ this.orderItem }}-->
+      <p>Total: {{ this.amount }} {{ currency }}</p>
       <!--Stepper-->
       <el-steps :active="activeStep" align-center>
         <el-step title="Personal Details" icon="el-icon-edit"></el-step>
@@ -98,8 +100,8 @@
               env="sandbox"
               locale="en_US"
               currency="RUB"
-              :items="[this.orderItem.items]"
-              :amount="this.orderItem.amount"
+              :items="this.orderItems"
+              :amount="this.amount"
               :client="credentials"
               :buttonStyle="btnStyle"
               notify-url="https://us-central1-e-store-dev.cloudfunctions.net/processPayPal"
@@ -122,7 +124,7 @@ export default {
   components: {
     PayPal
   },
-  props: ['order-item'],
+  props: ['order-items', 'amount', 'btn-name', 'currency'],
   data () {
     return {
       credentials: {

@@ -74,14 +74,13 @@ export default {
           return
         }
         firebase.database().ref(`users/${user.uid}/carts`).once('value')
-          .then(
-            (data) => {
-              console.log('Cart data fetched')
-              if (data.val()) {
-                commit('setCart', Object.values(data.val()))
-              }
-              commit('LOADING', false)
-            })
+          .then(data => {
+            console.log('Cart data fetched')
+            if (data.val()) {
+              commit('setCart', Object.values(data.val()))
+            }
+            commit('LOADING', false)
+          })
           .catch(
             error => {
               console.log(error)
