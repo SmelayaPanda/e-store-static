@@ -136,7 +136,7 @@ export default {
     return {
       sortAsc: true,
       activeName: 1,
-      isCollapse: false,
+      isCollapse: true,
       sliderValues: [1, 1000],
       selectedSize: 'All sizes',
       selectedColor: 'All colors',
