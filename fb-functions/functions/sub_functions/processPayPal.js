@@ -38,6 +38,7 @@ exports.handler = function (req, res, db) {
         }
       });
       logPaymentInfo(payInfo, orderId);
+      payPalSuccessOrderMail(payInfo, orderId)
       return res.sendStatus(200)
     })
     .catch(err => {
@@ -51,6 +52,64 @@ function logPaymentInfo(payInfo, orderId) {
   console.log(`Payer: ${payInfo.first_name} ${payInfo.last_name} ${payInfo.payer_email} -
                             ${payInfo.mc_gross} ${payInfo.mc_currency}`)
 }
+
+function payPalSuccessOrderMail(info, orderId) {
+  let nodemailer = require('nodemailer')
+
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'SmelayaPandaGM@gmail.com',
+      pass: '***'
+    }
+  });
+
+  let mailOptions = {
+    from: 'SmelayaPandaGM@gmail.com',
+    to: 'SmelayaPanda@mail.ru',
+    subject: 'Sending Email using Node.js',
+    text:
+      `Re:High Store message:
+     
+       PayPal order complete.
+       --------------------------------------------------
+       Payer info ............ ${info.last_name} ${info.first_name} 
+       Email .................... ${info.payer_email}
+       Country ................. ${info.address_country}
+       State ................... ${info.address_state}
+       City ...................... ${info.address_city}
+       Street ................... ${info.address_street}
+       Zip code ............... ${info.address_zip}
+       --------------------------------------------------
+       PayPal transaction Id: ${info.txn_id}
+       Firebase Database Order Id: ${orderId}
+       Total Gross: ${info.mc_gross} ${info.mc_currency}
+       Fee: ${info.mc_fee} ${info.mc_currency}
+       
+       Items Info:
+       1 Item name: ${info.item_name1} ( ${info.mc_gross_1} x ${info.quantity1} )
+       ${info.item_name2 ? `2 Item name: ${info.item_name2} ( ${info.mc_gross_2} x ${info.quantity2} )` : ''}
+       ${info.item_name3 ? `3 Item name: ${info.item_name3} ( ${info.mc_gross_3} x ${info.quantity3} )` : ''}
+       ${info.item_name4 ? `4 Item name: ${info.item_name4} ( ${info.mc_gross_4} x ${info.quantity4} )` : ''}
+       ${info.item_name5 ? `5 Item name: ${info.item_name5} ( ${info.mc_gross_5} x ${info.quantity5} )` : ''}
+       ${info.item_name5 ? `6 Item name: ${info.item_name6} ( ${info.mc_gross_6} x ${info.quantity6} )` : ''}
+       ${info.item_name5 ? `7 Item name: ${info.item_name7} ( ${info.mc_gross_7} x ${info.quantity7} )` : ''}
+       ${info.item_name5 ? `8 Item name: ${info.item_name8} ( ${info.mc_gross_8} x ${info.quantity8} )` : ''}
+       ${info.item_name5 ? `9 Item name: ${info.item_name9} ( ${info.mc_gross_9} x ${info.quantity9} )` : ''}
+       ${info.item_name5 ? `10 Item name: ${info.item_name10} ( ${info.mc_gross_10} x ${info.quantity10} )` : ''}
+       `
+  };
+
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+}
+
 
 // PayPal Instant Payment Notification (IPN) example:
 

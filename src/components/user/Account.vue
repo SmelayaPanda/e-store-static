@@ -37,7 +37,16 @@
               <el-collapse accordion v-for="(order, idx) in userOrders" :key="idx">
                 <el-collapse-item name="1">
                   <template slot="title">
-                    {{ order.item_name1 }}  {{ order.item_name2 }}  {{ order.item_name3 }}
+                    <span>{{ order.item_name1 }}</span>
+                    <span v-if="order.item_name2">, {{ order.item_name2 }}</span>
+                    <span v-if="order.item_name3">, {{ order.item_name3 }}</span>
+                    <span v-if="order.item_name4">, {{ order.item_name4 }}</span>
+                    <span v-if="order.item_name5">, {{ order.item_name5 }}</span>
+                    <span v-if="order.item_name6">, {{ order.item_name6 }}</span>
+                    <span v-if="order.item_name7">, {{ order.item_name7 }}</span>
+                    <span v-if="order.item_name8">, {{ order.item_name8 }}</span>
+                    <span v-if="order.item_name9">, {{ order.item_name9 }}</span>
+                    <span v-if="order.item_name10">, {{ order.item_name10 }}</span>
                     <i class="header-icon el-icon-info"></i>
                   </template>
                   <div v-for="(el, key) in order" :key="el.tnx_id">

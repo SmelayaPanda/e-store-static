@@ -49,14 +49,16 @@
               </buy>
             </el-col>
           </el-row>
-          <v-divider></v-divider>
-          <p class="pt-3">Total price: {{ parseFloat(totalPrice).toFixed(2) }} RUB </p>
-          <div class="paypal_total_btn">
-            <buy btn-name="Buy all"
-                 :currency="'RUB'"
-                 :amount="parseFloat(totalPrice).toFixed(2)"
-                 :order-items="totalItems">
-            </buy>
+          <div v-if="userCart.length > 1">
+            <v-divider></v-divider>
+            <p class="pt-3">Total price: {{ parseFloat(totalPrice).toFixed(2) }} RUB </p>
+            <div class="paypal_total_btn">
+              <buy btn-name="Buy all"
+                   :currency="'RUB'"
+                   :amount="parseFloat(totalPrice).toFixed(2)"
+                   :order-items="totalItems">
+              </buy>
+            </div>
           </div>
         </el-card>
       </el-col>

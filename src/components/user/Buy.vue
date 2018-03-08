@@ -26,7 +26,7 @@
         <el-step title="Review order" icon="el-icon-document"></el-step>
         <el-step title="Payment" icon="el-icon-circle-check-outline"></el-step>
       </el-steps>
-      <el-row style="height: 500px" class="mt-5" type="flex" justify="center">
+      <el-row style="height: 450px" class="mt-2" type="flex" justify="center">
         <!--Step 1-->
         <div class="form_1" v-if="activeStep === 1">
           <el-form label-position="top" label-width="100px" :model="form_1">
@@ -87,7 +87,7 @@
         <!--Step 3-->
         <div class="form_3" v-if="activeStep === 3">
           <el-row type="flex" justify="center">
-            <el-col :span="16">
+            <el-col :span="16" class="mt-5">
               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur cumque cupiditate dignissimos dolore esse est exercitationem, expedita, labore magnam minima minus molestias nam nobis nostrum officia placeat quisquam ratione sit.</p>
             </el-col>
           </el-row>

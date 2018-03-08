@@ -6,8 +6,9 @@
     <el-tab-pane label="Orders">
       <admin-orders></admin-orders>
     </el-tab-pane>
-    <el-tab-pane label="Settings">Task</el-tab-pane>
-    <el-tab-pane label="Info">Role</el-tab-pane>
+    <el-tab-pane label="Settings">Settings</el-tab-pane>
+    <el-tab-pane label="Info">Info</el-tab-pane>
+    <el-tab-pane label="Contacts">Contacts</el-tab-pane>
   </el-tabs>
 </template>
 
