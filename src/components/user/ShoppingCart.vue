@@ -8,9 +8,15 @@
       <el-col :xs="24" :sm="20" :md="16" :lg="14" :xl="8" type="flex" align="middle">
         <el-card v-if="userCart">
           <p class="mb-3" style="font-size: 18px;">
-            My shopping cart
+            <span v-if="userCart.length === 0">Your cart is empty</span>
+            <span v-else>My shopping cart</span>
           </p>
           <i class="el-icon-goods mb-3" style="transform: scale(2)"></i>
+          <p>
+            <router-link to="/shop">
+              <el-button type="text" v-if="userCart.length === 0">Go to shop</el-button>
+            </router-link>
+          </p>
           <!--PRODUCTS-->
           <el-row v-for="product in userCart" :key="product.cartId"
                   type="flex"

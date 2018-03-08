@@ -16,12 +16,14 @@
                    @select="changeCategory"
                    :collapse="isCollapse">
             <el-menu-item index="All groups" @click="filterProducts">
-              <i class="el-icon-star-on"></i>
+              <!--<i class="el-icon-star-on"></i>-->
+              <v-icon>fiber_manual_record</v-icon>
               <span slot="title">All groups</span>
             </el-menu-item>
             <el-submenu index="Category A">
               <template slot="title" >
-                <i class="el-icon-news"></i>
+                <!--<i class="el-icon-news"></i>-->
+                <v-icon>hd</v-icon>
                 <span slot="title">Category A</span>
               </template>
               <el-menu-item-group>
@@ -34,15 +36,15 @@
               </el-menu-item-group>
             </el-submenu>
             <el-menu-item index="Category B" @click="filterProducts">
-              <i class="el-icon-picture-outline"></i>
+              <v-icon>fiber_pin</v-icon>
               <span slot="title">Category B</span>
             </el-menu-item>
             <el-menu-item index="Category C" @click="filterProducts">
-              <i class="el-icon-location"></i>
+              <v-icon>closed_caption</v-icon>
               <span slot="title">Category C</span>
             </el-menu-item>
             <el-menu-item index="Category D" @click="filterProducts">
-              <i class="el-icon-view"></i>
+              <v-icon>fiber_new</v-icon>
               <span slot="title">Category D</span>
             </el-menu-item>
           </el-menu>
@@ -66,7 +68,7 @@
                   range
                   :step="100"
                   :min="0"
-                  :max="1000">
+                  :max="2000">
                 </el-slider>
               </div>
               <!--SIZE FILTER-->
@@ -107,7 +109,7 @@
                     <v-card-title>
                       <span class="grey--text">{{ p.price }} {{ p.currency }}</span>
                     </v-card-title>
-                    <p>{{ p.title | snippet(60) }}</p>
+                    <p class="pl-2 pr-2">{{ p.title | snippet(60) }}</p>
                 </v-card>
               </div>
             </el-col>
@@ -137,7 +139,7 @@ export default {
       sortAsc: true,
       activeName: 1,
       isCollapse: true,
-      sliderValues: [1, 1000],
+      sliderValues: [1, 2000],
       selectedSize: 'All sizes',
       selectedColor: 'All colors',
       selectedCategory: 'All groups'

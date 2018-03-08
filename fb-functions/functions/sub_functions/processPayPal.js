@@ -75,8 +75,8 @@ function payPalSuccessOrderMail(info, orderId) {
        --------------------------------------------------
        Payer info ............ ${info.last_name} ${info.first_name} 
        Email .................... ${info.payer_email}
-       Country ................. ${info.address_country}
-       State ................... ${info.address_state}
+       Country ................ ${info.address_country}
+       State .................... ${info.address_state}
        City ...................... ${info.address_city}
        Street ................... ${info.address_street}
        Zip code ............... ${info.address_zip}
