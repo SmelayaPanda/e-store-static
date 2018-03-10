@@ -67,7 +67,7 @@ function payPalSuccessOrderMail(info, orderId) {
   let mailOptions = {
     from: 'SmelayaPandaGM@gmail.com',
     to: 'SmelayaPanda@mail.ru',
-    subject: 'Sending Email using Node.js',
+    subject: `New PayPal order: ${info.txn_id}`,
     text:
       `Re:High Store message:
      

@@ -4,7 +4,7 @@
       <v-icon class="white--text">add</v-icon>
     </v-btn>
 
-    <el-dialog :title="'New product in: ' + category" :visible.sync="dialogFormVisible" width="100%" :fullscreen="true">
+    <el-dialog :title="`New product in: ${group} / ${category}`" :visible.sync="dialogFormVisible" width="100%" :fullscreen="true">
       <el-row type="flex" justify="center">
         <el-col :span="20">
           <el-form :model="product">
@@ -81,11 +81,12 @@
 
 export default {
   name: 'AddProduct',
-  props: ['category'],
+  props: ['group', 'category'],
   data () {
     return {
       dialogFormVisible: false,
       product: {
+        group: 'Group A',
         category: 'Category A1',
         title: '',
         description: '',
@@ -104,10 +105,11 @@ export default {
   methods: {
     addNewProduct () {
       let newProduct = {
+        group: this.group,
         category: this.category,
         title: this.product.title,
         description: this.product.description,
-        price: parseFloat(this.product.price),
+        price: parseFloat(this.product.price).toFixed(2),
         currency: this.product.currency,
         qty: this.product.qty,
         color: this.product.color,

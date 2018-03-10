@@ -8,24 +8,6 @@
       <el-row type="flex" justify="center">
         <el-col :span="20">
           <el-form :model="product">
-            <el-row type="flex" justify="center">
-              <el-form-item>
-                <el-select v-model="product.category"
-                           filterable
-                           placeholder="Select"
-                           default-first-option
-                           no-data-text="No data">
-                  <el-option
-                    v-for="item in productCategories"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                    :selected="product.category === item.value"
-                  >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-row>
             <el-form-item label="Title" :label-width="formLabelWidth">
               <el-input v-model="product.title"
                         placeholder="Product title (max 100 symbols)"
@@ -105,33 +87,13 @@ export default {
     return {
       product: this.editProduct,
       dialogFormVisible: false,
-      formLabelWidth: '120px',
-      productCategories: [{
-        value: 'Category A1',
-        label: 'Category A1'
-      }, {
-        value: 'Category A2',
-        label: 'Category A2'
-      }, {
-        value: 'Category A3',
-        label: 'Category A3'
-      }, {
-        value: 'Category B',
-        label: 'Category B'
-      }, {
-        value: 'Category C',
-        label: 'Category C'
-      }, {
-        value: 'Category D',
-        label: 'Category D'
-      }]
+      formLabelWidth: '120px'
     }
   },
   methods: {
     edit () {
       let editObj = {
         productId: this.editProduct.productId,
-        category: this.product.category,
         title: this.product.title,
         description: this.product.description,
         price: parseFloat(this.product.price),

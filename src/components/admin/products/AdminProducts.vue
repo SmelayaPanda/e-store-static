@@ -6,25 +6,15 @@
     </v-container>
     <div v-else>
       <el-row type="flex" justify="start" align="middle" class="mb-4">
-        <el-col style="width: 220px">
-          <el-select v-model="productCategory"
-                     default-first-option
-                     filterable
-                     placeholder="Select a category"
-                     @change="loadCategoryProducts"
-          >
-            <el-option
-              v-for="item in productCategories"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-              :selected="productCategory === item.value"
-            >
-            </el-option>
-          </el-select>
-        </el-col>
+        <el-cascader
+          :options="options"
+          filterable
+          placeholder="Select category"
+          v-model="productOption"
+          @change="loadCategoryProducts">
+        </el-cascader>
         <el-col class="left" style="width: 100px;">
-          <add-product :category="productCategory"></add-product>
+          <add-product :group="productOption[0]" :category="productOption[1]"></add-product>
         </el-col>
       </el-row>
       <el-table
@@ -152,25 +142,42 @@ export default {
   name: 'AdminProducts',
   data () {
     return {
-      productCategory: 'Category A1', // don't fordet change main js
-      productCategories: [{
-        value: 'Category A1',
-        label: 'Category A1'
+      productOption: ['Group A', 'Category A1'], // don't fordet change main js
+      options: [{
+        value: 'Group A',
+        label: 'Group A',
+        children: [{
+          value: 'Category A1',
+          label: 'Category A1'
+        }, {
+          value: 'Category A2',
+          label: 'Category A2'
+        }, {
+          value: 'Category A3',
+          label: 'Category A3'
+        }]
+      },
+      {
+        value: 'Group B',
+        label: 'Group B',
+        children: [{
+          value: 'Category B',
+          label: 'Category B'
+        }]
       }, {
-        value: 'Category A2',
-        label: 'Category A2'
+        value: 'Group C',
+        label: 'Group C',
+        children: [{
+          value: 'Category C',
+          label: 'Category C'
+        }]
       }, {
-        value: 'Category A3',
-        label: 'Category A3'
-      }, {
-        value: 'Category B',
-        label: 'Category B'
-      }, {
-        value: 'Category C',
-        label: 'Category C'
-      }, {
-        value: 'Category D',
-        label: 'Category D'
+        value: 'Group D',
+        label: 'Group D',
+        children: [{
+          value: 'Category D',
+          label: 'Category D'
+        }]
       }]
     }
   },
@@ -178,7 +185,7 @@ export default {
     loadCategoryProducts () {
       this.$store.dispatch('resetLastVisible')
       this.$store.dispatch('fetchProducts', {
-        category: this.productCategory,
+        category: this.productOption[1],
         sortAsc: true
       })
     }
@@ -199,5 +206,8 @@ export default {
 </script>
 
 <style scoped>
+  .el-cascader {
+    width: 400px !important;
+  }
 
 </style>
