@@ -1,15 +1,16 @@
 <template>
   <div>
-    <brand></brand>
+    <dictionary-subject title="Brand" name="brands"></dictionary-subject>
+    <dictionary-subject title="Color" name="colors"></dictionary-subject>
   </div>
 </template>
 
 <script>
-import Brand from './Brands'
+import DictionarySubject from './DictionarySubject'
 export default {
   name: 'AdminDictionaries',
   components: {
-    Brand
+    DictionarySubject
   },
   data () {
     return {}

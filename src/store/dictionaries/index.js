@@ -16,13 +16,21 @@ export default {
       }
   },
   actions: {
-    fetchBrands:
-      ({commit, getters}) => {
+    fetchDictionaries:
+      ({commit}) => {
         commit('LOADING', true)
-        firebase.firestore().collection('dictionaries').doc('brands').get()
+        firebase.firestore().collection('dictionaries').get()
           .then(snapshot => {
-            console.log(snapshot.data().all)
-            commit('setBrands', snapshot.data().all)
+            let docs = snapshot.docs
+            docs.forEach(doc => {
+              if (doc.id === 'brands') {
+                commit('setBrands', doc.data().all)
+              }
+              if (doc.id === 'colors') {
+                commit('setColors', doc.data().all)
+              }
+            })
+            console.log('All dictionaries fetched')
             commit('LOADING', false)
           })
           .catch(err => {
@@ -30,13 +38,15 @@ export default {
             commit('LOADING', false)
           })
       },
-    uploadBrands:
+    uploadDictionary:
       ({commit, getters}, payload) => {
+        let name = payload.name
+        delete payload.dictionary
         commit('LOADING', true)
-        firebase.firestore().collection('dictionaries').doc('brands').set({all: payload})
+        firebase.firestore().collection('dictionaries').doc(name).set({all: payload.data})
           .then(() => {
-            console.log('Brand uploaded')
-            commit('setBrands', payload)
+            console.log('Dictionary updated')
+            commit('setBrands', payload.data)
             commit('LOADING', false)
           })
           .catch(err => {

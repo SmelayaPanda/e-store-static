@@ -1,40 +1,39 @@
 <template>
   <div class="ml-5">
-      <h2>Brands</h2>
-      <v-btn class="primary"
-             @click="addDialogVisible = true">
-        <v-icon class="white--text">add</v-icon>
-      </v-btn>
+    <h2>{{ this.title }}</h2>
+    <v-btn class="primary"
+           @click="addDialogVisible = true">
+      <v-icon class="white--text">add</v-icon>
+    </v-btn>
     <!--ADD-->
     <el-dialog
-      title="Add new brand"
+      :title="`Add new ${this.title}`"
       :visible.sync="addDialogVisible"
       width="30%">
       <el-input v-model="item"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">Cancel</el-button>
         <el-button type="primary"
-                   @click="addBrand">Add</el-button>
+                   @click="addDictionaryItem">Add</el-button>
       </span>
     </el-dialog>
     <!--EDIT-->
     <el-dialog
-      :title="`Delete brand ${item}`"
+      :title="`Delete ${this.name} ${item}`"
       :visible.sync="deleteDialogVisible"
       width="30%">
       <el-input v-model="item"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="deleteDialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="deleteBrand">Delete</el-button>
+        <el-button type="primary" @click="deleteDictionaryItem">Delete</el-button>
       </span>
     </el-dialog>
-
-    <el-select v-model="item" placeholder="Brands" v-if="brands">
+    <el-select v-model="item" :placeholder="this.title" v-if="dictionary">
       <el-option
-        v-for="b in brands"
-        :key="b"
-        :label="b"
-        :value="b">
+        v-for="val in dictionary"
+        :key="val"
+        :label="val"
+        :value="val">
       </el-option>
     </el-select>
 
@@ -46,7 +45,8 @@
 
 <script>
 export default {
-  name: 'Brands',
+  name: 'DictionarySubject',
+  props: ['title', 'name'],
   data () {
     return {
       item: '',
@@ -55,25 +55,25 @@ export default {
     }
   },
   methods: {
-    addBrand () {
+    addDictionaryItem () {
       this.addDialogVisible = false
-      let brands = this.brands
-      if (brands.indexOf(this.item) === -1) {
-        brands.push(this.item)
+      let items = this.dictionary
+      if (items.indexOf(this.item) === -1) {
+        items.push(this.item)
       }
-      this.$store.dispatch('uploadBrands', brands)
+      this.$store.dispatch('uploadDictionary', {name: this.name, data: items})
     },
-    deleteBrand () {
+    deleteDictionaryItem () {
       this.deleteDialogVisible = false
-      let brands = this.brands
-      brands.splice(brands.indexOf(this.item), 1)
+      let items = this.dictionary
+      items.splice(items.indexOf(this.item), 1)
       this.item = ''
-      this.$store.dispatch('uploadBrands', brands)
+      this.$store.dispatch('uploadDictionary', {name: this.name, data: items})
     }
   },
   computed: {
-    brands () {
-      return this.$store.getters.brands
+    dictionary () {
+      return this.$store.getters[this.name]
     }
   }
 }
