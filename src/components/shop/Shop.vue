@@ -21,7 +21,7 @@
               <span slot="title">All groups</span>
             </el-menu-item>
             <el-submenu index="Category A">
-              <template slot="title" >
+              <template slot="title">
                 <!--<i class="el-icon-news"></i>-->
                 <v-icon>hd</v-icon>
                 <span slot="title">Category A</span>
@@ -71,32 +71,38 @@
                   :max="2000">
                 </el-slider>
               </div>
-              <!--SIZE FILTER-->
-              <div>
-                <el-radio-group v-model="selectedSize" size="small" @change="filterProducts" class="mb-2">
-                  <el-radio-button label="All sizes"></el-radio-button>
-                  <el-radio-button label="XXS"></el-radio-button>
-                  <el-radio-button label="XS"></el-radio-button>
-                  <el-radio-button label="S"></el-radio-button>
-                  <el-radio-button label="M"></el-radio-button>
-                  <el-radio-button label="L"></el-radio-button>
-                  <el-radio-button label="XL"></el-radio-button>
-                  <el-radio-button label="XXL"></el-radio-button>
-                </el-radio-group>
-              </div>
-              <!--COLOR FILTER-->
-              <div>
-                <el-radio-group v-model="selectedColor" size="small" @change="filterProducts">
-                  <el-radio-button label="All colors"></el-radio-button>
-                  <el-radio-button label="red"></el-radio-button>
-                  <el-radio-button label="green"></el-radio-button>
-                  <el-radio-button label="grey"></el-radio-button>
-                  <el-radio-button label="gold"></el-radio-button>
-                  <el-radio-button label="blue"></el-radio-button>
-                  <el-radio-button label="black"></el-radio-button>
-                  <el-radio-button label="pink"></el-radio-button>
-                </el-radio-group>
-              </div>
+              <!--BRAND-->
+              <el-row type="flex" style="flex-wrap: wrap">
+                <el-select filterable
+                           clearable
+                           no-match-text="Brand is missing"
+                           v-model="selectedBrand"
+                           placeholder="Brand"
+                           @change="filterProducts"
+                           v-if="brands">
+                  <el-option
+                    v-for="val in brands"
+                    :key="val"
+                    :label="val"
+                    :value="val">
+                  </el-option>
+                </el-select>
+                <!--COLOR-->
+                <el-select filterable
+                           clearable
+                           no-match-text="Color is missing"
+                           v-model="selectedColor"
+                           placeholder="Color"
+                           @change="filterProducts"
+                           v-if="colors">
+                  <el-option
+                    v-for="val in colors"
+                    :key="val"
+                    :label="val"
+                    :value="val">
+                  </el-option>
+                </el-select>
+              </el-row>
             </el-collapse-item>
           </el-collapse>
           <el-row>
@@ -106,10 +112,10 @@
               <div @click="viewProduct(p.productId)" class="card_wrapper">
                 <v-card class="main_card" height="410px">
                   <v-card-media :src="p.img_0.card" height="300px"></v-card-media>
-                    <v-card-title>
-                      <span class="grey--text">{{ p.price }} {{ p.currency }}</span>
-                    </v-card-title>
-                    <p class="pl-2 pr-2">{{ p.title | snippet(60) }}</p>
+                  <v-card-title>
+                    <span class="grey--text">{{ p.price }} {{ p.currency }}</span>
+                  </v-card-title>
+                  <p class="pl-2 pr-2">{{ p.title | snippet(60) }}</p>
                 </v-card>
               </div>
             </el-col>
@@ -120,7 +126,9 @@
         </el-col>
       </el-row>
       <back-to-top visibleOffset="500" :right="60" :bottom="30">
-        <el-button round><el-icon class="el-icon-arrow-up"></el-icon></el-button>
+        <el-button round>
+          <el-icon class="el-icon-arrow-up"></el-icon>
+        </el-button>
       </back-to-top>
     </div>
   </div>
@@ -140,8 +148,9 @@ export default {
       activeName: 1,
       isCollapse: true,
       sliderValues: [1, 2000],
-      selectedSize: 'All sizes',
-      selectedColor: 'All colors',
+      selectedBrand: '',
+      selectedColor: '',
+      formLabelWidth: '120px',
       selectedCategory: 'All groups'
     }
   },
@@ -170,8 +179,8 @@ export default {
         minPrice: this.sliderValues[0],
         maxPrice: this.sliderValues[1],
         category: this.selectedCategory === 'All groups' ? null : this.selectedCategory,
-        color: this.selectedColor === 'All colors' ? null : this.selectedColor,
-        size: this.selectedSize === 'All sizes' ? null : this.selectedSize
+        color: this.selectedColor === '' ? null : this.selectedColor,
+        brand: this.selectedBrand === '' ? null : this.selectedBrand
       })
     }
   },
@@ -187,6 +196,12 @@ export default {
         }
       }
       return max
+    },
+    brands () {
+      return this.$store.getters.brands
+    },
+    colors () {
+      return this.$store.getters.colors
     }
   }
 }
