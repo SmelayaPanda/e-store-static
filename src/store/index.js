@@ -6,6 +6,7 @@ import user from './user/index'
 import cart from './shopping-cart/index'
 import products from './products/index'
 import orders from './orders/index'
+import dictionaries from './dictionaries/index'
 
 Vue.use(Vuex)
 
@@ -15,6 +16,7 @@ export const store = new Vuex.Store({
     shared: shared,
     cart: cart,
     products: products,
-    orders: orders
+    orders: orders,
+    dictionaries: dictionaries
   }
 })

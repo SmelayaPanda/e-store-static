@@ -6,8 +6,9 @@
     <el-tab-pane label="Orders">
       <admin-orders></admin-orders>
     </el-tab-pane>
-    <el-tab-pane label="Settings">Settings</el-tab-pane>
-    <el-tab-pane label="Info">Info</el-tab-pane>
+    <el-tab-pane label="Dictionaries">
+      <dictionaries></dictionaries>
+    </el-tab-pane>
     <el-tab-pane label="Contacts">Contacts</el-tab-pane>
   </el-tabs>
 </template>
@@ -15,11 +16,13 @@
 <script>
 import AdminProducts from './products/AdminProducts'
 import AdminOrders from './orders/AdminOrders'
+import Dictionaries from './dictionaries/Dictionaries'
 export default {
   name: 'NavMenu',
   components: {
     AdminProducts,
-    AdminOrders
+    AdminOrders,
+    Dictionaries
   },
   data () {
     return {

@@ -97,6 +97,7 @@ new Vue({
         this.$store.dispatch('fetchUserCart')
         this.$store.dispatch('fetchUserOrders')
         this.$store.dispatch('fetchAllOrders')
+        this.$store.dispatch('fetchBrands')
       })
   }
 })
