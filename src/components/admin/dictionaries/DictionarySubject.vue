@@ -19,13 +19,12 @@
     </el-dialog>
     <!--EDIT-->
     <el-dialog
-      :title="`Delete ${this.name} ${item}`"
+      :title="`Delete ${this.name} ${item} ?`"
       :visible.sync="deleteDialogVisible"
       width="30%">
-      <el-input v-model="item"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="deleteDialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="deleteDictionaryItem">Delete</el-button>
+        <el-button type="danger" @click="deleteDictionaryItem">Delete</el-button>
       </span>
     </el-dialog>
 

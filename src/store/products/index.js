@@ -30,11 +30,14 @@ export default {
             .where('price', '>=', payload.minPrice)
             .where('price', '<=', payload.maxPrice)
         }
-        if (payload.brand) {
-          query = query.where('brand', '==', payload.brand)
+        if (payload.group) {
+          query = query.where('group', '==', payload.group)
         }
         if (payload.category) {
           query = query.where('category', '==', payload.category)
+        }
+        if (payload.brand) {
+          query = query.where('brand', '==', payload.brand)
         }
         if (payload.color) {
           query = query.where('color', '==', payload.color)

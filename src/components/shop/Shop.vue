@@ -11,21 +11,24 @@
             <el-radio-button :label="false">expand</el-radio-button>
             <el-radio-button :label="true">collapse</el-radio-button>
           </el-radio-group>
-          <el-menu default-active="All groups"
+          <el-menu default-active="all"
                    class="el-menu-vertical-demo"
                    @select="changeCategory"
                    :collapse="isCollapse">
-            <el-menu-item index="All groups" @click="filterProducts">
+            <el-menu-item index="all" @click="filterProducts">
               <!--<i class="el-icon-star-on"></i>-->
               <v-icon>fiber_manual_record</v-icon>
-              <span slot="title">All groups</span>
+              <span slot="title">All categories</span>
             </el-menu-item>
             <el-submenu index="Category A">
               <template slot="title">
                 <!--<i class="el-icon-news"></i>-->
                 <v-icon>hd</v-icon>
-                <span slot="title">Category A</span>
+                <span slot="title">Group A</span>
               </template>
+              <el-menu-item-group>
+                <el-menu-item index="Group A" @click="filterProducts">All in Group A</el-menu-item>
+              </el-menu-item-group>
               <el-menu-item-group>
                 <span slot="title">Group One</span>
                 <el-menu-item index="Category A1" @click="filterProducts">Category A1</el-menu-item>
@@ -72,10 +75,11 @@
                 </el-slider>
               </div>
               <!--BRAND-->
-              <el-row type="flex" style="flex-wrap: wrap">
+              <el-row type="flex" justify="center" style="flex-wrap: wrap">
                 <el-select filterable
                            clearable
                            no-match-text="Brand is missing"
+                           class="mr-2"
                            v-model="selectedBrand"
                            placeholder="Brand"
                            @change="filterProducts"
@@ -91,6 +95,7 @@
                 <el-select filterable
                            clearable
                            no-match-text="Color is missing"
+                           class="ml-2"
                            v-model="selectedColor"
                            placeholder="Color"
                            @change="filterProducts"
@@ -148,10 +153,11 @@ export default {
       activeName: 1,
       isCollapse: true,
       sliderValues: [1, 2000],
-      selectedBrand: '',
-      selectedColor: '',
-      formLabelWidth: '120px',
-      selectedCategory: 'All groups'
+      selectedBrand: null,
+      selectedColor: null,
+      selectedGroup: null,
+      selectedCategory: 'all',
+      formLabelWidth: '120px'
     }
   },
   methods: {
@@ -163,7 +169,13 @@ export default {
       this.$router.push('/product/' + id)
     },
     changeCategory (key) {
-      this.selectedCategory = key
+      if (['Group A', 'Group B', '...'].indexOf(key) !== -1) { // extends for other groups
+        this.selectedGroup = key
+        this.selectedCategory = null
+      } else {
+        this.selectedCategory = key
+        this.selectedGroup = null
+      }
     },
     filterProducts () {
       this.$store.dispatch('resetLastVisible')
@@ -178,9 +190,10 @@ export default {
         sortAsc: this.sortAsc,
         minPrice: this.sliderValues[0],
         maxPrice: this.sliderValues[1],
-        category: this.selectedCategory === 'All groups' ? null : this.selectedCategory,
-        color: this.selectedColor === '' ? null : this.selectedColor,
-        brand: this.selectedBrand === '' ? null : this.selectedBrand
+        category: this.selectedCategory === 'all' ? null : this.selectedCategory,
+        group: this.selectedGroup,
+        color: this.selectedColor,
+        brand: this.selectedBrand
       })
     }
   },
