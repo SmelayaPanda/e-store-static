@@ -22,6 +22,18 @@
                         :maxlength="400"
               ></el-input>
             </el-form-item>
+            <el-form-item label="Article" :label-width="formLabelWidth">
+              <el-input v-model="product.article"
+                        placeholder="(max 20 symbols)"
+                        :maxlength="20"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="Brand" :label-width="formLabelWidth">
+              <el-input v-model="product.brand"
+                        placeholder="(max 50 symbols)"
+                        :maxlength="50"
+              ></el-input>
+            </el-form-item>
             <el-row type="flex" style="flex-wrap: wrap">
               <el-form-item label="Price" :label-width="formLabelWidth">
                 <el-input-number v-model="product.price" :min="1" :max="1000000"></el-input-number>
@@ -32,18 +44,6 @@
                   <el-option label="USD" value="USD" disabled></el-option>
                   <el-option label="EUR" value="EUR" disabled></el-option>
                   <el-option label="GBP" value="GBP" disabled></el-option>
-                </el-select>
-              </el-form-item>
-            </el-row>
-            <el-row type="flex" style="flex-wrap: wrap">
-              <el-form-item label="Weight" :label-width="formLabelWidth">
-                <el-input-number v-model="product.weight" :min="1" :max="1000000"></el-input-number>
-              </el-form-item>
-              <el-form-item label="Measure" :label-width="formLabelWidth">
-                <el-select v-model="product.weightMeasure" placeholder="Select a measure">
-                  <el-option label="kg" value="kg"></el-option>
-                  <el-option label="gr" value="gr"></el-option>
-                  <el-option label="mg" value="mg"></el-option>
                 </el-select>
               </el-form-item>
             </el-row>
@@ -96,13 +96,13 @@ export default {
         productId: this.editProduct.productId,
         title: this.product.title,
         description: this.product.description,
+        article: this.product.article,
+        brand: this.product.brand,
         price: parseFloat(this.product.price),
         currency: this.product.currency,
         qty: this.product.qty,
         color: this.product.color,
         size: this.product.size,
-        weight: this.product.weight,
-        weightMeasure: this.product.weightMeasure,
         editDate: new Date()
       }
       this.dialogFormVisible = false
@@ -129,7 +129,8 @@ export default {
   },
   computed: {
     isValidForm () {
-      return this.product.title !== '' && this.product.description !== '' && this.product.color !== ''
+      return this.product.title !== '' && this.product.description !== '' &&
+        this.product.color !== '' && this.product.article !== '' && this.product.brand !== ''
     }
   }
 }

@@ -47,6 +47,22 @@
             </el-popover>
           </template>
         </el-table-column>
+        <!--ARTICLE-->
+        <el-table-column
+          label="Article"
+          width="90">
+          <template slot-scope="scope">
+            <span>{{ scope.row.article }}</span>
+          </template>
+        </el-table-column>
+        <!--BRAND-->
+        <el-table-column
+          label="Brand"
+          width="90">
+          <template slot-scope="scope">
+            <span>{{ scope.row.brand }}</span>
+          </template>
+        </el-table-column>
         <!--DESCRIPTION-->
         <el-table-column
           label="Title/Description"
@@ -64,7 +80,7 @@
         <!--PRICE-->
         <el-table-column
           label="Price"
-          width="100">
+          width="80">
           <template slot-scope="scope">
             <span>{{ scope.row.price }} {{ scope.row.currency }}</span>
           </template>
@@ -72,7 +88,7 @@
         <!--QUANTITY-->
         <el-table-column
           label="Quantity"
-          width="100">
+          width="70">
           <template slot-scope="scope">
             <span>{{ scope.row.qty }}</span>
           </template>
@@ -88,17 +104,9 @@
         <!--SIZE-->
         <el-table-column
           label="Size"
-          width="100">
+          width="90">
           <template slot-scope="scope">
             <span>{{ scope.row.size }}</span>
-          </template>
-        </el-table-column>
-        <!--WEIGHT-->
-        <el-table-column
-          label="Weight"
-          width="100">
-          <template slot-scope="scope">
-            <span>{{ scope.row.weight }} {{ scope.row.weightMeasure }}</span>
           </template>
         </el-table-column>
         <!--DATE-->
