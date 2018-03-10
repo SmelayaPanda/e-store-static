@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p>* Common system constants</p>
     <dictionary-subject title="Brand" name="brands"></dictionary-subject>
     <dictionary-subject title="Color" name="colors"></dictionary-subject>
   </div>
@@ -19,5 +20,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

@@ -47,12 +47,12 @@
             </el-popover>
           </template>
         </el-table-column>
-        <!--ARTICLE-->
+        <!--Vendor Code-->
         <el-table-column
-          label="Article"
-          width="90">
+          label="Vendor Code"
+          width="100">
           <template slot-scope="scope">
-            <span>{{ scope.row.article }}</span>
+            <span>{{ scope.row.vendorCode }}</span>
           </template>
         </el-table-column>
         <!--BRAND-->
@@ -217,5 +217,4 @@ export default {
   .el-cascader {
     width: 400px !important;
   }
-
 </style>

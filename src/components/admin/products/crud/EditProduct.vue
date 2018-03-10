@@ -22,18 +22,42 @@
                         :maxlength="400"
               ></el-input>
             </el-form-item>
-            <el-form-item label="Article" :label-width="formLabelWidth">
-              <el-input v-model="product.article"
+            <el-form-item label="Vendor Code" :label-width="formLabelWidth">
+              <el-input v-model="product.vendorCode"
                         placeholder="(max 20 symbols)"
                         :maxlength="20"
               ></el-input>
             </el-form-item>
-            <el-form-item label="Brand" :label-width="formLabelWidth">
-              <el-input v-model="product.brand"
-                        placeholder="(max 50 symbols)"
-                        :maxlength="50"
-              ></el-input>
-            </el-form-item>
+            <!--BRAND-->
+            <el-row type="flex" style="flex-wrap: wrap">
+              <el-form-item label="Brand" :label-width="formLabelWidth">
+                <el-select filterable
+                           v-model="product.brand"
+                           placeholder="Brand"
+                           v-if="brands">
+                  <el-option
+                    v-for="val in brands"
+                    :key="val"
+                    :label="val"
+                    :value="val">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <!--COLOR-->
+              <el-form-item label="Color" :label-width="formLabelWidth">
+                <el-select filterable
+                           v-model="product.color"
+                           placeholder="Color"
+                           v-if="colors">
+                  <el-option
+                    v-for="val in colors"
+                    :key="val"
+                    :label="val"
+                    :value="val">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-row>
             <el-row type="flex" style="flex-wrap: wrap">
               <el-form-item label="Price" :label-width="formLabelWidth">
                 <el-input-number v-model="product.price" :min="1" :max="1000000"></el-input-number>
@@ -44,22 +68,6 @@
                   <el-option label="USD" value="USD" disabled></el-option>
                   <el-option label="EUR" value="EUR" disabled></el-option>
                   <el-option label="GBP" value="GBP" disabled></el-option>
-                </el-select>
-              </el-form-item>
-            </el-row>
-            <el-row type="flex" style="flex-wrap: wrap">
-              <el-form-item label="Color" :label-width="formLabelWidth">
-                <el-input v-model="product.color"></el-input>
-              </el-form-item>
-              <el-form-item label="Size" :label-width="formLabelWidth">
-                <el-select v-model="product.size" placeholder="Select a size">
-                  <el-option label="XXS" value="XXS"></el-option>
-                  <el-option label="XS" value="XS"></el-option>
-                  <el-option label="S" value="S"></el-option>
-                  <el-option label="M" value="M"></el-option>
-                  <el-option label="L" value="L"></el-option>
-                  <el-option label="XL" value="XL"></el-option>
-                  <el-option label="XXL" value="XXL"></el-option>
                 </el-select>
               </el-form-item>
             </el-row>
@@ -96,13 +104,13 @@ export default {
         productId: this.editProduct.productId,
         title: this.product.title,
         description: this.product.description,
-        article: this.product.article,
+        vendorCode: this.product.vendorCode,
         brand: this.product.brand,
         price: parseFloat(this.product.price),
         currency: this.product.currency,
         qty: this.product.qty,
         color: this.product.color,
-        size: this.product.size,
+        // size: this.product.size,
         editDate: new Date()
       }
       this.dialogFormVisible = false
@@ -130,7 +138,13 @@ export default {
   computed: {
     isValidForm () {
       return this.product.title !== '' && this.product.description !== '' &&
-        this.product.color !== '' && this.product.article !== '' && this.product.brand !== ''
+        this.product.color !== '' && this.product.vendorCode !== '' && this.product.brand !== ''
+    },
+    brands () {
+      return this.$store.getters.brands
+    },
+    colors () {
+      return this.$store.getters.colors
     }
   }
 }

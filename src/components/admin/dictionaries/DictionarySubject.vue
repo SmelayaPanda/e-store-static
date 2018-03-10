@@ -28,7 +28,11 @@
         <el-button type="primary" @click="deleteDictionaryItem">Delete</el-button>
       </span>
     </el-dialog>
-    <el-select v-model="item" :placeholder="this.title" v-if="dictionary">
+
+    <el-select filterable
+               v-model="item"
+               :placeholder="this.title"
+               v-if="dictionary">
       <el-option
         v-for="val in dictionary"
         :key="val"
@@ -80,5 +84,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .el-select {
+    width: 350px !important;
+  }
 </style>
