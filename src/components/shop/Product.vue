@@ -85,8 +85,7 @@
                 </el-button>
                 <!--ONE CLICK-->
                 <one-click :alreadyAddedProduct="alreadyAddedProduct"
-                           :productId="product.productId"
-                           :productTitle="product.title"
+                           :product="product"
                 ></one-click>
                 <!--ALREADY IN CART-->
                 <div v-if="alreadyAddedProduct">

@@ -10,7 +10,7 @@
     <i class="el-icon-check ml-2" style="transform: scale(1.5)"></i>
   </el-button>
   <el-dialog
-    :title="`Buy one click: ${productTitle}`"
+    :title="`Buy one click: ${product.title}`"
     width="100%"
     :visible.sync="dialogVisible">
     <!--<h2>{{ productId }}</h2>-->
@@ -40,7 +40,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary"
-                       @click="submitForm('oneClickForm')"
+                       @click="submitForm"
                        :disabled="!isValidForm"
             >
               One Click!
@@ -55,9 +55,10 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'OneClick',
-  props: ['alreadyAddedProduct', 'productId', 'productTitle'],
+  props: ['alreadyAddedProduct', 'product'],
   data () {
     let validateNickname = (rule, value, callback) => {
       if (value === '') {
@@ -81,9 +82,9 @@ export default {
     return {
       dialogVisible: false,
       oneClickForm: {
-        nickname: '',
-        email: '',
-        phone: ''
+        nickname: '1',
+        email: 'test@mail.ru',
+        phone: '7 999 467 78 43'
       },
       formRules: {
         nickname: [
@@ -99,16 +100,24 @@ export default {
     buyOneClick () {
       this.dialogVisible = true
     },
-    submitForm (formName) {
+    submitForm () {
       this.dialogVisible = false
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
+      axios.post('https://us-central1-e-store-dev.cloudfunctions.net/oneClickNotification', {
+        nickname: this.oneClickForm.nickname,
+        email: this.oneClickForm.email,
+        phone: this.oneClickForm.phone,
+        product: {
+          title: this.product.title,
+          price: this.product.price,
+          vendorCode: this.product.vendorCode
         }
       })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     isValidEmail () {
       return /^\S+@\S+\.\S+$/.test(this.oneClickForm.email)
