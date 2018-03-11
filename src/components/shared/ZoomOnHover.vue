@@ -33,6 +33,7 @@ export default {
       let offset = this.pageOffset(this.$el)
       let zoom = this.$refs.zoom
       let normal = this.$refs.normal
+      if (!zoom || !normal) return
       let relativeX = event.clientX - offset.x + window.scrollX
       let relativeY = event.clientY - offset.y + window.scrollY
       let normalPercentX = relativeX / normal.offsetWidth

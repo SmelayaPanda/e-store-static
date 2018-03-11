@@ -1,11 +1,22 @@
 const cors = require('cors')({origin: true});
 
-exports.handler = function (req, res, db) {
+exports.handler = function (req, res, admin) {
   cors(req, res, () => {
     // console.log(req.query.text)
     let info = req.body
-    sendOneClickEmailNotification(info)
-    res.status(200).send('OK')
+    info.creationDate = new Date()
+    admin.firestore().collection('oneclick').add(info)
+      .then(() => {
+        console.log('One click message added into database!')
+        return sendOneClickEmailNotification(info)
+      })
+      .then(() => {
+        return res.status(200).send('OK')
+      })
+      .catch(err => {
+        console.log(err)
+        return res.status(500).send('Error saving into database!')
+      })
   });
 }
 
@@ -29,14 +40,14 @@ function sendOneClickEmailNotification(info) {
      
        WHO:
        Nickname ........... ${info.nickname}
-       Email ................. ${info.email}
-       Phone ................ ${info.phone}
+       Email .................. ${info.email}
+       Phone ................. ${info.phone}
        
        
        WANT TO BUY:
        Vendor Code ....... ${info.product.vendorCode}
-       Title ..................... ${info.product.title}
-       Price ................... ${info.product.price} RUB
+       Title ...................... ${info.product.title}
+       Price .................... ${info.product.price} RUB
        `
   };
 

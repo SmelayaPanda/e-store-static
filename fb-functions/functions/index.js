@@ -16,7 +16,7 @@ exports.processPayPal = functions.https.onRequest((req, res) => {
 
 // ONE CLICK
 exports.oneClickNotification = functions.https.onRequest((req, res) => {
-  oneClickNotification.handler(req, res, db)
+  oneClickNotification.handler(req, res, admin)
 })
 
 // PRODUCT IMAGES
