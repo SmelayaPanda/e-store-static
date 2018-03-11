@@ -56,6 +56,7 @@
 
 <script>
 import axios from 'axios'
+
 export default {
   name: 'OneClick',
   props: ['alreadyAddedProduct', 'product'],
@@ -114,9 +115,27 @@ export default {
       })
         .then(res => {
           console.log(res)
+          if (res.status === 200) {
+            this.$notify({
+              title: 'Cool!',
+              message: 'Your request has been delivered!',
+              type: 'success',
+              showClose: true,
+              duration: 10000,
+              offset: 50
+            })
+          }
         })
-        .catch(err => {
-          console.log(err)
+        .catch(() => {
+          this.$notify({
+            title: 'Ahh...',
+            message: 'Something is wrong with one click function. ' +
+              'Please write into tec-support SmelayaPandaGM@gmail.com',
+            type: 'error',
+            showClose: true,
+            duration: 100000,
+            offset: 50
+          })
         })
     },
     isValidEmail () {

@@ -10,7 +10,8 @@ exports.handler = function (req, res, admin) {
         console.log('One click message added into database!')
         return sendOneClickEmailNotification(info)
       })
-      .then(() => {
+      .then((data) => {
+        console.log(data)
         return res.status(200).send('OK')
       })
       .catch(err => {
@@ -20,23 +21,24 @@ exports.handler = function (req, res, admin) {
   });
 }
 
-function sendOneClickEmailNotification(info) {
-  let nodemailer = require('nodemailer')
+let sendOneClickEmailNotification = function (info) {
+  return new Promise(((resolve, reject) => {
+    let nodemailer = require('nodemailer')
 
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'SmelayaPandaGM@gmail.com',
-      pass: '***'
-    }
-  });
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'SmelayaPandaGM@gmail.com',
+        pass: '***'
+      }
+    });
 
-  let mailOptions = {
-    from: 'SmelayaPandaGM@gmail.com',
-    to: 'SmelayaPanda@mail.ru',
-    subject: `New one click message from ${info.nickname}`,
-    text:
-      `Re:High Store One Click message:
+    let mailOptions = {
+      from: 'SmelayaPandaGM@gmail.com',
+      to: 'SmelayaPanda@mail.ru',
+      subject: `New one click message from ${info.nickname}`,
+      text:
+        `Re:High Store One Click message:
      
        WHO:
        Nickname ........... ${info.nickname}
@@ -49,13 +51,14 @@ function sendOneClickEmailNotification(info) {
        Title ...................... ${info.product.title}
        Price .................... ${info.product.price} RUB
        `
-  };
+    };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log('Email sent: ' + info.response);
-    }
-  });
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve('Email sent: ' + info.response)
+      }
+    });
+  }))
 }
