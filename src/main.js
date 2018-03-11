@@ -25,6 +25,7 @@ import {mailing} from './mixins/mailing'
 import AlertComp from './components/shared/Alert'
 import Loader from './components/shared/Loader'
 import HelpTooltip from './components/shared/HelpTooltip'
+import MaskedInput from 'vue-masked-input'
 // USE
 Vue.mixin(authMixin)
 Vue.mixin(image)
@@ -33,6 +34,7 @@ Vue.mixin(mailing)
 Vue.filter('date', DateFilter)
 Vue.filter('admin_date', AdminDateFilter)
 Vue.filter('snippet', Snippet)
+Vue.component('masked-input', MaskedInput)
 Vue.component('app-alert', AlertComp)
 Vue.component('app-loader', Loader)
 Vue.component('app-help-tooltip', HelpTooltip)

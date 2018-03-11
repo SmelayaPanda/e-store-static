@@ -83,16 +83,12 @@
                   </span>
                   <i class="el-icon-goods ml-2" style="transform: scale(1.5)"></i>
                 </el-button>
-                <el-button v-if="!alreadyAddedProduct"
-                           size="medium"
-                           class="mt-3"
-                           @click="buyOneClick">
-                  <span style="font-size: 14px">
-                    Buy one click
-                  </span>
-                  <i class="el-icon-check ml-2" style="transform: scale(1.5)"></i>
-                </el-button>
-                <!--ELSE-->
+                <!--ONE CLICK-->
+                <one-click :alreadyAddedProduct="alreadyAddedProduct"
+                           :productId="product.productId"
+                           :productTitle="product.title"
+                ></one-click>
+                <!--ALREADY IN CART-->
                 <div v-if="alreadyAddedProduct">
                   <router-link to="/cart">
                     <el-button type="text" class="mb-2 success--text">
@@ -116,14 +112,16 @@
 
 <script>
 import ZoomOnHover from '@/components/shared/ZoomOnHover.vue'
+import OneClick from './OneClick'
 
 export default {
   props: ['id'],
   name: 'ManId',
-  components: {ZoomOnHover},
+  components: {ZoomOnHover, OneClick},
   data () {
     return {
       dialogVisible: false,
+      oneClickDialogVisible: false,
       viewImage: ''
     }
   },
@@ -154,8 +152,6 @@ export default {
       orderProduct.price = this.product.price
       orderProduct.currency = this.product.currency
       this.$store.dispatch('addToCart', orderProduct)
-    },
-    buyOneClick () {
     },
     removeFromCart () {
       this.$store.dispatch('removeFromCart', this.alreadyAddedProduct.cartId)

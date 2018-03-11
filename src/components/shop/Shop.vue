@@ -17,7 +17,7 @@
                    :collapse="isCollapse">
             <el-menu-item index="all" @click="filterProducts">
               <!--<i class="el-icon-star-on"></i>-->
-              <v-icon>fiber_manual_record</v-icon>
+              <v-icon>select_all</v-icon>
               <span slot="title">All categories</span>
             </el-menu-item>
             <el-submenu index="Category A">
@@ -39,7 +39,7 @@
               </el-menu-item-group>
             </el-submenu>
             <el-menu-item index="Category B" @click="filterProducts">
-              <v-icon>fiber_pin</v-icon>
+              <v-icon>high_quality</v-icon>
               <span slot="title">Category B</span>
             </el-menu-item>
             <el-menu-item index="Category C" @click="filterProducts">
