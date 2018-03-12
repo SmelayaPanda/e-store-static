@@ -12,11 +12,14 @@
         <el-col :span="12">
           <!--Stepper-->
           <el-row class="mt-4">
-          <el-steps :active="activeStep" align-center>
+          <el-steps :active="activeStep"
+                    align-center
+                    finish-status="success"
+          >
             <el-step title="Personal Details" icon="el-icon-info"></el-step>
             <el-step title="Shipping" icon="el-icon-location"></el-step>
-            <el-step title="Review order" icon="el-icon-document"></el-step>
-            <el-step title="Payment" icon="el-icon-circle-check-outline"></el-step>
+            <el-step title="Delivery Method" icon="el-icon-document"></el-step>
+            <el-step title="Ordering" icon="el-icon-circle-check-outline"></el-step>
           </el-steps>
           </el-row>
           <!---------->
@@ -72,7 +75,7 @@
                        :rules="formRules_2"
                        v-if="activeStep === 2"
                        :model="form_2">
-                  <!--COUNTRY-->
+                <!--COUNTRY-->
                 <el-row type="flex">
                   <el-col :span="12" class="pr-1">
                     <el-form-item label="Coutry" prop="country">
@@ -87,13 +90,23 @@
                   </el-col>
                 </el-row>
                 <!--STREET-->
-                <el-form-item label="Street" prop="street">
-                  <el-input v-model="form_2.street"></el-input>
-                </el-form-item>
+                <el-row>
+                  <el-col :span="18" class="pr-1">
+                    <el-form-item label="Street" prop="street">
+                      <el-input v-model="form_2.street"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <!--BUILD-->
+                  <el-col :span="6" class="pr-1">
+                    <el-form-item label="Build" prop="build">
+                      <el-input v-model="form_2.build"></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
                 <el-row type="flex">
-                <!--HOUSE-->
+                <!--HOUSE/Apartment-->
                   <el-col :span="12" class="pr-1">
-                    <el-form-item label="House" prop="house">
+                    <el-form-item label="House/Apartment" prop="house">
                       <el-input v-model="form_2.house"></el-input>
                     </el-form-item>
                   </el-col>
@@ -113,8 +126,40 @@
           <el-row type="flex" justify="center">
             <el-col :span="18">
               <div class="form_3" v-if="activeStep === 3">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur cumque cupiditate dignissimos dolore esse est exercitationem, expedita, labore magnam minima minus molestias nam nobis nostrum officia placeat quisquam ratione sit.</p>
-                <el-checkbox class="mb-5">I agree</el-checkbox>
+                <h3 class="mb-1">Delivery Method</h3>
+                  <el-radio-group v-model="deliveryMethod" size="medium" class="mb-2">
+                    <el-radio-button label="Courier" ></el-radio-button>
+                    <el-radio-button label="Russian Post"></el-radio-button>
+                    <el-radio-button label="PickPoint"></el-radio-button>
+                  </el-radio-group>
+                <div style="height: 200px;">
+                  <h4 v-if="deliveryMethod === 'Courier'" class="primary--text mt-2">
+                    Free shipping only in Novosibirsk!
+                  </h4>
+                  <h4 v-if="deliveryMethod === 'Russian Post'" class="primary--text mt-2">
+                    Shipping is charged separately on receipt!
+                  </h4>
+                  <h4 v-if="deliveryMethod === 'PickPoint'" class="primary--text mt-2">
+                    Shipping is charged separately on receipt!
+                  </h4>
+                  <h3 class="mb-1 mt-4">Payment Method</h3>
+                  <el-radio-group v-model="paymentMethod" size="medium" class="mb-2">
+                    <el-radio-button label="Online" ></el-radio-button>
+                    <el-radio-button label="On receipt"></el-radio-button>
+                  </el-radio-group>
+                  <h4 v-if="paymentMethod === 'Online'" class="primary--text mt-2">
+                    Currently our system only supports payment with PayPal!
+                  </h4>
+                  <h4 v-if="deliveryMethod === 'Courier' && paymentMethod === 'On receipt'" class="primary--text mt-2">
+                    Pay the courier can only cash!
+                  </h4>
+                  <h4 v-if="deliveryMethod === 'Russian Post' && paymentMethod === 'On receipt'" class="primary--text mt-2">
+                    The parcel will be shipped by cash on delivery!
+                  </h4>
+                  <h4 v-if="deliveryMethod === 'PickPoint' && paymentMethod === 'On receipt'" class="primary--text mt-2">
+                    You can pay for PickPoint services on receipt!
+                  </h4>
+                </div>
               </div>
             </el-col>
           </el-row>
@@ -122,7 +167,13 @@
           <!--Step 4-->
           <el-row type="flex" justify="center">
               <el-col :span="18">
-                <div class="form_4 buy_button" v-if="activeStep === 4">
+                <div class="form_4" v-if="activeStep === 4">
+                  <p class="mt-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur cumque cupiditate dignissimos dolore esse est exercitationem, expedita, labore magnam minima minus molestias nam nobis nostrum officia placeat quisquam ratione sit.</p>
+                  <el-checkbox class="mb-5">I agree</el-checkbox><br>
+                  <el-button class="mb-4">
+                    CHECKOUT
+                  </el-button>
+                  <div class="buy_button" v-if="paymentMethod ==='Online'">
                     <PayPal
                       env="sandbox"
                       locale="en_US"
@@ -134,6 +185,7 @@
                       notify-url="https://us-central1-e-store-dev.cloudfunctions.net/processPayPal"
                     >
                     </PayPal>
+                  </div>
                 </div>
               </el-col>
             </el-row>
@@ -148,6 +200,9 @@
         <!--ITEMS INFO-->
         <el-col :span="8" class="mt-3 pl-4">
           <el-card>
+            <div slot="header" class="clearfix">
+            <h3>My order</h3>
+            </div>
           <div style="font-size: 16px; margin-bottom: 20px;: 0; padding-top: 0;"
                v-for="item in orderItems" :key="item.description"
           >
@@ -158,7 +213,7 @@
             =
             <el-tag class="mb-2">{{ parseFloat(item.price * item.quantity).toFixed(2) }} {{ currency }}</el-tag>
           </div>
-          <p>Total: {{ this.amount }} {{ currency }}</p>
+          <b class="success--text">Total: {{ this.amount }} {{ currency }}</b>
           </el-card>
         </el-col>
       </el-row>
@@ -196,6 +251,8 @@ export default {
       }, 1000)
     }
     return {
+      deliveryMethod: 'Courier',
+      paymentMethod: 'On receipt',
       credentials: {
         sandbox: 'AaTdJiFck5jx4xpaVOjFHkfNO8XZjflSRzYZ3yGbXEHZ43J7upAFabAkRhv1NJPPfDR49F9mqf8rbud4',
         production: 'someId'
@@ -218,7 +275,8 @@ export default {
         country: 'Russia',
         city: 'Novosibirsk',
         street: 'Sirenevaya',
-        house: '31',
+        build: '31',
+        house: '65',
         postCode: '630090'
       },
       formRules_1: {
@@ -240,6 +298,9 @@ export default {
           {validator: notEmptyString, trigger: 'blur'}
         ],
         street: [
+          {validator: notEmptyString, trigger: 'blur'}
+        ],
+        build: [
           {validator: notEmptyString, trigger: 'blur'}
         ],
         house: [
