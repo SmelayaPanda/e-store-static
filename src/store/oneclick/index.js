@@ -41,7 +41,7 @@ export default {
         commit('LOADING', true)
         firebase.firestore().collection('oneclick').doc(payload.id).update(payload)
           .then(() => {
-            console.log('Oneclick updated')
+            console.log('One Click updated')
             commit('LOADING', false)
           })
           .catch(err => {

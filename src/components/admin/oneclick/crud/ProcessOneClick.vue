@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button size="mini" @click="dialogFormVisible = true">
+    <el-button @click="dialogFormVisible = true">
       <i class="el-icon-service"></i>
     </el-button>
 

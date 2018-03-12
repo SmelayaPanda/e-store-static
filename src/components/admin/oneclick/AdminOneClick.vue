@@ -2,7 +2,7 @@
   <!--STATUS:
 1. created
 2. processed
-3. refusal
+3. refused
 4. sent
 5. delivered
 6. returned
@@ -40,9 +40,12 @@
           <template slot-scope="props">
             <el-row>
               <el-col :span="12">
-                <p><span>Database One Click id:</span>
+                <p><span>Database id:</span>
                   <el-tag size="mini" type="success">{{ props.row.id }}</el-tag>
-                <h3>Product info:</h3>
+                </p>
+                <h3><i class="el-icon-info"></i>
+                  Product info:
+                </h3>
                 <p>
                   Title: {{ props.row.product.title }}<br>
                   Vendor Code: {{ props.row.product.vendorCode }}<br>
@@ -50,13 +53,17 @@
                   <span v-if="props.row.product.qty">Quantity: {{ props.row.product.qty }}</span>
                 </p>
                 <span v-if="props.row.comments">
-                <h3>Comments:</h3>
+                <h3><i class="el-icon-warning"></i>
+                  Comments:
+                </h3>
                 {{ props.row.comments }}<br>
               </span>
               </el-col>
               <el-col :span="12">
               <span v-if="props.row.shipping">
-                <h3>Shipping info:</h3>
+                <h3><i class="el-icon-location"></i>
+                  Shipping info:
+                </h3>
                 <p>
                   City: {{ props.row.shipping.city }}<br>
                   Street: {{ props.row.shipping.street }}<br>
@@ -66,14 +73,14 @@
               </span>
               </el-col>
             </el-row>
-            <el-row >
+            <el-row>
               <el-col :span="24">
                 <h3 class="mt-3">Status history:</h3>
                 <span>
                   <el-tag type="info">Created
                     <p>
                       {{ props.row.creationDate | date }}<br>
-                      <span v-if="props.row.processDate || props.row.refusalDate">
+                      <span v-if="props.row.processDate || props.row.refuseDate">
                         ------------------------------
                       </span>
                     </p>
@@ -89,16 +96,6 @@
                       </p>
                     </el-tag>
                 </span>
-                <!--REFUSAL-->
-                <span v-if="props.row.refusalDate">
-                  <i class="el-icon-caret-right"></i>
-                    <el-tag type="info">Refusal
-                      <p>
-                        {{ props.row.refusalDate | date }}<br>
-                        {{(Math.abs(props.row.refusalDate - props.row.processDate) / 36e5).toFixed(1) }} hours
-                      </p>
-                    </el-tag>
-                </span>
                 <!--SENT-->
                 <span v-if="props.row.sentDate">
                   <i class="el-icon-caret-right"></i>
@@ -110,22 +107,32 @@
                     </el-tag>
                 </span>
                 <!--DELIVERED-->
-                <span v-if="props.row.deliveredDate">
+                <span v-if="props.row.deliverDate">
                   <i class="el-icon-caret-right"></i>
                     <el-tag type="info">Delivered
                       <p>
-                        {{ props.row.deliveredDate | date }}<br>
-                        {{(Math.abs(props.row.deliveredDate - props.row.sentDate) / 36e5).toFixed(1) }} hours
+                        {{ props.row.deliverDate | date }}<br>
+                        {{(Math.abs(props.row.deliverDate - props.row.sentDate) / 36e5).toFixed(1) }} hours
                       </p>
                     </el-tag>
                 </span>
                 <!--RETURNED-->
-                <span v-if="props.row.returnedDate">
+                <span v-if="props.row.returnDate">
                   <i class="el-icon-caret-right"></i>
                     <el-tag type="info">Returned
                       <p>
-                        {{ props.row.returnedDate | date }}<br>
-                        {{(Math.abs(props.row.returnedDate - props.row.deliveredDate) / 36e5).toFixed(1) }} hours
+                        {{ props.row.returnDate | date }}<br>
+                        {{(Math.abs(props.row.returnDate - props.row.deliverDate) / 36e5).toFixed(1) }} hours
+                      </p>
+                    </el-tag>
+                </span>
+                <!--REFUSE-->
+                <span v-if="props.row.refuseDate">
+                  <i class="el-icon-caret-right"></i>
+                    <el-tag type="info">Refuse
+                      <p>
+                        {{ props.row.refuseDate | date }}<br>
+                        {{(Math.abs(props.row.refuseDate - props.row.creationDate) / 36e5).toFixed(1) }} hours (from creation)
                       </p>
                     </el-tag>
                 </span>
@@ -180,11 +187,30 @@
         </el-table-column>
         <!--Process-->
         <el-table-column
-          width="80"
-          label="Process">
+          width="150"
+          label="Action">
           <template slot-scope="scope">
-            <el-row type="flex" justify="center">
-              <process-one-click :oneClickId="scope.row.id"></process-one-click>
+            <el-row type="flex" justify="start">
+              <process-one-click :oneClickId="scope.row.id"
+                                 v-if="status === 'created'"
+              >
+              </process-one-click>
+              <sent-one-click :oneClickId="scope.row.id"
+                              v-if="status === 'processed'"
+              >
+              </sent-one-click>
+              <deliver-one-click :oneClickId="scope.row.id"
+                                 v-if="status === 'sent'"
+              >
+              </deliver-one-click>
+              <refuse-one-click :oneClickId="scope.row.id"
+                                v-if="status !== 'refused' && status !== 'delivered' && status !== 'returned'"
+              >
+              </refuse-one-click>
+              <return-one-click :oneClickId="scope.row.id"
+                                v-if="status === 'delivered'"
+              >
+              </return-one-click>
             </el-row>
           </template>
         </el-table-column>
@@ -195,16 +221,24 @@
 
 <script>
 import ProcessOneClick from './crud/ProcessOneClick'
+import RefuseOneClick from './crud/RefuseOneClick'
+import SentOneClick from './crud/SentOneClick'
+import DeliverOneClick from './crud/DeliverOneClick'
+import ReturnOneClick from './crud/ReturnOneClick'
 
 export default {
   components: {
-    ProcessOneClick
+    ProcessOneClick,
+    SentOneClick,
+    DeliverOneClick,
+    RefuseOneClick,
+    ReturnOneClick
   },
   name: 'AdminOneClick',
   data () {
     return {
       status: 'created',
-      statuses: ['created', 'processed', 'refusal', 'sent', 'delivered', 'returned']
+      statuses: ['created', 'processed', 'sent', 'delivered', 'returned', 'refused']
     }
   },
   methods: {
