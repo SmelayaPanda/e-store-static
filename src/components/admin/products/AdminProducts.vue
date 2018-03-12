@@ -22,9 +22,16 @@
         :data="products"
         :highlight-current-row="true"
         empty-text="No data"
-        size="small"
         style="width: 100vw; text-align: left"
       >
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <p><span>Database id:</span> <el-tag size="mini" type="success">{{ props.row.productId }}</el-tag></p>
+            <p>Description: {{ props.row.description }}</p>
+            <p>Color: {{ props.row.color }}</p>
+            <p>Creation date: {{ props.row.creationDate | date }}</p>
+          </template>
+        </el-table-column>
         <!--THUMBNAIL-->
         <el-table-column
           label="Image"
@@ -33,46 +40,36 @@
             <img :src="scope.row.img_0.thumbnail" height="40px" width="auto">
           </template>
         </el-table-column>
-        <!--ID-->
-        <el-table-column
-          label="id"
-          width="100">
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>Id: {{ scope.row.productId }}</p>
-              <span>* unique database parameter</span>
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.productId | snippet(6) }}</el-tag>
-              </div>
-            </el-popover>
-          </template>
-        </el-table-column>
         <!--Vendor Code-->
         <el-table-column
           label="Vendor Code"
-          width="100">
+          width="120">
           <template slot-scope="scope">
-            <span>{{ scope.row.vendorCode }}</span>
+            <span><el-tag type="success">{{ scope.row.vendorCode }}</el-tag></span>
+          </template>
+        </el-table-column>
+        <!--Title-->
+        <el-table-column
+          label="Title"
+          width="300">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <p>Title: {{ scope.row.title }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium">{{ scope.row.title | snippet(40) }}</el-tag>
+              </div>
+            </el-popover>
           </template>
         </el-table-column>
         <!--BRAND-->
         <el-table-column
           label="Brand"
-          width="90">
-          <template slot-scope="scope">
-            <span>{{ scope.row.brand }}</span>
-          </template>
-        </el-table-column>
-        <!--DESCRIPTION-->
-        <el-table-column
-          label="Title/Description"
-          width="260">
+          width="120">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
-              <p>Title: {{ scope.row.title }}</p>
-              <p>Description: {{ scope.row.description }}</p>
+              <p>Brand: {{ scope.row.brand }}</p>
               <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.title | snippet(32) }}</el-tag>
+                <el-tag size="medium" type="info">{{ scope.row.brand | snippet(20) }}</el-tag>
               </div>
             </el-popover>
           </template>
@@ -80,7 +77,7 @@
         <!--PRICE-->
         <el-table-column
           label="Price"
-          width="80">
+          width="120">
           <template slot-scope="scope">
             <span>{{ scope.row.price }} {{ scope.row.currency }}</span>
           </template>
@@ -88,33 +85,9 @@
         <!--QUANTITY-->
         <el-table-column
           label="Quantity"
-          width="70">
-          <template slot-scope="scope">
-            <span>{{ scope.row.qty }}</span>
-          </template>
-        </el-table-column>
-        <!--COLORS-->
-        <el-table-column
-          label="Color"
-          width="120">
-          <template slot-scope="scope">
-            <span>{{ scope.row.color }}</span>
-          </template>
-        </el-table-column>
-        <!--SIZE-->
-        <el-table-column
-          label="Size"
           width="90">
           <template slot-scope="scope">
-            <span>{{ scope.row.size }}</span>
-          </template>
-        </el-table-column>
-        <!--DATE-->
-        <el-table-column
-          label="Creation Date"
-          width="120">
-          <template slot-scope="scope">
-            <span>{{ scope.row.creationDate | date }}</span>
+            <span>{{ scope.row.qty }}</span>
           </template>
         </el-table-column>
         <!--EDIT/DELETE-->

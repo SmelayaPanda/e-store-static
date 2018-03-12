@@ -2,10 +2,13 @@
   <!--STATUS:
   1. created
   2. processed
-  3. sent
-  4. delivered
+  3. refusal
+  4. sent
+  5. delivered
+  6. returned
   -->
-<div>One</div>
+<div>
+</div>
 </template>
 
 <script>
