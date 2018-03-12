@@ -1,14 +1,18 @@
 const cors = require('cors')({origin: true});
 
-exports.handler = function (req, res, admin) {
+exports.handler = function (req, res, admin, transporter) {
+  console.log('>-------------------------------------------------------------------------------------------------------');
   cors(req, res, () => {
-    // console.log(req.query.text)
     let info = req.body
     info.creationDate = new Date()
+    info.status = 'created'
     admin.firestore().collection('oneclick').add(info)
       .then(() => {
         console.log('One click message added into database!')
-        return sendOneClickEmailNotification(info)
+        return Promise.all([
+          sendOneClickEmailNotifyToAdmin(transporter, info),
+          sendOneClickEmailNotifyToBuyer(transporter, info)
+        ])
       })
       .then((data) => {
         console.log(data)
@@ -21,21 +25,12 @@ exports.handler = function (req, res, admin) {
   });
 }
 
-let sendOneClickEmailNotification = function (info) {
+let sendOneClickEmailNotifyToAdmin = function (transporter, info) {
   return new Promise(((resolve, reject) => {
-    let nodemailer = require('nodemailer')
-
-    let transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'SmelayaPandaGM@gmail.com',
-        pass: '***'
-      }
-    });
 
     let mailOptions = {
-      from: 'SmelayaPandaGM@gmail.com',
-      to: 'SmelayaPanda@mail.ru',
+      from: ADMIN_EMAIL,
+      to: ADMIN_EMAIL,
       subject: `New one click message from ${info.nickname}`,
       text:
         `Re:High Store One Click message:
@@ -51,6 +46,34 @@ let sendOneClickEmailNotification = function (info) {
        Title ...................... ${info.product.title}
        Price .................... ${info.product.price} RUB
        `
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve('Email sent: ' + info.response)
+      }
+    });
+  }))
+}
+
+
+let sendOneClickEmailNotifyToBuyer = function (transporter, info) {
+  return new Promise(((resolve, reject) => {
+
+    let mailOptions = {
+      from: ADMIN_EMAIL,
+      to: info.email,
+      subject: `Re:High Store notification`,
+      text:
+        `${info.nickname}, thank you for ordering "${info.product.title} (${info.product.price} RUB)" on our website.
+         
+         Administrator will contact you by phone ${info.phone} in the near future to clarify the details.
+         
+         --------------------------------------
+         Re:High Store
+        `
     };
 
     transporter.sendMail(mailOptions, (error, info) => {

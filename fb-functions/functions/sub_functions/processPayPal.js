@@ -1,4 +1,4 @@
-exports.handler = function (req, res, db) {
+exports.handler = function (req, res, db, transporter) {
   console.log('>-------------------------------------------------------------------------------------------------------');
   const payInfo = req.body;
   console.log(payInfo)
@@ -38,7 +38,7 @@ exports.handler = function (req, res, db) {
         }
       });
       logPaymentInfo(payInfo, orderId);
-      payPalSuccessOrderMail(payInfo, orderId)
+      payPalSuccessOrderMail(transporter, payInfo, orderId)
       return res.sendStatus(200)
     })
     .catch(err => {
@@ -53,20 +53,10 @@ function logPaymentInfo(payInfo, orderId) {
                             ${payInfo.mc_gross} ${payInfo.mc_currency}`)
 }
 
-function payPalSuccessOrderMail(info, orderId) {
-  let nodemailer = require('nodemailer')
-
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'SmelayaPandaGM@gmail.com',
-      pass: '***'
-    }
-  });
-
+function payPalSuccessOrderMail(transporter, info, orderId) {
   let mailOptions = {
-    from: 'SmelayaPandaGM@gmail.com',
-    to: 'SmelayaPanda@mail.ru',
+    from: ADMIN_EMAIL,
+    to: ADMIN_EMAIL,
     subject: `New PayPal order: ${info.txn_id}`,
     text:
       `Re:High Store message:

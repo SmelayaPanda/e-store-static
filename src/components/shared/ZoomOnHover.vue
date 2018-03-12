@@ -19,21 +19,20 @@ export default {
   },
   methods: {
     zoom () {
-      if (this.disabled) return
+      if (this.disabled || !this.$refs.zoom || !this.$refs.normal) return
       this.$refs.zoom.style.opacity = 1
       this.$refs.normal.style.opacity = 0
     },
     unzoom () {
-      if (this.disabled) return
+      if (this.disabled || !this.$refs.zoom || !this.$refs.normal) return
       this.$refs.zoom.style.opacity = 0
       this.$refs.normal.style.opacity = 1
     },
     move (event) {
-      if (this.disabled) return
+      if (this.disabled || !this.$refs.zoom || !this.$refs.normal) return
       let offset = this.pageOffset(this.$el)
       let zoom = this.$refs.zoom
       let normal = this.$refs.normal
-      if (!zoom || !normal) return
       let relativeX = event.clientX - offset.x + window.scrollX
       let relativeY = event.clientY - offset.y + window.scrollY
       let normalPercentX = relativeX / normal.offsetWidth

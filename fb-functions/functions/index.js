@@ -9,14 +9,24 @@ const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 const db = admin.database();
 
+global.ADMIN_EMAIL = 'SmelayaPandaGM@gmail.com'
+let nodemailer = require('nodemailer')
+let transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: ADMIN_EMAIL,
+    pass: '***'
+  }
+});
+
 // PAYPAL
 exports.processPayPal = functions.https.onRequest((req, res) => {
-  processPayPal.handler(req, res, db)
+  processPayPal.handler(req, res, db, transporter)
 })
 
 // ONE CLICK
 exports.oneClickNotification = functions.https.onRequest((req, res) => {
-  oneClickNotification.handler(req, res, admin)
+  oneClickNotification.handler(req, res, admin, transporter)
 })
 
 // PRODUCT IMAGES

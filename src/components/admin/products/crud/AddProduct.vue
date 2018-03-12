@@ -33,6 +33,7 @@
             <el-row type="flex" style="flex-wrap: wrap">
               <el-form-item label="Brand" :label-width="formLabelWidth">
                 <el-select filterable
+                           no-match-text="Brand is missing"
                            v-model="product.brand"
                            placeholder="Brand"
                            v-if="brands">
@@ -47,6 +48,7 @@
               <!--COLOR-->
               <el-form-item label="Color" :label-width="formLabelWidth">
                 <el-select filterable
+                           no-match-text="Color is missing"
                            v-model="product.color"
                            placeholder="Color"
                            v-if="colors">

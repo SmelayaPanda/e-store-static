@@ -118,7 +118,8 @@ export default {
           if (res.status === 200) {
             this.$notify({
               title: 'Cool!',
-              message: 'Your request has been delivered!',
+              message: 'Your request has been delivered! ' +
+              'Our manager will contact you soon.',
               type: 'success',
               showClose: true,
               duration: 10000,

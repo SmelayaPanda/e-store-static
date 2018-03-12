@@ -6,6 +6,9 @@
     <el-tab-pane label="Orders">
       <admin-orders></admin-orders>
     </el-tab-pane>
+    <el-tab-pane label="One Click">
+      <admin-one-click></admin-one-click>
+    </el-tab-pane>
     <el-tab-pane label="Dictionaries">
       <dictionaries></dictionaries>
     </el-tab-pane>
@@ -17,9 +20,11 @@
 import AdminProducts from './products/AdminProducts'
 import AdminOrders from './orders/AdminOrders'
 import Dictionaries from './dictionaries/Dictionaries'
+import AdminOneClick from './oneclick/AdminOneClick'
 export default {
   name: 'NavMenu',
   components: {
+    AdminOneClick,
     AdminProducts,
     AdminOrders,
     Dictionaries
