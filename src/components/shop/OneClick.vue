@@ -13,8 +13,6 @@
     :title="`Buy one click: ${product.title}`"
     width="100%"
     :visible.sync="dialogVisible">
-    <!--<h2>{{ productId }}</h2>-->
-    <!--<h2>{{ productTitle }}</h2>-->
     <el-row type="flex" justify="center">
       <el-col :xs="23" :sm="14" :md="10" :lg="8" :xl="6">
         <el-form :model="oneClickForm"
@@ -22,13 +20,12 @@
                  :rules="formRules"
                  ref="oneClickForm"
                  label-width="120px"
-                 label-position="top"
-                 class="demo-ruleForm">
+                 label-position="top">
           <el-form-item label="Nickname" prop="nickname">
             <el-input type="text" v-model="oneClickForm.nickname" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="Email" prop="email">
-            <el-input type="email" v-model="oneClickForm.email" auto-complete="off"></el-input>
+            <el-input type="email" v-model="oneClickForm.email" auto-complete="on"></el-input>
           </el-form-item>
           <el-form-item label="Phone" prop="phone">
             <masked-input v-model="oneClickForm.phone"
