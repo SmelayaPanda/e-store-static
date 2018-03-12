@@ -48,7 +48,7 @@
                 </h3>
                 <p>
                   Title: {{ props.row.product.title }}<br>
-                  Vendor Code: {{ props.row.product.vendorCode }}<br>
+                  SKU: {{ props.row.product.SKU }}<br>
                   Price: {{ props.row.product.price }}<br>
                   <span v-if="props.row.product.qty">Quantity: {{ props.row.product.qty }}</span>
                 </p>

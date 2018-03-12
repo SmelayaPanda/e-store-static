@@ -20,7 +20,7 @@
             <h3>Product info: </h3>
             <p>
               Title: {{ oneClick.product.title }}<br>
-              Vendor code: {{ oneClick.product.vendorCode }}<br>
+              SKU: {{ oneClick.product.SKU }}<br>
               Price: {{ oneClick.product.price }} RUB
             </p>
             <p class="right">{{ oneClick.creationDate | date }}</p>

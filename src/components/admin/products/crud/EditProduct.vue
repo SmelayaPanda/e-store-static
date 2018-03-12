@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button size="small" @click="dialogFormVisible = true">
+    <el-button @click="dialogFormVisible = true">
       <i class="el-icon-edit"></i>
     </el-button>
 
@@ -22,8 +22,8 @@
                         :maxlength="400"
               ></el-input>
             </el-form-item>
-            <el-form-item label="Vendor Code" :label-width="formLabelWidth">
-              <el-input v-model="product.vendorCode"
+            <el-form-item label="SKU" :label-width="formLabelWidth">
+              <el-input v-model="product.SKU"
                         placeholder="(max 20 symbols)"
                         :maxlength="20"
               ></el-input>
@@ -106,7 +106,7 @@ export default {
         productId: this.editProduct.productId,
         title: this.product.title,
         description: this.product.description,
-        vendorCode: this.product.vendorCode,
+        SKU: this.product.SKU,
         brand: this.product.brand,
         price: parseFloat(this.product.price),
         currency: this.product.currency,
@@ -140,7 +140,7 @@ export default {
   computed: {
     isValidForm () {
       return this.product.title !== '' && this.product.description !== '' &&
-        this.product.color !== '' && this.product.vendorCode !== '' && this.product.brand !== ''
+        this.product.color !== '' && this.product.SKU !== '' && this.product.brand !== ''
     },
     brands () {
       return this.$store.getters.brands

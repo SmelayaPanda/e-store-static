@@ -107,7 +107,7 @@ export default {
         product: {
           title: this.product.title,
           price: this.product.price,
-          vendorCode: this.product.vendorCode
+          SKU: this.product.SKU
         }
       })
         .then(res => {

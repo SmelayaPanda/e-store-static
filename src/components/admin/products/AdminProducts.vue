@@ -41,12 +41,12 @@
             <img :src="scope.row.img_0.thumbnail" height="40px" width="auto">
           </template>
         </el-table-column>
-        <!--Vendor Code-->
+        <!--SKU-->
         <el-table-column
-          label="Vendor Code"
+          label="SKU"
           width="120">
           <template slot-scope="scope">
-            <span><el-tag type="success">{{ scope.row.vendorCode }}</el-tag></span>
+            <span><el-tag type="success">{{ scope.row.SKU }}</el-tag></span>
           </template>
         </el-table-column>
         <!--Title-->
@@ -93,7 +93,7 @@
         </el-table-column>
         <!--EDIT/DELETE-->
         <el-table-column
-          width="150"
+          width="200"
           label="Operations">
           <template slot-scope="scope">
             <el-row type="flex" justify="center">

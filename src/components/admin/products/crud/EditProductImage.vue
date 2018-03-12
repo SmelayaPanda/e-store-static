@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button size="small" @click="dialogFormVisible = true">
+    <el-button @click="dialogFormVisible = true">
       <i class="el-icon-picture-outline"></i>
     </el-button>
     <!--Image-->

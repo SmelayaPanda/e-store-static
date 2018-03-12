@@ -42,7 +42,7 @@ let sendOneClickEmailNotifyToAdmin = function (transporter, info) {
        
        
        WANT TO BUY:
-       Vendor Code ....... ${info.product.vendorCode}
+       SKU ........................... ${info.product.SKU}
        Title ...................... ${info.product.title}
        Price .................... ${info.product.price} RUB
        `
