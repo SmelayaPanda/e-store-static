@@ -26,7 +26,7 @@
       >
         <el-table-column type="expand">
           <template slot-scope="props">
-            <p><span>Database id:</span> <el-tag size="mini" type="success">{{ props.row.productId }}</el-tag></p>
+            <p><span>Database product id:</span> <el-tag size="mini" type="success">{{ props.row.productId }}</el-tag></p>
             <p>Description: {{ props.row.description }}</p>
             <p>Color: {{ props.row.color }}</p>
             <p>Creation date: {{ props.row.creationDate | date }}</p>

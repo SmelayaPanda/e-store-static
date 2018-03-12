@@ -2,12 +2,12 @@ import * as firebase from 'firebase'
 
 export default {
   state: {
-    oneclick: []
+    oneClick: []
   },
   mutations: {
     setOneClick:
       (state, payload) => {
-        state.oneclick = payload
+        state.oneClick = payload
       }
   },
   actions: {
@@ -20,15 +20,15 @@ export default {
         }
         query.orderBy('creationDate').get()
           .then(snapshot => {
-            let oneclick = []
+            let oneClick = []
             snapshot.docs.forEach(doc => {
               let item = doc.data()
               item.id = doc.id
-              oneclick.push(item)
+              oneClick.push(item)
             })
             // console.log(oneclick)
             console.log('Oneclick fetched')
-            commit('setOneClick', oneclick)
+            commit('setOneClick', oneClick)
             commit('LOADING', false)
           })
           .catch(err => {
@@ -38,13 +38,10 @@ export default {
       },
     updateOneClick:
       ({commit, getters}, payload) => {
-        let name = payload.name
-        delete payload.dictionary
         commit('LOADING', true)
-        firebase.firestore().collection('dictionaries').doc(name).set({all: payload.data})
+        firebase.firestore().collection('oneclick').doc(payload.id).update(payload)
           .then(() => {
-            console.log('Dictionary updated')
-            commit('setBrands', payload.data)
+            console.log('Oneclick updated')
             commit('LOADING', false)
           })
           .catch(err => {
@@ -54,9 +51,15 @@ export default {
       }
   },
   getters: {
-    oneclick:
+    oneClick:
       state => {
-        return state.oneclick
+        return state.oneClick
+      },
+    oneClickById:
+      state => (id) => {
+        return state.oneClick.find(el => {
+          return el.id === id
+        })
       }
   }
 }

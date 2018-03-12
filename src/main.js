@@ -100,7 +100,7 @@ new Vue({
         this.$store.dispatch('fetchUserOrders')
         this.$store.dispatch('fetchAllOrders')
         this.$store.dispatch('fetchDictionaries')
-        this.$store.dispatch('fetchOneClick') // TODO: determinate admin loads
+        this.$store.dispatch('fetchOneClick', 'created') // TODO: determinate admin loads
       })
   }
 })

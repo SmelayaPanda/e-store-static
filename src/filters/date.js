@@ -6,9 +6,9 @@ export default (value) => {
     month: 'long',
     day: 'numeric',
     // weekday: 'long',
-    timezone: 'UTC'
-    // hour: 'numeric',
-    // minute: 'numeric'
+    timezone: 'UTC',
+    hour: 'numeric',
+    minute: 'numeric'
   }
   return date.toLocaleString('en-US', options) // 'ru'
 }
