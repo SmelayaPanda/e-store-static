@@ -4,20 +4,10 @@
       <i class="el-icon-close"></i>
     </el-button>
     <el-dialog
-      title="Refuse one click!"
+      title="Refuse product?"
       :visible.sync="dialogVisible"
-      width="30%"
+      width="500px"
       center>
-      <h3>You want to decline the "Оne Сlick" request?</h3>
-      <v-divider class="mt-2 mb-2"></v-divider>
-      <p>
-        <b v-if="oneClick">
-          {{ oneClick.product.title }}
-        </b>
-      </p>
-      <b>From:</b><br> {{ oneClick.nickname }}<br>
-      <i class="el-icon-phone"></i> {{ oneClick.phone }}<br>
-      <i class="el-icon-message"></i> {{ oneClick.email }}
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
         <el-button type="danger" @click="refuseOneClick">Confirm</el-button>
@@ -29,9 +19,10 @@
 <script>
 export default {
   name: 'RefuseOneClick',
-  props: ['oneClickId'],
+  props: ['oneClickId', 'comments'],
   data () {
     return {
+      editComments: this.comments,
       dialogVisible: false
     }
   },
@@ -40,6 +31,7 @@ export default {
       this.dialogVisible = false
       let obj = this.oneClick
       obj.status = 'refused'
+      obj.comments = this.editComments
       obj.refuseDate = new Date()
       this.$store.dispatch('updateOneClick', obj)
       return true

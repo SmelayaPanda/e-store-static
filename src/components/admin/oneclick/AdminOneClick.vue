@@ -196,18 +196,22 @@
               >
               </process-one-click>
               <sent-one-click :oneClickId="scope.row.id"
+                              :comments="scope.row.comments"
                               v-if="status === 'processed'"
               >
               </sent-one-click>
               <deliver-one-click :oneClickId="scope.row.id"
+                                 :comments="scope.row.comments"
                                  v-if="status === 'sent'"
               >
               </deliver-one-click>
               <refuse-one-click :oneClickId="scope.row.id"
+                                :comments="scope.row.comments"
                                 v-if="status !== 'refused' && status !== 'delivered' && status !== 'returned'"
               >
               </refuse-one-click>
               <return-one-click :oneClickId="scope.row.id"
+                                :comments="scope.row.comments"
                                 v-if="status === 'delivered'"
               >
               </return-one-click>

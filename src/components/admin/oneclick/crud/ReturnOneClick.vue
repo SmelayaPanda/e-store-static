@@ -6,24 +6,15 @@
     <el-dialog
       title="Return product?"
       :visible.sync="dialogVisible"
-      width="30%"
+      width="500px"
       center>
-      <p>
-        <b v-if="oneClick">
-          {{ oneClick.product.title }}
-        </b><br>
-        {{ oneClick.product.price }} x {{ oneClick.product.qty }} = {{ oneClick.product.price * oneClick.product.qty }} RUB
-      </p>
-      <b>For:</b><br>
-      {{ oneClick.nickname }}<br>
-      <i class="el-icon-phone"></i> {{ oneClick.phone }}<br>
-      <i class="el-icon-message"></i> {{ oneClick.email }}
-      <v-divider class="mt-2 mb-2"></v-divider>
-      <b>Address:</b><br>
-      City: {{ oneClick.shipping.city }}<br>
-      Street: {{ oneClick.shipping.street }}<br>
-      Build: {{ oneClick.shipping.build }}<br>
-      House: {{ oneClick.shipping.house }}
+      <b>Comments:</b><br>
+      <el-input v-model="editComments"
+                type="textarea"
+                placeholder="(max 400 symbols)"
+                :autosize="{ minRows: 3, maxRows: 7}"
+                :maxlength="400"
+      ></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
         <el-button type="danger" @click="returnOneClick">Confirm</el-button>
@@ -35,9 +26,10 @@
 <script>
 export default {
   name: 'ReturnOneClick',
-  props: ['oneClickId'],
+  props: ['oneClickId', 'comments'],
   data () {
     return {
+      editComments: this.comments,
       dialogVisible: false
     }
   },
@@ -46,6 +38,7 @@ export default {
       this.dialogVisible = false
       let obj = this.oneClick
       obj.status = 'returned'
+      obj.comments = this.editComments
       obj.returnDate = new Date()
       this.$store.dispatch('updateOneClick', obj)
       return true
