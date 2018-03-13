@@ -3,6 +3,7 @@
 // CORE
 import Vue from 'vue'
 import App from './App'
+import { sync } from 'vuex-router-sync'
 import router from './router'
 import {store} from './store'
 // import {sync} from 'vuex-router-sync'
@@ -26,6 +27,9 @@ import AlertComp from './components/shared/Alert'
 import Loader from './components/shared/Loader'
 import HelpTooltip from './components/shared/HelpTooltip'
 import MaskedInput from 'vue-masked-input'
+// for router in store
+const unsync = sync(store, router)
+unsync()
 // USE
 Vue.mixin(authMixin)
 Vue.mixin(image)
@@ -98,7 +102,7 @@ new Vue({
         })
         this.$store.dispatch('fetchUserCart')
         this.$store.dispatch('fetchUserOrders')
-        this.$store.dispatch('fetchAllOrders')
+        // this.$store.dispatch('fetchAllOrders')
         this.$store.dispatch('fetchDictionaries')
         this.$store.dispatch('fetchOneClick', 'created') // TODO: determinate admin loads
       })

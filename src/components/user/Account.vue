@@ -31,29 +31,110 @@
               </div>
             </el-card>
           </el-col>
-          <el-col :xs="24" :sm="17" :md="13" :lg="11" :xl="9" class="ml-1 mr-1">
+          <el-col :xs="24" :sm="17" :md="15" :lg="11" :xl="9" class="ml-1 mr-1">
             <el-card>
               <h2 class="mb-2">My orders history</h2>
-              <el-collapse accordion v-for="(order, idx) in userOrders" :key="idx">
-                <el-collapse-item name="1">
-                  <template slot="title">
-                    <span>{{ order.item_name1 }}</span>
-                    <span v-if="order.item_name2">, {{ order.item_name2 }}</span>
-                    <span v-if="order.item_name3">, {{ order.item_name3 }}</span>
-                    <span v-if="order.item_name4">, {{ order.item_name4 }}</span>
-                    <span v-if="order.item_name5">, {{ order.item_name5 }}</span>
-                    <span v-if="order.item_name6">, {{ order.item_name6 }}</span>
-                    <span v-if="order.item_name7">, {{ order.item_name7 }}</span>
-                    <span v-if="order.item_name8">, {{ order.item_name8 }}</span>
-                    <span v-if="order.item_name9">, {{ order.item_name9 }}</span>
-                    <span v-if="order.item_name10">, {{ order.item_name10 }}</span>
-                    <i class="header-icon el-icon-info"></i>
+              <el-table
+                default-expand-all
+                ref="orderTable"
+                :data="userOrders"
+                :highlight-current-row="true"
+                empty-text="No data"
+                style="width: 100vw; text-align: left"
+              >
+                <el-table-column type="expand">
+                  <template slot-scope="props">
+                    <el-row>
+                      <el-col :span="12">
+                        <p><span>Database id:</span>
+                          <el-tag size="mini" type="success">{{ props.row.id }}</el-tag>
+                        </p>
+                        <h3><i class="el-icon-info"></i>
+                          Product info:
+                        </h3>
+                        <p>
+                          Title: {{ props.row.products[0].name }}<br>
+                          SKU: {{ props.row.products[0].SKU }}<br>
+                          Price: {{ props.row.products[0].price }}<br>
+                          <span v-if="props.row.products">Quantity: {{ props.row.products[0].quantity }}</span>
+                        </p>
+                        <span v-if="props.row.comments">
+                <h3><i class="el-icon-warning"></i>
+                  Comments:
+                </h3>
+                {{ props.row.comments }}<br>
+              </span>
+                      </el-col>
+                      <el-col :span="12">
+              <span v-if="props.row.shipping">
+                <h3><i class="el-icon-location"></i>
+                  Shipping info:
+                </h3>
+                <p>
+                  Country: {{ props.row.shipping.country }}<br>
+                  City: {{ props.row.shipping.city }}<br>
+                  Street: {{ props.row.shipping.street }}<br>
+                  Build: {{ props.row.shipping.build }}<br>
+                  House: {{ props.row.shipping.house }}<br>
+                </p>
+              </span>
+                      </el-col>
+                    </el-row>
                   </template>
-                  <div v-for="(el, key) in order" :key="el.tnx_id">
-                    {{ key }}:  <span class="primary--text">{{ el }}</span>
-                  </div>
-                </el-collapse-item>
-              </el-collapse>
+                </el-table-column>
+                <!--Order Id-->
+                <el-table-column
+                  label="Order Id"
+                  width="180">
+                  <template slot-scope="scope">
+                    <el-popover trigger="hover" placement="top">
+                      <p>Order id: {{ scope.row.id }}</p>
+                      <div slot="reference" class="name-wrapper">
+                        <el-tag size="medium" type="success">{{ scope.row.id | snippet(40) }}</el-tag>
+                      </div>
+                    </el-popover>
+                  </template>
+                </el-table-column>
+                <!--Products-->
+                <el-table-column
+                  label="Total price"
+                  width="120">
+                  <template slot-scope="scope">
+                    <el-popover trigger="hover" placement="top">
+                      <p>Total price: {{ scope.row.totalPrice }} {{ scope.row.currency }}</p>
+                      <div slot="reference" class="name-wrapper">
+                        <el-tag size="medium">
+                          {{ scope.row.totalPrice }} {{ scope.row.currency }}
+                        </el-tag>
+                      </div>
+                    </el-popover>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  label="Order date"
+                  width="180">
+                  <template slot-scope="scope">
+                    <el-popover trigger="hover" placement="top">
+                      <p>Order date: {{ scope.row.orderDate }}</p>
+                      <div slot="reference" class="name-wrapper">
+                        <el-tag size="medium" type="info">
+                          {{ scope.row.orderDate | date }}
+                        </el-tag>
+                      </div>
+                    </el-popover>
+                  </template>
+                </el-table-column>
+                <!--Process-->
+                <el-table-column
+                  width="150"
+                  label="Action">
+                  <template slot-scope="scope">
+                    <el-row type="flex" justify="start">
+                      <el-button>Pay</el-button>
+                    </el-row>
+                  </template>
+                </el-table-column>
+              </el-table>
             </el-card>
           </el-col>
         </el-row>

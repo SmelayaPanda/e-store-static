@@ -41,29 +41,31 @@
               <el-button type="secondary" size="small" @click="removeFromCart(product.cartId)">
                 <i class="el-icon-delete"></i>
               </el-button>
-              <buy btn-name="Buy"
-                   :currency="'RUB'"
-                   :amount="parseFloat(product.price * product.qty).toFixed(2)"
-                   :order-items="[{
+              <checkout btn-name="Buy"
+                        :key="product.productId"
+                        :currency="'RUB'"
+                        :amount="parseFloat(product.price * product.qty).toFixed(2)"
+                        :order-items="[{
                   name: product.title.substring(0, 124),
                   quantity: product.qty,
                   price: parseFloat(product.price).toFixed(2),
                   currency: 'RUB',
-                  description: product.cartId
+                  description: ''
               }]"
               >
-              </buy>
+              </checkout>
             </el-col>
           </el-row>
           <div v-if="userCart.length > 1">
             <v-divider></v-divider>
             <p class="pt-3">Total price: {{ parseFloat(totalPrice).toFixed(2) }} RUB </p>
             <div class="paypal_total_btn">
-              <buy btn-name="Buy all"
-                   :currency="'RUB'"
-                   :amount="parseFloat(totalPrice).toFixed(2)"
-                   :order-items="totalItems">
-              </buy>
+              <checkout :key="1"
+                        btn-name="Buy all"
+                        :currency="'RUB'"
+                        :totalAmount="parseFloat(totalPrice).toFixed(2)"
+                        :order-items="totalItems">
+              </checkout>
             </div>
           </div>
         </el-card>
@@ -74,15 +76,15 @@
 
 <script>
 import PayPal from 'vue-paypal-checkout'
-import Buy from './Buy'
-// NOTE: description of items = IPN <<transaction_subject>> = "cartId1, cartId2, ..."
+import Checkout from './Checkout'
+// NOTE: description of items = IPN <<transaction_subject>> = "checkout order id"
 // ( all items descriptions will be concatenated )
 // TODO: check cart no more than 10 items
 export default {
   name: 'ShoppingCart',
   components: {
     PayPal,
-    Buy
+    Checkout
   },
   data () {
     return {
@@ -110,7 +112,7 @@ export default {
         item.price = cart[el].price
         item.quantity = cart[el].qty
         item.currency = cart[el].currency
-        item.description = cart[el].cartId + ',' // (,) - delimiter of <<transaction_subject>>
+        item.description = ''
         items.push(item)
       }
       return items
@@ -126,3 +128,8 @@ export default {
 
 <style scoped>
 </style>
+<!--item.description = ''-->
+<!--// it will be orderId-->
+<!--// Added after checkout insert.-->
+<!--// Only for first, because all items description concatenates by PayPal-->
+<!--// into <transaction_subject> field-->

@@ -12,7 +12,6 @@
             <el-radio-button :label="true">collapse</el-radio-button>
           </el-radio-group>
           <el-menu default-active="all"
-                   class="el-menu-vertical-demo"
                    @select="changeCategory"
                    :collapse="isCollapse">
             <el-menu-item index="all" @click="filterProducts">

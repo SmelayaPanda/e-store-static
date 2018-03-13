@@ -181,22 +181,21 @@
                 <div class="form_4" v-if="activeStep === 4">
                   <p class="mt-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur cumque cupiditate dignissimos dolore esse est exercitationem, expedita, labore magnam minima minus molestias nam nobis nostrum officia placeat quisquam ratione sit.</p>
                   <el-checkbox class="mb-5">I agree</el-checkbox><br>
-                  <el-button class="mb-4">
+                  <el-button class="mb-4"
+                             @click="checkout"
+                             :loading="this.$store.getters.loading"
+                  >
                     CHECKOUT
                   </el-button>
-                  <div class="buy_button" v-if="paymentMethod ==='Online'">
-                    <PayPal
-                      env="sandbox"
-                      locale="en_US"
-                      currency="RUB"
-                      :items="this.orderItems"
-                      :amount="this.amount"
-                      :client="credentials"
-                      :buttonStyle="btnStyle"
-                      notify-url="https://us-central1-e-store-dev.cloudfunctions.net/processPayPal"
-                    >
-                    </PayPal>
-                  </div>
+                  <!--&lt;!&ndash;PayPal Buy&ndash;&gt;-->
+                  <!--<pay-pal-buy :orderItems="orderItems"-->
+                               <!--:amount="amount"-->
+                               <!--v-if="-->
+                               <!--paymentMethod ==='Online' &&-->
+                               <!--orderIsProcessed &&-->
+                               <!--!this.$store.getters.loading"-->
+                  <!--&gt;-->
+                  <!--</pay-pal-buy>-->
                 </div>
               </el-col>
             </el-row>
@@ -215,7 +214,7 @@
             <h3>My order</h3>
             </div>
           <div style="font-size: 16px; margin-bottom: 20px;: 0; padding-top: 0;"
-               v-for="item in orderItems" :key="item.description"
+               v-for="(item, idx) in orderItems" :key="idx"
           >
             <span style="font-weight: bold;">{{ item.name }}: </span><br>
             <el-tag>{{ item.price }}</el-tag>
@@ -233,13 +232,9 @@
 </template>
 
 <script>
-import PayPal from 'vue-paypal-checkout'
 
 export default {
-  name: 'BuyOne',
-  components: {
-    PayPal
-  },
+  name: 'Checkout',
   props: ['order-items', 'amount', 'btn-name', 'currency'],
   data () {
     let notEmptyString = (rule, value, callback) => {
@@ -264,16 +259,6 @@ export default {
     return {
       deliveryMethod: 'Courier',
       paymentMethod: 'On receipt',
-      credentials: {
-        sandbox: 'AaTdJiFck5jx4xpaVOjFHkfNO8XZjflSRzYZ3yGbXEHZ43J7upAFabAkRhv1NJPPfDR49F9mqf8rbud4',
-        production: 'someId'
-      },
-      btnStyle: {
-        label: 'checkout',
-        size: 'responsive', // small | medium | large | responsive
-        shape: 'rect', // pill | rect
-        color: 'silver' // gold | blue | silver | black
-      },
       dialogFormVisible: false,
       activeStep: 1,
       form_1: {
@@ -339,6 +324,20 @@ export default {
     },
     isValidPhone: function () {
       return this.form_1.phone.replace(/[^0-9]/g, '').length === 11
+    },
+    checkout () {
+      this.orderIsProcessed = true
+      let order = {
+        products: this.orderItems,
+        totalPrice: this.amount,
+        currency: 'RUB',
+        orderDate: new Date(),
+        buyer: this.form_1,
+        shipping: this.form_2,
+        paymentMethod: this.paymentMethod,
+        deliveryMethod: this.deliveryMethod
+      }
+      this.$store.dispatch('checkout', order)
     }
   },
   computed: {
@@ -353,10 +352,4 @@ export default {
 </script>
 
 <style scoped>
-  .buy_button {
-    width: 200px;
-    height: 100px;
-    display:block;
-    margin: 30px auto 0;
-  }
 </style>
