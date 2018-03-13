@@ -92,10 +92,9 @@
 <script>
 export default {
   name: 'EditProduct',
-  props: ['editProduct'],
+  props: ['id'],
   data () {
     return {
-      product: this.editProduct,
       dialogFormVisible: false,
       formLabelWidth: '120px'
     }
@@ -103,7 +102,7 @@ export default {
   methods: {
     edit () {
       let editObj = {
-        productId: this.editProduct.productId,
+        productId: this.id,
         title: this.product.title,
         description: this.product.description,
         SKU: this.product.SKU,
@@ -147,6 +146,9 @@ export default {
     },
     colors () {
       return this.$store.getters.colors
+    },
+    product () {
+      return this.$store.getters.productById(this.id)
     }
   }
 }

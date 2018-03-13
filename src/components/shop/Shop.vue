@@ -23,7 +23,7 @@
             <el-submenu index="Category A">
               <template slot="title">
                 <!--<i class="el-icon-news"></i>-->
-                <v-icon>hd</v-icon>
+                <v-icon>looks_one</v-icon>
                 <span slot="title">Group A</span>
               </template>
               <el-menu-item-group>
@@ -39,15 +39,15 @@
               </el-menu-item-group>
             </el-submenu>
             <el-menu-item index="Category B" @click="filterProducts">
-              <v-icon>high_quality</v-icon>
+              <v-icon>looks_two</v-icon>
               <span slot="title">Category B</span>
             </el-menu-item>
             <el-menu-item index="Category C" @click="filterProducts">
-              <v-icon>closed_caption</v-icon>
+              <v-icon>looks_3</v-icon>
               <span slot="title">Category C</span>
             </el-menu-item>
             <el-menu-item index="Category D" @click="filterProducts">
-              <v-icon>fiber_new</v-icon>
+              <v-icon>looks_4</v-icon>
               <span slot="title">Category D</span>
             </el-menu-item>
           </el-menu>

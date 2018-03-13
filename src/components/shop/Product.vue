@@ -48,12 +48,11 @@
                 <h2 class="mt-3">{{ product.title }}</h2>
                 <v-divider class="mb-3 mt-3"></v-divider>
                 <div class="product_info">
-                  <!--<p>Id: {{ product.productId }}</p>-->
+                  <p class="info--text">SKU: {{ product.SKU }}</p>
                   <p>Description: {{ product.description }} </p>
-                  <p>Total Quantity: {{ product.qty }} </p>
+                  <p>Brand: {{ product.brand }} </p>
                   <p>Color: {{ product.color }} </p>
-                  <p>Size: {{ product.size }} </p>
-                  <p>Weight: {{ product.weight }} {{ product.weightMeasure }}</p>
+                  <p>Total Quantity: {{ product.qty }} </p>
                 </div>
                 <v-divider class="mb-3 mt-4"></v-divider>
                 <p>Price: {{ product.price }} {{ product.currency }}</p>

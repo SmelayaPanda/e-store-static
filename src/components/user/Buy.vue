@@ -8,7 +8,7 @@
                width="100%"
                :visible.sync="dialogFormVisible"
                :fullscreen="true">
-      <el-row style="height: 450px" type="flex" justify="center">
+      <el-row type="flex" justify="center">
         <el-col :span="12">
           <!--Stepper-->
           <el-row class="mt-4">
@@ -18,7 +18,7 @@
           >
             <el-step title="Personal Details" icon="el-icon-info"></el-step>
             <el-step title="Shipping" icon="el-icon-location"></el-step>
-            <el-step title="Delivery Method" icon="el-icon-document"></el-step>
+            <el-step title="Delivery / Payment" icon="el-icon-document"></el-step>
             <el-step title="Ordering" icon="el-icon-circle-check-outline"></el-step>
           </el-steps>
           </el-row>
@@ -126,39 +126,50 @@
           <el-row type="flex" justify="center">
             <el-col :span="18">
               <div class="form_3" v-if="activeStep === 3">
-                <h3 class="mb-1">Delivery Method</h3>
-                  <el-radio-group v-model="deliveryMethod" size="medium" class="mb-2">
-                    <el-radio-button label="Courier" ></el-radio-button>
-                    <el-radio-button label="Russian Post"></el-radio-button>
-                    <el-radio-button label="PickPoint"></el-radio-button>
-                  </el-radio-group>
-                <div style="height: 200px;">
-                  <h4 v-if="deliveryMethod === 'Courier'" class="primary--text mt-2">
+                <h3 class="mb-1">DELIVERY METHOD</h3>
+                  <div>
+                    <el-radio v-model="deliveryMethod" label="Courier" border></el-radio>
+                    <el-radio v-model="deliveryMethod" label="Russian Post" border></el-radio>
+                    <el-radio v-model="deliveryMethod" label="PickPoint" border></el-radio>
+                  </div>
+                <div class="mb-4">
+                  <h4 v-if="deliveryMethod === 'Courier'" class="mt-4">
                     Free shipping only in Novosibirsk!
+                    <v-icon class="ml-2">directions_bike</v-icon>
                   </h4>
-                  <h4 v-if="deliveryMethod === 'Russian Post'" class="primary--text mt-2">
-                    Shipping is charged separately on receipt!
+                  <h4 v-if="deliveryMethod === 'Russian Post'" class="mt-4">
+                    Shipping is charged
+                    <v-icon>train</v-icon>
+                    separately on receipt!
                   </h4>
-                  <h4 v-if="deliveryMethod === 'PickPoint'" class="primary--text mt-2">
-                    Shipping is charged separately on receipt!
+                  <h4 v-if="deliveryMethod === 'PickPoint'" class="mt-4">
+                    Shipping is charged
+                    <v-icon>touch_app</v-icon>
+                    separately on receipt!
                   </h4>
-                  <h3 class="mb-1 mt-4">Payment Method</h3>
-                  <el-radio-group v-model="paymentMethod" size="medium" class="mb-2">
-                    <el-radio-button label="Online" ></el-radio-button>
-                    <el-radio-button label="On receipt"></el-radio-button>
-                  </el-radio-group>
-                  <h4 v-if="paymentMethod === 'Online'" class="primary--text mt-2">
+                  <v-divider></v-divider>
+                  <h3 class="mb-1 mt-4">PAYMENT METHOD</h3>
+                  <div>
+                    <el-radio v-model="paymentMethod" label="Online" border></el-radio>
+                    <el-radio v-model="paymentMethod" label="On receipt" border></el-radio>
+                  </div>
+                  <h4 v-if="paymentMethod === 'Online'" class="mt-4">
+                    <v-icon>credit_card</v-icon><br>
                     Currently our system only supports payment with PayPal!
                   </h4>
-                  <h4 v-if="deliveryMethod === 'Courier' && paymentMethod === 'On receipt'" class="primary--text mt-2">
+                  <h4 v-if="deliveryMethod === 'Courier' && paymentMethod === 'On receipt'" class="mt-4">
+                    <v-icon>monetization_on</v-icon><br>
                     Pay the courier can only cash!
                   </h4>
-                  <h4 v-if="deliveryMethod === 'Russian Post' && paymentMethod === 'On receipt'" class="primary--text mt-2">
+                  <h4 v-if="deliveryMethod === 'Russian Post' && paymentMethod === 'On receipt'" class="mt-4">
+                    <v-icon>assignment</v-icon><br>
                     The parcel will be shipped by cash on delivery!
                   </h4>
-                  <h4 v-if="deliveryMethod === 'PickPoint' && paymentMethod === 'On receipt'" class="primary--text mt-2">
+                  <h4 v-if="deliveryMethod === 'PickPoint' && paymentMethod === 'On receipt'" class="mt-4">
+                    <v-icon>donut_small</v-icon><br>
                     You can pay for PickPoint services on receipt!
                   </h4>
+                  <v-divider></v-divider>
                 </div>
               </div>
             </el-col>
