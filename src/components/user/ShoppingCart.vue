@@ -59,7 +59,7 @@
             <v-divider></v-divider>
             <p class="pt-3">Total price: {{ parseFloat(totalPrice).toFixed(2) }} RUB </p>
             <div class="paypal_total_btn">
-              <checkout btn-name="Buy"
+              <checkout btn-name="Buy all"
                         :checkout-obj="totalItems"
               >
               </checkout>

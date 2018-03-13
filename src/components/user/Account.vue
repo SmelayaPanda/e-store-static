@@ -31,7 +31,7 @@
               </div>
             </el-card>
           </el-col>
-          <el-col :xs="24" :sm="17" :md="15" :lg="11" :xl="9" class="ml-1 mr-1">
+          <el-col :xs="24" :sm="17" :md="15" :lg="12" :xl="9" class="ml-1 mr-1">
             <el-card>
               <h2 class="mb-2">My orders history</h2>
               <el-table
@@ -48,15 +48,15 @@
                     <el-row>
                       <el-col :span="12">
                         <!--Standard looping is not working-->
-                        <div v-for="i in 10" :key="i" >
+                        <div v-for="i in 10" :key="i">
                           <div v-if="props.row.products[i-1]">
                             <h3><i class="el-icon-info"></i>
                               Product {{ i }} info:
                             </h3>
                             <span>SKU:</span>
-                              <el-tag size="mini" type="success" >
-                                {{ props.row.products[i-1].SKU }}
-                              </el-tag>
+                            <el-tag size="mini" type="success">
+                              {{ props.row.products[i-1].SKU }}
+                            </el-tag>
                             <p>
                               Title: {{ props.row.products[i-1].title }}<br>
                               SKU: {{ props.row.products[i-1].SKU }}<br>
@@ -83,7 +83,16 @@
                             Street: {{ props.row.shipping.street }}<br>
                             Build: {{ props.row.shipping.build }}<br>
                             House: {{ props.row.shipping.house }}<br>
+                            Post Code: {{ props.row.shipping.postCode }}<br>
                           </p>
+                          <h4><v-icon small class="mb-2">airplanemode_active</v-icon>
+                            Shipping method:
+                            <span style="font-weight: normal;">{{ props.row.deliveryMethod }}</span><br>
+                          </h4>
+                          <h4><v-icon small class="mb-1">monetization_on</v-icon>
+                            Payment method:
+                            <span style="font-weight: normal;">{{ props.row.paymentMethod }}</span>
+                          </h4>
                         </span>
                       </el-col>
                     </el-row>
@@ -137,7 +146,7 @@
                   label="Action">
                   <template slot-scope="scope">
                     <el-row type="flex" justify="start">
-                      <el-button>Pay</el-button>
+                      <el-button style="width: 100px" type="success"><b>Pay</b></el-button>
                     </el-row>
                   </template>
                 </el-table-column>
