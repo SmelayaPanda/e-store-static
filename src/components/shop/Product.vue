@@ -52,25 +52,10 @@
                   <p>Description: {{ product.description }} </p>
                   <p>Brand: {{ product.brand }} </p>
                   <p>Color: {{ product.color }} </p>
-                  <p>Total Quantity: {{ product.qty }} </p>
+                  <p>Total Quantity: {{ product.totalQty }} </p>
                 </div>
                 <v-divider class="mb-3 mt-4"></v-divider>
                 <p>Price: {{ product.price }} {{ product.currency }}</p>
-                <!--Authentication dialog-->
-                <el-dialog
-                  title="One second please!"
-                  :visible.sync="dialogVisible"
-                  width="30%"
-                  center
-                >
-                  <span>To continue shopping please register on the site!</span>
-                  <span slot="footer" class="dialog-footer">
-                    <router-link to="/signup">
-                      <el-button>Sing up</el-button>
-                    </router-link>
-                    <el-button type="primary" @click="signInAnonymously">Anonymously</el-button>
-                  </span>
-                </el-dialog>
                 <!--Add to cart-->
                 <el-button v-if="!alreadyAddedProduct"
                            size="medium"
@@ -131,26 +116,18 @@ export default {
       return this.$store.getters.cart
     },
     alreadyAddedProduct () {
-      return this.$store.getters.cart.find(el => {
-        return el.productId === this.id
-      })
+      return this.$store.getters.cart.indexOf(this.id) !== -1
     }
   },
   methods: {
     addToCart () {
       if (!this.isAuthenticatedUser) {
-        this.dialogVisible = true
+        this.$store.dispatch('signInAnonymously')
       }
-      let orderProduct = {}
-      orderProduct.productId = this.id
-      orderProduct.SKU = this.product.SKU
-      orderProduct.title = this.product.title
-      orderProduct.price = this.product.price
-      orderProduct.currency = this.product.currency
-      this.$store.dispatch('addToCart', orderProduct)
+      this.$store.dispatch('updateCart', {operation: 'add', productId: this.id})
     },
     removeFromCart () {
-      this.$store.dispatch('removeFromCart', this.alreadyAddedProduct.cartId)
+      this.$store.dispatch('updateCart', {operation: 'remove', productId: this.id})
     },
     signInAnonymously () {
       this.dialogVisible = false

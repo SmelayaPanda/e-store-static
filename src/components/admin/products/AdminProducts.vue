@@ -85,10 +85,10 @@
         </el-table-column>
         <!--QUANTITY-->
         <el-table-column
-          label="Quantity"
+          label="Total Qty"
           width="90">
           <template slot-scope="scope">
-            <span>{{ scope.row.qty }}</span>
+            <span>{{ scope.row.totalQty }}</span>
           </template>
         </el-table-column>
         <!--EDIT/DELETE-->

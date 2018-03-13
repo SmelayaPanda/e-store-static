@@ -11,20 +11,22 @@ export default {
       }
   },
   actions: {
-    addToCart:
+    updateCart:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
         const user = getters.user
-        let cart = getters.cart
         if (!user) {
           commit('LOADING', false)
           return
         }
-        payload.qty = 1
-        firebase.firestore().collection('users').doc(user.uid).collection('cart').add(payload)
-          .then((docRef) => {
-            payload.cartId = docRef.id
-            cart.push(payload)
+        let cart = getters.cart
+        if (payload.operation === 'add') {
+          cart.push(payload.productId)
+        } else if (payload.operation === 'remove') {
+          cart.splice(cart.indexOf(payload), 1)
+        }
+        firebase.firestore().collection('users').doc(user.uid).update({cart: cart})
+          .then(() => {
             commit('setCart', cart)
             commit('LOADING', false)
           })
@@ -32,28 +34,6 @@ export default {
             console.log(err)
             commit('LOADING', false)
           })
-      },
-    removeFromCart:
-      ({commit, getters}, payload) => {
-        commit('LOADING', true)
-        const user = getters.user
-        if (!user) {
-          commit('LOADING', false)
-          return
-        }
-        firebase.firestore().collection('users').doc(user.uid).collection('cart').doc(payload).delete()
-          .then(() => {
-            let cart = getters.cart
-            let idx = cart.findIndex(el => el.cartId === payload)
-            cart.splice(idx, 1)
-            commit('setCart', cart)
-            commit('LOADING', false)
-          })
-          .catch(
-            error => {
-              console.log(error)
-              commit('LOADING', false)
-            })
       },
     fetchUserCart:
       ({commit, getters}) => {
@@ -63,15 +43,9 @@ export default {
           commit('LOADING', false)
           return
         }
-        firebase.firestore().collection('users').doc(user.uid).collection('cart').get()
+        firebase.firestore().collection('users').doc(user.uid).get()
           .then(snapshot => {
-            let cart = []
-            let item
-            snapshot.docs.forEach(doc => {
-              item = doc.data()
-              item.cartId = doc.id
-              cart.push(item)
-            })
+            let cart = snapshot.data().cart
             commit('setCart', cart)
             commit('LOADING', false)
             console.log('Cart data fetched')
@@ -86,9 +60,7 @@ export default {
   getters: {
     cart:
       state => {
-        return state.cart.filter(obj => {
-          return obj.isPayed !== true
-        })
+        return state.cart
       }
   }
 }

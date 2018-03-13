@@ -76,8 +76,8 @@
               </el-form-item>
             </el-row>
             <el-row type="flex" style="flex-wrap: wrap">
-              <el-form-item label="Quantity" :label-width="formLabelWidth">
-                <el-input-number v-model="product.qty" :min="0" :max="1000000"></el-input-number>
+              <el-form-item label="Total Qty" :label-width="formLabelWidth">
+                <el-input-number v-model="product.totalQty" :min="0" :max="1000000"></el-input-number>
               </el-form-item>
             </el-row>
           </el-form>
@@ -124,7 +124,8 @@ export default {
         brand: this.product.brand,
         price: parseFloat(this.product.price).toFixed(2),
         currency: this.product.currency,
-        qty: this.product.qty,
+        qty: 1, // for user cart
+        totalQty: this.product.totalQty,
         color: this.product.color,
         creationDate: new Date()
       }

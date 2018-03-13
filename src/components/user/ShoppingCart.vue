@@ -18,7 +18,7 @@
             </router-link>
           </p>
           <!--PRODUCTS-->
-          <el-row v-for="product in userCart" :key="product.cartId"
+          <el-row v-for="product in userCart" :key="product.productId"
                   type="flex"
                   justify="center"
                   class="mb-3"
@@ -27,27 +27,26 @@
               <router-link :to="'/product/' + product.productId">
                 <h3>{{ product.title }}</h3>
               </router-link>
-              <i class="mb-0">Parameters:</i>
+              <p class="mb-0 info--text">SKU: {{ product.SKU }}</p>
+              <p class="mb-0">Brand: {{ product.brand }}</p>
               <p class="mb-0">Color: {{ product.color }}</p>
-              <p class="mb-0">Size: {{ product.size }}</p>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" align="right">
               <p>{{ parseFloat(product.qty * product.price).toFixed(2) }} {{ product.currency }}</p>
               <el-input-number size="small"
                                v-model="product.qty"
                                :min="0"
-                               :max="1000">
+                               :max="product.totalQty">
               </el-input-number>
-              <el-button type="secondary" size="small" @click="removeFromCart(product.cartId)">
+              <el-button type="secondary" size="small" @click="removeFromCart(product.productId)">
                 <i class="el-icon-delete"></i>
               </el-button>
               <checkout btn-name="Buy"
-                        :key="product.productId"
                         :currency="'RUB'"
-                        :amount="parseFloat(product.price * product.qty).toFixed(2)"
+                        :totalPrice="parseFloat(product.price * product.userQty).toFixed(2)"
                         :order-items="[{
                   name: product.title.substring(0, 124),
-                  quantity: product.qty,
+                  quantity: product.userQty,
                   price: parseFloat(product.price).toFixed(2),
                   currency: 'RUB',
                   description: ''
@@ -60,10 +59,9 @@
             <v-divider></v-divider>
             <p class="pt-3">Total price: {{ parseFloat(totalPrice).toFixed(2) }} RUB </p>
             <div class="paypal_total_btn">
-              <checkout :key="1"
-                        btn-name="Buy all"
+              <checkout btn-name="Buy all"
                         :currency="'RUB'"
-                        :totalAmount="parseFloat(totalPrice).toFixed(2)"
+                        :totalPrice="parseFloat(totalPrice).toFixed(2)"
                         :order-items="totalItems">
               </checkout>
             </div>
@@ -93,7 +91,14 @@ export default {
   },
   computed: {
     userCart () {
-      return this.$store.getters.cart
+      let cart = this.$store.getters.cart
+      let products = []
+      let product
+      for (const productId of cart) {
+        product = this.$store.getters.productById(productId)
+        products.push(product)
+      }
+      return products
     },
     totalPrice () {
       let total = 0
@@ -119,8 +124,8 @@ export default {
     }
   },
   methods: {
-    removeFromCart (cartId) {
-      this.$store.dispatch('removeFromCart', cartId)
+    removeFromCart (productId) {
+      this.$store.dispatch('updateCart', {operation: 'remove', productId: productId})
     }
   }
 }

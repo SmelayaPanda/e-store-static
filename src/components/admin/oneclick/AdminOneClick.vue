@@ -50,7 +50,7 @@
                   Title: {{ props.row.product.title }}<br>
                   SKU: {{ props.row.product.SKU }}<br>
                   Price: {{ props.row.product.price }}<br>
-                  <span v-if="props.row.product.qty">Quantity: {{ props.row.product.qty }}</span>
+                  <span v-if="props.row.product.totalQty">Total Qty: {{ props.row.product.totalQty }}</span>
                 </p>
                 <span v-if="props.row.comments">
                 <h3><i class="el-icon-warning"></i>
