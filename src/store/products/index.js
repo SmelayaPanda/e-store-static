@@ -56,7 +56,7 @@ export default {
               if (snapshot.size < 9) {
                 commit('isAllLoaded', true)
               }
-              snapshot.forEach(doc => {
+              snapshot.docs.forEach(doc => {
                 products.push(doc.data())
               })
               let lastVisible = snapshot.docs[snapshot.docs.length - 1]

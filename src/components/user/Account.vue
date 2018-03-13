@@ -38,6 +38,7 @@
                 default-expand-all
                 ref="orderTable"
                 :data="userOrders"
+                v-if="userOrders"
                 :highlight-current-row="true"
                 empty-text="No data"
                 style="width: 100vw; text-align: left"
@@ -46,8 +47,8 @@
                   <template slot-scope="props">
                     <el-row>
                       <el-col :span="12">
-                        <p><span>Database id:</span>
-                          <el-tag size="mini" type="success">{{ props.row.id }}</el-tag>
+                        <p><span>SKU:</span>
+                          <el-tag size="mini" type="success">{{ props.row.products[0].SKU }}</el-tag>
                         </p>
                         <h3><i class="el-icon-info"></i>
                           Product info:

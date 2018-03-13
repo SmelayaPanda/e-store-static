@@ -20,17 +20,10 @@ export default {
           commit('LOADING', false)
           return
         }
-        let cartId
-        firebase.database().ref(`users/${user.uid}/carts`).push(payload)
-          .then((data) => {
-            cartId = data.key
-            payload.cartId = cartId
-            return firebase.database().ref(`users/${user.uid}/carts`).child(cartId).update({cartId: cartId})
-          })
-          .then(() => {
-            return firebase.database().ref('cart_user').update({[cartId]: user.uid})
-          })
-          .then(() => {
+        payload.qty = 1
+        firebase.firestore().collection('users').doc(user.uid).collection('cart').add(payload)
+          .then((docRef) => {
+            payload.cartId = docRef.id
             cart.push(payload)
             commit('setCart', cart)
             commit('LOADING', false)
@@ -48,10 +41,7 @@ export default {
           commit('LOADING', false)
           return
         }
-        firebase.database().ref(`users/${user.uid}/carts`).child(payload).remove()
-          .then(() => {
-            return firebase.database().ref('cart_user').child(payload).remove()
-          })
+        firebase.firestore().collection('users').doc(user.uid).collection('cart').doc(payload).delete()
           .then(() => {
             let cart = getters.cart
             let idx = cart.findIndex(el => el.cartId === payload)
@@ -73,13 +63,18 @@ export default {
           commit('LOADING', false)
           return
         }
-        firebase.database().ref(`users/${user.uid}/carts`).once('value')
-          .then(data => {
-            console.log('Cart data fetched')
-            if (data.val()) {
-              commit('setCart', Object.values(data.val()))
-            }
+        firebase.firestore().collection('users').doc(user.uid).collection('cart').get()
+          .then(snapshot => {
+            let cart = []
+            let item
+            snapshot.docs.forEach(doc => {
+              item = doc.data()
+              item.cartId = doc.id
+              cart.push(item)
+            })
+            commit('setCart', cart)
             commit('LOADING', false)
+            console.log('Cart data fetched')
           })
           .catch(
             error => {

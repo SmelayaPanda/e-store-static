@@ -34,7 +34,6 @@ export default {
                 order.id = doc.id
                 orders.push(order)
               })
-              console.log(orders)
               commit('setOrders', orders)
               commit('LOADING', false)
             })
@@ -80,10 +79,12 @@ export default {
           return
         }
         firebase.firestore().collection('users').doc(user.uid).collection('orders').add(payload)
-          .then((snapshot) => {
-            let orderId = snapshot.id
+          .then((docRef) => {
+            let orders = getters.orders ? getters.orders : []
+            payload.id = docRef.id
+            orders.push(payload)
+            commit('setOrders', orders)
             commit('LOADING', false)
-            console.log(orderId)
             console.log('Order added')
             router.push('/account')
           })

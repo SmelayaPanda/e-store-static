@@ -329,7 +329,7 @@ export default {
       this.orderIsProcessed = true
       let order = {
         products: this.orderItems,
-        totalPrice: this.amount,
+        totalPrice: parseFloat(this.amount).toFixed(2),
         currency: 'RUB',
         orderDate: new Date(),
         buyer: this.form_1,

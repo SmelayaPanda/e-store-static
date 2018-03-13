@@ -143,10 +143,8 @@ export default {
       }
       let orderProduct = {}
       orderProduct.productId = this.id
-      orderProduct.qty = 1
+      orderProduct.SKU = this.product.SKU
       orderProduct.title = this.product.title
-      orderProduct.color = this.product.color
-      orderProduct.size = this.product.size
       orderProduct.price = this.product.price
       orderProduct.currency = this.product.currency
       this.$store.dispatch('addToCart', orderProduct)
