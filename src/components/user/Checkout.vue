@@ -4,7 +4,7 @@
       {{ btnName }}
     </el-button>
     <el-dialog title="CHECKOUT"
-               v-if="orderItems"
+               v-if="orderProducts"
                width="100%"
                :visible.sync="dialogFormVisible"
                :fullscreen="true">
@@ -214,16 +214,16 @@
             <h3>My order</h3>
             </div>
           <div style="font-size: 16px; margin-bottom: 20px;: 0; padding-top: 0;"
-               v-for="(item, idx) in orderItems" :key="idx"
+               v-for="product in orderProducts" :key="product.productId"
           >
-            <span style="font-weight: bold;">{{ item.name }}: </span><br>
-            <el-tag>{{ item.price }}</el-tag>
+            <span style="font-weight: bold;">{{ product.title }}: </span><br>
+            <el-tag>{{ product.price }}</el-tag>
             x
-            <el-tag>{{ item.quantity }}</el-tag>
+            <el-tag>{{ product.qty }}</el-tag>
             =
-            <el-tag class="mb-2">{{ parseFloat(item.price * item.quantity).toFixed(2) }} {{ currency }}</el-tag>
+            <el-tag class="mb-2">{{ parseFloat(product.price * product.qty).toFixed(2) }} {{ product.currency }}</el-tag>
           </div>
-          <b class="success--text">Total: {{ this.amount }} {{ currency }}</b>
+          <b class="success--text">Total: {{ this.totalPrice }} RUB</b>
           </el-card>
         </el-col>
       </el-row>
@@ -235,7 +235,7 @@
 
 export default {
   name: 'Checkout',
-  props: ['order-items', 'amount', 'btn-name', 'currency'],
+  props: ['checkoutObj', 'btnName'],
   data () {
     let notEmptyString = (rule, value, callback) => {
       if (!value) {
@@ -327,15 +327,27 @@ export default {
     },
     checkout () {
       this.orderIsProcessed = true
+      let lightProducts = []
+      for (let p of this.orderProducts) {
+        // minimum info
+        let sp = {}
+        sp.productId = p.productId
+        sp.SKU = p.SKU
+        sp.qty = p.qty
+        sp.title = p.title
+        sp.price = p.price
+        sp.currency = 'RUB'
+        lightProducts.push(sp)
+      }
       let order = {
-        products: this.orderItems,
-        totalPrice: parseFloat(this.amount).toFixed(2),
-        currency: 'RUB',
-        orderDate: new Date(),
+        products: lightProducts,
+        checkoutDate: new Date(),
         buyer: this.form_1,
         shipping: this.form_2,
+        deliveryMethod: this.deliveryMethod,
         paymentMethod: this.paymentMethod,
-        deliveryMethod: this.deliveryMethod
+        totalPrice: parseFloat(this.totalPrice).toFixed(2),
+        currency: 'RUB'
       }
       this.$store.dispatch('checkout', order)
     }
@@ -346,6 +358,24 @@ export default {
     },
     isValidForm_2 () {
       return this.form_2.country && this.form_2.city && this.form_2.street && this.form_2.house && this.form_2.postCode
+    },
+    orderProducts () {
+      let checkoutObj = this.checkoutObj
+      let products = []
+      checkoutObj.forEach(el => {
+        let product = this.$store.getters.productById(el.productId)
+        product.qty = el.qty
+        products.push(product)
+      })
+      return products
+    },
+    totalPrice () {
+      let total = 0
+      let products = this.orderProducts
+      for (let p of products) {
+        total += p.qty * p.price
+      }
+      return total
     }
   }
 }

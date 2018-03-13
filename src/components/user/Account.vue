@@ -47,38 +47,44 @@
                   <template slot-scope="props">
                     <el-row>
                       <el-col :span="12">
-                        <p><span>SKU:</span>
-                          <el-tag size="mini" type="success">{{ props.row.products[0].SKU }}</el-tag>
-                        </p>
-                        <h3><i class="el-icon-info"></i>
-                          Product info:
-                        </h3>
-                        <p>
-                          Title: {{ props.row.products[0].name }}<br>
-                          SKU: {{ props.row.products[0].SKU }}<br>
-                          Price: {{ props.row.products[0].price }}<br>
-                          <span v-if="props.row.products">Quantity: {{ props.row.products[0].quantity }}</span>
-                        </p>
-                        <span v-if="props.row.comments">
-                <h3><i class="el-icon-warning"></i>
-                  Comments:
-                </h3>
-                {{ props.row.comments }}<br>
-              </span>
+                        <!--Standard looping is not working-->
+                        <div v-for="i in 10" :key="i" >
+                          <div v-if="props.row.products[i-1]">
+                            <h3><i class="el-icon-info"></i>
+                              Product {{ i }} info:
+                            </h3>
+                            <span>SKU:</span>
+                              <el-tag size="mini" type="success" >
+                                {{ props.row.products[i-1].SKU }}
+                              </el-tag>
+                            <p>
+                              Title: {{ props.row.products[i-1].title }}<br>
+                              SKU: {{ props.row.products[i-1].SKU }}<br>
+                              Price: {{ props.row.products[i-1].price }} {{ props.row.products[i-1].currency }}<br>
+                              Quantity: {{ props.row.products[i-1].qty }}
+                            </p>
+                            <span v-if="props.row.comments">
+                              <h3><i class="el-icon-warning"></i>
+                                Comments:
+                              </h3>
+                              {{ props.row.comments }}<br>
+                            </span>
+                          </div>
+                        </div>
                       </el-col>
                       <el-col :span="12">
-              <span v-if="props.row.shipping">
-                <h3><i class="el-icon-location"></i>
-                  Shipping info:
-                </h3>
-                <p>
-                  Country: {{ props.row.shipping.country }}<br>
-                  City: {{ props.row.shipping.city }}<br>
-                  Street: {{ props.row.shipping.street }}<br>
-                  Build: {{ props.row.shipping.build }}<br>
-                  House: {{ props.row.shipping.house }}<br>
-                </p>
-              </span>
+                        <span v-if="props.row.shipping">
+                          <h3><i class="el-icon-location"></i>
+                            Shipping info:
+                          </h3>
+                          <p>
+                            Country: {{ props.row.shipping.country }}<br>
+                            City: {{ props.row.shipping.city }}<br>
+                            Street: {{ props.row.shipping.street }}<br>
+                            Build: {{ props.row.shipping.build }}<br>
+                            House: {{ props.row.shipping.house }}<br>
+                          </p>
+                        </span>
                       </el-col>
                     </el-row>
                   </template>
@@ -119,7 +125,7 @@
                       <p>Order date: {{ scope.row.orderDate }}</p>
                       <div slot="reference" class="name-wrapper">
                         <el-tag size="medium" type="info">
-                          {{ scope.row.orderDate | date }}
+                          {{ scope.row.checkoutDate | date }}
                         </el-tag>
                       </div>
                     </el-popover>

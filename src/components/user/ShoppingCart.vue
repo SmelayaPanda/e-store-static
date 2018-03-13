@@ -5,7 +5,7 @@
       <app-loader></app-loader>
     </v-container>
     <el-row v-else el-row type="flex" justify="center">
-      <el-col :xs="24" :sm="20" :md="16" :lg="14" :xl="8" type="flex" align="middle">
+      <el-col :xs="24" :sm="20" :md="18" :lg="16" :xl="12" type="flex" align="middle">
         <el-card v-if="userCart">
           <p class="mb-3" style="font-size: 18px;">
             <span v-if="userCart.length === 0">Your cart is empty</span>
@@ -23,7 +23,12 @@
                   justify="center"
                   class="mb-3"
                   style="flex-wrap: wrap">
-            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" align="left">
+            <el-col :sm="3" :md="3" :lg="3" :xl="3" align="left" class="mr-1">
+              <img v-if="product.img_0.thumbnail"
+                   :src="product.img_0.thumbnail"
+                   ref="img_0" class="thumb_img"/>
+            </el-col>
+            <el-col :xs="24" :sm="10" :md="10" :lg="10" :xl="10" align="left">
               <router-link :to="'/product/' + product.productId">
                 <h3>{{ product.title }}</h3>
               </router-link>
@@ -31,7 +36,7 @@
               <p class="mb-0">Brand: {{ product.brand }}</p>
               <p class="mb-0">Color: {{ product.color }}</p>
             </el-col>
-            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" align="right">
+            <el-col :xs="24" :sm="9" :md="9" :lg="9" :xl="9" align="right">
               <p>{{ parseFloat(product.qty * product.price).toFixed(2) }} {{ product.currency }}</p>
               <el-input-number size="small"
                                v-model="product.qty"
@@ -42,15 +47,10 @@
                 <i class="el-icon-delete"></i>
               </el-button>
               <checkout btn-name="Buy"
-                        :currency="'RUB'"
-                        :totalPrice="parseFloat(product.price * product.userQty).toFixed(2)"
-                        :order-items="[{
-                  name: product.title.substring(0, 124),
-                  quantity: product.userQty,
-                  price: parseFloat(product.price).toFixed(2),
-                  currency: 'RUB',
-                  description: ''
-              }]"
+                        :checkout-obj="[{
+                          productId: product.productId,
+                          qty: product.qty
+                        }]"
               >
               </checkout>
             </el-col>
@@ -59,10 +59,9 @@
             <v-divider></v-divider>
             <p class="pt-3">Total price: {{ parseFloat(totalPrice).toFixed(2) }} RUB </p>
             <div class="paypal_total_btn">
-              <checkout btn-name="Buy all"
-                        :currency="'RUB'"
-                        :totalPrice="parseFloat(totalPrice).toFixed(2)"
-                        :order-items="totalItems">
+              <checkout btn-name="Buy"
+                        :checkout-obj="totalItems"
+              >
               </checkout>
             </div>
           </div>
@@ -103,21 +102,18 @@ export default {
     totalPrice () {
       let total = 0
       let cart = this.userCart
-      for (let product in cart) {
-        total += cart[product].qty * cart[product].price
+      for (let product of cart) {
+        total += product.qty * product.price
       }
       return total
     },
     totalItems () {
       let items = []
       let cart = this.userCart
-      for (let el in cart) {
+      for (let el of cart) {
         let item = {}
-        item.name = cart[el].title
-        item.price = cart[el].price
-        item.quantity = cart[el].qty
-        item.currency = cart[el].currency
-        item.description = ''
+        item.productId = el.productId
+        item.qty = el.qty
         items.push(item)
       }
       return items
@@ -132,6 +128,13 @@ export default {
 </script>
 
 <style scoped>
+  .thumb_img {
+    height: 90px;
+    width: 78px;
+    object-fit: cover;
+    margin-right: 1px;
+    margin-left: 1px;
+  }
 </style>
 <!--item.description = ''-->
 <!--// it will be orderId-->
