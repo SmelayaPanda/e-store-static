@@ -74,7 +74,6 @@
 </template>
 
 <script>
-import PayPal from 'vue-paypal-checkout'
 import Checkout from './Checkout'
 import OrdersHistory from './OrdersHistory'
 // NOTE: description of items = IPN <<transaction_subject>> = "checkout order id"
@@ -83,7 +82,6 @@ import OrdersHistory from './OrdersHistory'
 export default {
   name: 'ShoppingCart',
   components: {
-    PayPal,
     Checkout,
     OrdersHistory
   },

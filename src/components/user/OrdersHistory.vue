@@ -20,11 +20,27 @@
                   Show details
                 </el-switch>
               </el-col>
-              <el-col :xs="19" :sm="20" :md="20" :lg="20" :xl="20" class="mb-2">
+              <el-col :xs="19" :sm="15" :md="15" :lg="15" :xl="15" class="mb-2">
                 <el-tag type="success" class="ml-2 mt-2">ID: {{ order.id }}</el-tag>
                 <el-tag type="info" class="ml-2 mt-2">Date: {{ order.checkoutDate | date }}</el-tag>
                 <el-tag class="ml-2 mt-2">{{ order.totalPrice }} {{ order.currency }}</el-tag>
-                <el-button size="small" type="success" class="ml-2 mt-2">Pay</el-button>
+                <el-button type="text" class="ml-2 mt-2 info--text">
+                  <!--Status:-->
+                  <el-tag type="danger">
+                    Is not paid
+                  </el-tag>
+                  <el-tooltip class="item" effect="dark"
+                              content="This status means"
+                              placement="right-start">
+                    <v-icon>lightbulb_outline</v-icon>
+                  </el-tooltip>
+                </el-button>
+                <!--PAY NOW-->
+                <pay-now-dialog :orderId="order.id"
+                                :orderItems="order.products"
+                                :amount="order.totalPrice"
+                >
+                </pay-now-dialog>
               </el-col>
             </el-row>
             <div v-show="order.showDetails === true">
@@ -107,8 +123,10 @@
 </template>
 
 <script>
+import PayNowDialog from './PayNowDialog'
 export default {
   name: 'OrdersHistory',
+  components: {PayNowDialog},
   computed: {
     userOrders () {
       return this.$store.getters.orders
