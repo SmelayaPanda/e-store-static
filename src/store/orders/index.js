@@ -78,7 +78,6 @@ export default {
           commit('LOADING', false)
           return
         }
-        let decreaseObj = []
         firebase.firestore().collection('users').doc(user.uid).collection('orders').add(payload)
           .then((docRef) => {
             let orders = getters.orders ? getters.orders : []
@@ -86,35 +85,22 @@ export default {
             orders.push(payload)
             commit('setOrders', orders)
             let actions = []
-            // 1. remove items from user cart:
-            let cart = getters.cart
-            for (let p of payload.products) {
-              cart.splice(cart.indexOf(p.productId))
-              decreaseObj.push({
-                productId: p.productId,
-                qty: p.qty
-              })
-            }
+            // 1. remove items from user cart
+            // 2. decrease totalQty of each products
             let updateCart = function (cart) {
               return firebase.firestore().collection('users').doc(user.uid).update({cart: cart})
-            }
-            actions.push(updateCart(cart))
-            // 2. decrease totalQty of each products
-            let updateProducts = []
-            for (let obj of decreaseObj) {
-              let product = getters.productById(obj.productId)
-              let newTotalQty = product.totalQty - obj.qty
-              updateProducts.push({
-                productId: obj.productId,
-                totalQty: newTotalQty
-              })
             }
             let decreaseTotalQty = function (productId, totalQty) {
               return firebase.firestore().collection('products').doc(productId).update({totalQty: totalQty})
             }
-            for (let obj of updateProducts) {
-              actions.push(decreaseTotalQty(obj.productId, obj.totalQty))
+            let cart = getters.cart
+            let product
+            for (let p of payload.products) {
+              cart.splice(cart.indexOf(p.productId))
+              product = getters.productById(p.productId)
+              actions.push(decreaseTotalQty(p.productId, product.totalQty - p.qty))
             }
+            actions.push(updateCart(cart))
             return Promise.all(actions)
           })
           .then(() => {
