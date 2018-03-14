@@ -5,7 +5,7 @@
       <app-loader></app-loader>
     </v-container>
     <div v-else>
-      <div v-if="isVerifiedEmail">
+      <div v-if="user.emailVerified">
         <!--Personal card-->
         <div></div>
         <el-row type="flex" justify="center" style="flex-wrap: wrap">
@@ -33,124 +33,7 @@
           </el-col>
           <el-col :xs="24" :sm="17" :md="15" :lg="12" :xl="9" class="ml-1 mr-1">
             <el-card>
-              <h2 class="mb-2">My orders history</h2>
-              <el-table
-                default-expand-all
-                ref="orderTable"
-                :data="userOrders"
-                v-if="userOrders"
-                :highlight-current-row="true"
-                empty-text="No data"
-                style="width: 100vw; text-align: left"
-              >
-                <el-table-column type="expand">
-                  <template slot-scope="props">
-                    <el-row>
-                      <el-col :span="12">
-                        <!--Standard looping is not working-->
-                        <div v-for="i in 10" :key="i">
-                          <div v-if="props.row.products[i-1]">
-                            <h3><i class="el-icon-info"></i>
-                              Product {{ i }} info:
-                            </h3>
-                            <span>SKU:</span>
-                            <el-tag size="mini" type="success">
-                              {{ props.row.products[i-1].SKU }}
-                            </el-tag>
-                            <p>
-                              Title: {{ props.row.products[i-1].title }}<br>
-                              SKU: {{ props.row.products[i-1].SKU }}<br>
-                              Price: {{ props.row.products[i-1].price }} {{ props.row.products[i-1].currency }}<br>
-                              Quantity: {{ props.row.products[i-1].qty }}
-                            </p>
-                            <span v-if="props.row.comments">
-                              <h3><i class="el-icon-warning"></i>
-                                Comments:
-                              </h3>
-                              {{ props.row.comments }}<br>
-                            </span>
-                          </div>
-                        </div>
-                      </el-col>
-                      <el-col :span="12">
-                        <span v-if="props.row.shipping">
-                          <h3><i class="el-icon-location"></i>
-                            Shipping info:
-                          </h3>
-                          <p>
-                            Country: {{ props.row.shipping.country }}<br>
-                            City: {{ props.row.shipping.city }}<br>
-                            Street: {{ props.row.shipping.street }}<br>
-                            Build: {{ props.row.shipping.build }}<br>
-                            House: {{ props.row.shipping.house }}<br>
-                            Post Code: {{ props.row.shipping.postCode }}<br>
-                          </p>
-                          <h4><v-icon small class="mb-2">airplanemode_active</v-icon>
-                            Shipping method:
-                            <span style="font-weight: normal;">{{ props.row.deliveryMethod }}</span><br>
-                          </h4>
-                          <h4><v-icon small class="mb-1">monetization_on</v-icon>
-                            Payment method:
-                            <span style="font-weight: normal;">{{ props.row.paymentMethod }}</span>
-                          </h4>
-                        </span>
-                      </el-col>
-                    </el-row>
-                  </template>
-                </el-table-column>
-                <!--Order Id-->
-                <el-table-column
-                  label="Order Id"
-                  width="180">
-                  <template slot-scope="scope">
-                    <el-popover trigger="hover" placement="top">
-                      <p>Order id: {{ scope.row.id }}</p>
-                      <div slot="reference" class="name-wrapper">
-                        <el-tag size="medium" type="success">{{ scope.row.id | snippet(40) }}</el-tag>
-                      </div>
-                    </el-popover>
-                  </template>
-                </el-table-column>
-                <!--Products-->
-                <el-table-column
-                  label="Total price"
-                  width="120">
-                  <template slot-scope="scope">
-                    <el-popover trigger="hover" placement="top">
-                      <p>Total price: {{ scope.row.totalPrice }} {{ scope.row.currency }}</p>
-                      <div slot="reference" class="name-wrapper">
-                        <el-tag size="medium">
-                          {{ scope.row.totalPrice }} {{ scope.row.currency }}
-                        </el-tag>
-                      </div>
-                    </el-popover>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  label="Order date"
-                  width="180">
-                  <template slot-scope="scope">
-                    <el-popover trigger="hover" placement="top">
-                      <p>Order date: {{ scope.row.orderDate }}</p>
-                      <div slot="reference" class="name-wrapper">
-                        <el-tag size="medium" type="info">
-                          {{ scope.row.checkoutDate | date }}
-                        </el-tag>
-                      </div>
-                    </el-popover>
-                  </template>
-                </el-table-column>
-                <!--Process-->
-                <el-table-column
-                  width="150"
-                  label="Action">
-                  <template slot-scope="scope">
-                    <el-row type="flex" justify="start">
-                      <el-button style="width: 100px" type="success"><b>Pay</b></el-button>
-                    </el-row>
-                  </template>
-                </el-table-column>
-              </el-table>
+              <h2 class="mb-2">Contact info</h2>
             </el-card>
           </el-col>
         </el-row>
@@ -160,7 +43,7 @@
           <i class="el-icon-info"></i>
           Confirm your email address to continue
         </h3>
-        <p>Email with verification link sent to address: <br><span>{{ userEmail }}</span></p>
+        <p>Email with verification link sent to address: <br><span>{{ user.email }}</span></p>
       </div>
       <div v-if="this.isAnonymousUser">
         <h2 class="mb-2">You are sign in as anonymous user.</h2>
@@ -186,13 +69,8 @@ export default {
   },
   components: {},
   computed: {
-    isVerifiedEmail: function () {
-      if (this.$store.getters.user) {
-        return this.$store.getters.user.emailVerified
-      }
-    },
-    userEmail () {
-      return this.$store.getters.user.email
+    user () {
+      return this.$store.getters.user
     },
     userOrders () {
       return this.$store.getters.orders

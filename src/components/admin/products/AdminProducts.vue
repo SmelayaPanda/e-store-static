@@ -20,7 +20,7 @@
       <el-table
         ref="categoryTable"
         :data="products"
-        :highlight-current-row="true"
+        highlight-current-row
         empty-text="No data"
         style="width: 100vw; text-align: left"
       >

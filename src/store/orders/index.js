@@ -25,13 +25,14 @@ export default {
           commit('LOADING', false)
           return
         }
-        firebase.firestore().collection('users').doc(user.uid).collection('orders').get()
+        firebase.firestore().collection('users').doc(user.uid).collection('orders').orderBy('checkoutDate', 'desc').get()
           .then(
             (snapshot) => {
               let orders = []
               snapshot.docs.forEach(doc => {
                 let order = doc.data()
                 order.id = doc.id
+                order.showDetails = false
                 orders.push(order)
               })
               commit('setOrders', orders)

@@ -68,12 +68,15 @@
         </el-card>
       </el-col>
     </el-row>
+    <!--ORDERS HISTORY-->
+    <orders-history></orders-history>
   </div>
 </template>
 
 <script>
 import PayPal from 'vue-paypal-checkout'
 import Checkout from './Checkout'
+import OrdersHistory from './OrdersHistory'
 // NOTE: description of items = IPN <<transaction_subject>> = "checkout order id"
 // ( all items descriptions will be concatenated )
 // TODO: check cart no more than 10 items
@@ -81,7 +84,8 @@ export default {
   name: 'ShoppingCart',
   components: {
     PayPal,
-    Checkout
+    Checkout,
+    OrdersHistory
   },
   data () {
     return {
