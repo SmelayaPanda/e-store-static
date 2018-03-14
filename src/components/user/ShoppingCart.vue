@@ -40,7 +40,7 @@
               <p>{{ parseFloat(product.qty * product.price).toFixed(2) }} {{ product.currency }}</p>
               <el-input-number size="small"
                                v-model="product.qty"
-                               :min="0"
+                               :min="1"
                                :max="product.totalQty">
               </el-input-number>
               <el-button type="secondary" size="small" @click="removeFromCart(product.productId)">

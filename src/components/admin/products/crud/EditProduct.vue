@@ -62,7 +62,7 @@
             </el-row>
             <el-row type="flex" style="flex-wrap: wrap">
               <el-form-item label="Price" :label-width="formLabelWidth">
-                <el-input-number v-model="product.price" :min="1" :max="1000000"></el-input-number>
+                <el-input-number v-model="product.price" :min="0" :max="1000000"></el-input-number>
               </el-form-item>
               <el-form-item label="Currency" :label-width="formLabelWidth">
                 <el-select v-model="product.currency" placeholder="Select a currency">

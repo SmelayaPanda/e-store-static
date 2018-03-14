@@ -52,7 +52,14 @@
                   <p>Description: {{ product.description }} </p>
                   <p>Brand: {{ product.brand }} </p>
                   <p>Color: {{ product.color }} </p>
-                  <p>Total Quantity: {{ product.totalQty }} </p>
+                  <p>Total Quantity:
+                    <span v-if="product.totalQty < 1" class="error--text">
+                      Not allowed
+                    </span>
+                    <span v-else>
+                      {{ product.totalQty }}
+                    </span>
+                  </p>
                 </div>
                 <v-divider class="mb-3 mt-4"></v-divider>
                 <p>Price: {{ product.price }} {{ product.currency }}</p>
@@ -61,6 +68,7 @@
                            size="medium"
                            type="primary"
                            class="mt-3"
+                           :disabled="product.totalQty < 1"
                            @click="addToCart">
                   <span style="font-size: 14px">
                     Add to cart
@@ -68,9 +76,11 @@
                   <i class="el-icon-goods ml-2" style="transform: scale(1.5)"></i>
                 </el-button>
                 <!--ONE CLICK-->
-                <one-click :alreadyAddedProduct="alreadyAddedProduct"
+                <one-click :disabled="product.totalQty < 1"
+                           :alreadyAddedProduct="alreadyAddedProduct"
                            :product="product"
-                ></one-click>
+                >
+                </one-click>
                 <!--ALREADY IN CART-->
                 <div v-if="alreadyAddedProduct">
                   <router-link to="/cart">

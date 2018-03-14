@@ -36,11 +36,14 @@ export default {
   methods: {
     returnOneClick () {
       this.dialogVisible = false
-      let obj = this.oneClick
+      let obj = {}
       obj.status = 'returned'
       obj.comments = this.editComments
       obj.returnDate = new Date()
-      this.$store.dispatch('updateOneClick', obj)
+      this.$store.dispatch('updateOneClick', {
+        updateData: obj,
+        oneClickId: this.oneClickId
+      })
       return true
     }
   },

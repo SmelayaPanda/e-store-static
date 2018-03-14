@@ -26,7 +26,6 @@ export default {
               item.id = doc.id
               oneClick.push(item)
             })
-            // console.log(oneclick)
             console.log('Oneclick fetched')
             commit('setOneClick', oneClick)
             commit('LOADING', false)
@@ -39,7 +38,13 @@ export default {
     updateOneClick:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
-        firebase.firestore().collection('oneclick').doc(payload.id).update(payload)
+        firebase.firestore().collection('oneclick').doc(payload.oneClickId).update(payload.updateData)
+          .then(() => {
+            if (payload.updateData.status === 'processed') {
+              return firebase.firestore().collection('products')
+                .doc(payload.productId).update({totalQty: payload.totalQty})
+            }
+          })
           .then(() => {
             console.log('One Click updated')
             commit('LOADING', false)

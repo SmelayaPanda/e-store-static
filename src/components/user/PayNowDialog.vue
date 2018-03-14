@@ -2,7 +2,6 @@
   <div>
     <el-button @click="dialogVisible = true"
                class="ml-2"
-               @openPayNowDialog="processOpenNow"
     >
       Pay now
     </el-button>
@@ -40,7 +39,7 @@ export default {
   },
   data () {
     return {
-      dialogVisible: false,
+      dialogVisible: true,
       credentials: {
         sandbox: 'AaTdJiFck5jx4xpaVOjFHkfNO8XZjflSRzYZ3yGbXEHZ43J7upAFabAkRhv1NJPPfDR49F9mqf8rbud4',
         production: 'someId'
@@ -53,15 +52,7 @@ export default {
       }
     }
   },
-  methods: {
-    processOpenNow (val) {
-      console.log(val)
-      console.log(this.orderItems.id)
-      if (this.orderItems.id === val) {
-        this.dialogVisible = true
-      }
-    }
-  },
+  methods: {},
   computed: {
     totalItems () {
       let orderItems = this.orderItems
@@ -77,9 +68,6 @@ export default {
       }
       return items
     }
-    // dialogVisible () {
-    //   return this.$store.getters.openPayNowDialog === this.orderId
-    // }
   }
 }
 </script>

@@ -37,11 +37,14 @@ export default {
   methods: {
     sentOneClick () {
       this.dialogVisible = false
-      let obj = this.oneClick
+      let obj = {}
       obj.status = 'sent'
       obj.comments = this.editComments
       obj.sentDate = new Date()
-      this.$store.dispatch('updateOneClick', obj)
+      this.$store.dispatch('updateOneClick', {
+        updateData: obj,
+        oneClickId: this.oneClickId
+      })
       return true
     }
   },

@@ -3,6 +3,7 @@
     <el-button v-if="!alreadyAddedProduct"
                size="medium"
                class="mt-3"
+               :disabled="disabled"
                @click="buyOneClick">
     <span style="font-size: 14px">
       Buy one click
@@ -56,7 +57,7 @@ import axios from 'axios'
 
 export default {
   name: 'OneClick',
-  props: ['alreadyAddedProduct', 'product'],
+  props: ['alreadyAddedProduct', 'product', 'disabled'],
   data () {
     let validateNickname = (rule, value, callback) => {
       if (value === '') {
@@ -104,10 +105,12 @@ export default {
         nickname: this.oneClickForm.nickname,
         email: this.oneClickForm.email,
         phone: this.oneClickForm.phone,
+        qty: 1,
         product: {
           title: this.product.title,
           price: this.product.price,
-          SKU: this.product.SKU
+          SKU: this.product.SKU,
+          id: this.product.productId
         }
       })
         .then(res => {

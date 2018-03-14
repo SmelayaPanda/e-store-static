@@ -83,7 +83,7 @@ export default {
           .then((docRef) => {
             let orders = getters.orders ? getters.orders : []
             payload.id = docRef.id
-            orders.push(payload)
+            orders.unshift(payload)
             commit('setOrders', orders)
             let actions = []
             // 1. remove items from user cart
@@ -99,7 +99,20 @@ export default {
             for (let p of payload.products) {
               cart.splice(cart.indexOf(p.productId))
               product = getters.productById(p.productId)
-              actions.push(decreaseTotalQty(p.productId, product.totalQty - p.qty))
+              let isEndedProducts = product.totalQty - p.qty < 0
+              if (isEndedProducts) {
+                this.$notify({
+                  title: 'Ahh...',
+                  message: 'Probably while you were buying the goods it ended. ' +
+                  'Our administrator will contact you to clarify the remaining quantity',
+                  type: 'error',
+                  showClose: true,
+                  duration: 30000,
+                  offset: 50
+                })
+              }
+              actions.push(decreaseTotalQty(p.productId,
+                isEndedProducts ? 0 : product.totalQty - p.qty))
             }
             actions.push(updateCart(cart))
             return Promise.all(actions)
@@ -107,7 +120,7 @@ export default {
           .then(() => {
             commit('LOADING', false)
             console.log('Order added')
-            router.push('/account')
+            router.push('/cart')
           })
           .catch(err => {
             console.log(err)

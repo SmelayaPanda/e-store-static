@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button @click="dialogFormVisible = true">
+    <el-button @click="openProcessDialog">
       <i class="el-icon-service"></i>
     </el-button>
 
@@ -67,8 +67,12 @@
                         :maxlength="400"
               ></el-input>
             </el-form-item>
-            <el-form-item label="Quantity" :label-width="formLabelWidth">
-              <el-input-number v-model="qty" :min="0" :max="1000000"></el-input-number>
+            <el-form-item label="Quantity" :label-width="formLabelWidth" v-if="product">
+              <el-input-number v-model="qty" :min="1" :max="product.totalQty"></el-input-number>
+              (max: {{ product.totalQty }})
+              <span v-if="product.totalQty < 1" class="error--text ml-2">
+                <b>It seems that the goods is ended</b>
+              </span>
             </el-form-item>
           </el-form>
           <el-row type="flex" justify="center">
@@ -82,12 +86,13 @@
 </template>
 
 <script>
-
+import * as firebase from 'firebase'
 export default {
   name: 'ProcessOneClick',
   props: ['oneClickId'],
   data () {
     return {
+      product: {},
       qty: 1,
       city: '',
       street: '',
@@ -100,10 +105,10 @@ export default {
   },
   methods: {
     processOneClick () {
-      let obj = this.oneClick
+      let obj = {}
       obj.status = 'processed'
       obj.processDate = new Date()
-      obj.product.qty = this.qty
+      obj.qty = this.qty
       obj.shipping = {
         city: this.city,
         street: this.street,
@@ -112,7 +117,23 @@ export default {
       }
       obj.comments = this.comments
       this.dialogFormVisible = false
-      this.$store.dispatch('updateOneClick', obj)
+      this.$store.dispatch('updateOneClick', {
+        updateData: obj,
+        oneClickId: this.oneClickId,
+        productId: this.product.productId,
+        totalQty: this.product.totalQty - this.qty
+      })
+    },
+    openProcessDialog () {
+      this.dialogFormVisible = true
+      // For calc actual totalQty
+      firebase.firestore().collection('products').doc(this.oneClick.product.id).get()
+        .then((snapshot) => {
+          this.product = snapshot.data()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   },
   computed: {

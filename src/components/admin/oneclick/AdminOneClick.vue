@@ -40,7 +40,7 @@
           <template slot-scope="props">
             <el-row>
               <el-col :span="12">
-                <p><span>Database id:</span>
+                <p><span>Database one click id:</span>
                   <el-tag size="mini" type="success">{{ props.row.id }}</el-tag>
                 </p>
                 <h3><i class="el-icon-info"></i>

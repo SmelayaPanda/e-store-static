@@ -1,6 +1,8 @@
 <template>
   <span style="text-align: center">
-    <el-button size="small" type="primary" @click="dialogFormVisible = true">
+    <el-button size="small"
+               type="primary"
+               @click="dialogFormVisible = true">
       {{ btnName }}
     </el-button>
     <el-dialog title="CHECKOUT"

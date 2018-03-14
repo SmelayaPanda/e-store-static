@@ -29,11 +29,14 @@ export default {
   methods: {
     refuseOneClick () {
       this.dialogVisible = false
-      let obj = this.oneClick
+      let obj = {}
       obj.status = 'refused'
       obj.comments = this.editComments
       obj.refuseDate = new Date()
-      this.$store.dispatch('updateOneClick', obj)
+      this.$store.dispatch('updateOneClick', {
+        updateData: obj,
+        oneClickId: this.oneClickId
+      })
       return true
     }
   },
