@@ -2,31 +2,31 @@
   <div class="mb-3" v-show="!isAdminPanel">
     <!--Toolbar-->
     <el-row type="flex" justify="center" class="hidden-xs-only">
-      <el-menu :default-active="'1'"
+      <el-menu :default-active="this.$router.history.current.name"
                :router="true"
                mode="horizontal">
-        <el-menu-item index="1" route="/">ReHigh Store</el-menu-item>
-        <el-menu-item index="2" route="/shop">Shop</el-menu-item>
-        <el-menu-item index="3" route="/info"> Info</el-menu-item>
-        <el-menu-item index="4" route="/cart">
+        <el-menu-item index="home" route="/">ReHigh Store</el-menu-item>
+        <el-menu-item index="shop" route="/shop">Shop</el-menu-item>
+        <el-menu-item index="info" route="/info"> Info</el-menu-item>
+        <el-menu-item index="cart" route="/cart">
           Cart
           <el-tag size="mini" class="mb-1">{{ productCount }}</el-tag>
         </el-menu-item>
-        <el-submenu index="5">
-          <template slot="title"> User</template>
-          <el-menu-item index="5-1" route="/account"
+        <el-submenu index="user">
+          <template slot="title">User</template>
+          <el-menu-item index="account" route="/account"
                         v-if="this.isAuthenticatedUser">
             Account
           </el-menu-item>
-          <el-menu-item index="5-2" route="/signin"
+          <el-menu-item index="signin" route="/signin"
                         v-if="!this.isAuthenticatedUser">
             Sign in
           </el-menu-item>
-          <el-menu-item index="5-3" route="/signup"
+          <el-menu-item index="signup" route="/signup"
                         v-if="!this.isAuthenticatedUser">
             Sign up
           </el-menu-item>
-          <el-menu-item index="5-4" route="/logout"
+          <el-menu-item index="logout" route="/logout"
                         v-if="this.isAuthenticatedUser"
                         @click="onLogout"> Logout
           </el-menu-item>
