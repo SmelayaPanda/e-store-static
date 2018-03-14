@@ -6,7 +6,7 @@
     </v-container>
     <div v-else>
       <el-row type="flex" justify="left" style="flex-wrap: wrap">
-        <el-col :xs="24" :sm="24" :md="6" :lg="4" :xl="4">
+        <el-col :xs="24" :sm="6" :md="5" :lg="4" :xl="4">
           <el-radio-group v-model="isCollapse" style="margin-bottom: 20px; margin-top: 4px; margin-left: 10px;">
             <el-radio-button :label="false">expand</el-radio-button>
             <el-radio-button :label="true">collapse</el-radio-button>
@@ -51,19 +51,19 @@
             </el-menu-item>
           </el-menu>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="18" :lg="16" :xl="14" type="flex" align="middle">
+        <el-col :xs="24" :sm="18" :md="18" :lg="16" :xl="14" type="flex" align="middle">
           <!--FILTER-->
           <el-collapse v-model="activeName" accordion style="margin-left: 12px; margin-right: 12px">
             <!--PRICE FILTER-->
             <el-collapse-item title="Filter" name="1">
               <el-button type="text" class="pr-4 pb-0" @click="sortByPrice">
-                <span class="ml-3">Price</span>
+                <span class="pl-3">Price</span>
                 <el-tag size="mini">
                   <i class="el-icon-caret-top" v-if="!this.sortAsc"></i>
                   <i class="el-icon-caret-bottom" v-else></i>
                 </el-tag>
               </el-button>
-              <div class="ml-3 mr-3">
+              <div class="pl-3 pr-3">
                 <el-slider
                   v-model="sliderValues"
                   @change="filterProducts"
@@ -74,43 +74,45 @@
                 </el-slider>
               </div>
               <!--BRAND-->
-              <el-row type="flex" justify="center" style="flex-wrap: wrap">
-                <el-select filterable
-                           clearable
-                           no-match-text="Brand is missing"
-                           class="mr-2"
-                           v-model="selectedBrand"
-                           placeholder="Brand"
-                           @change="filterProducts"
-                           v-if="brands">
-                  <el-option
-                    v-for="val in brands"
-                    :key="val"
-                    :label="val"
-                    :value="val">
-                  </el-option>
-                </el-select>
+              <el-row type="flex" justify="center" style="flex-wrap: wrap" class="pt-2">
+                <el-col :span="12" align="right" class="pr-1">
+                  <el-select filterable
+                             clearable
+                             no-match-text="Brand is missing"
+                             v-model="selectedBrand"
+                             placeholder="Brand"
+                             @change="filterProducts"
+                             v-if="brands">
+                    <el-option
+                      v-for="val in brands"
+                      :key="val"
+                      :label="val"
+                      :value="val">
+                    </el-option>
+                  </el-select>
+                </el-col>
                 <!--COLOR-->
-                <el-select filterable
-                           clearable
-                           no-match-text="Color is missing"
-                           class="ml-2"
-                           v-model="selectedColor"
-                           placeholder="Color"
-                           @change="filterProducts"
-                           v-if="colors">
-                  <el-option
-                    v-for="val in colors"
-                    :key="val"
-                    :label="val"
-                    :value="val">
-                  </el-option>
-                </el-select>
+                <el-col :span="12" align="left" class="pl-1">
+                  <el-select filterable
+                             clearable
+                             no-match-text="Color is missing"
+                             v-model="selectedColor"
+                             placeholder="Color"
+                             @change="filterProducts"
+                             v-if="colors">
+                    <el-option
+                      v-for="val in colors"
+                      :key="val"
+                      :label="val"
+                      :value="val">
+                    </el-option>
+                  </el-select>
+                </el-col>
               </el-row>
             </el-collapse-item>
           </el-collapse>
-          <el-row>
-            <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8"
+          <el-row type="flex" justify="center" style="flex-wrap: wrap">
+            <el-col :xs="23" :sm="12" :md="8" :lg="8" :xl="8"
                     v-for="(p,key) in products" :key="key"
             >
               <div @click="viewProduct(p.productId)" class="card_wrapper">

@@ -15,6 +15,7 @@ import Admin from '@/components/admin/AdminPanel'
 // SHOP
 import Shop from '@/components/shop/Shop'
 import Product from '@/components/shop/Product'
+import UserAgreement from '@/components/info/UserAgreement'
 
 Vue.use(Router)
 
@@ -67,6 +68,12 @@ export default new Router({
       name: 'admin',
       props: true,
       component: Admin
+    },
+    {
+      path: '/userAgreement',
+      name: 'userAgreement',
+      props: true,
+      component: UserAgreement
     }
   ],
   mode: 'history'

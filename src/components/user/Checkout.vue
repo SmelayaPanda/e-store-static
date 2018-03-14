@@ -10,8 +10,8 @@
                width="100%"
                :visible.sync="dialogFormVisible"
                :fullscreen="true">
-      <el-row type="flex" justify="center">
-        <el-col :span="12">
+      <el-row type="flex" justify="center" style="flex-wrap: wrap">
+        <el-col :xs="24" :sm="16" :md="14" :lg="12" :xl="10">
           <!--Stepper-->
           <el-row class="mt-4">
           <el-steps :active="activeStep"
@@ -181,23 +181,19 @@
           <el-row type="flex" justify="center">
               <el-col :span="18">
                 <div class="form_4" v-if="activeStep === 4">
-                  <p class="mt-3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur cumque cupiditate dignissimos dolore esse est exercitationem, expedita, labore magnam minima minus molestias nam nobis nostrum officia placeat quisquam ratione sit.</p>
-                  <el-checkbox class="mb-5">I agree</el-checkbox><br>
+                  <p>By clicking on the "CHECKOUT" button i I confirm with the
+                    <a target="_blank"
+                       href="http://localhost:8080/userAgreement">
+                      user agreement
+                    </a>
+                      <!--<el-button type="text">user agreement</el-button>-->
+                  </p>
                   <el-button class="mb-4"
                              @click="checkout"
-                             :loading="this.$store.getters.loading"
+                             type="success"
                   >
                     CHECKOUT
                   </el-button>
-                  <!--&lt;!&ndash;PayPal Buy&ndash;&gt;-->
-                  <!--<pay-pal-buy :orderItems="orderItems"-->
-                               <!--:amount="amount"-->
-                               <!--v-if="-->
-                               <!--paymentMethod ==='Online' &&-->
-                               <!--orderIsProcessed &&-->
-                               <!--!this.$store.getters.loading"-->
-                  <!--&gt;-->
-                  <!--</pay-pal-buy>-->
                 </div>
               </el-col>
             </el-row>
@@ -210,7 +206,7 @@
              </el-button>
         </el-col>
         <!--ITEMS INFO-->
-        <el-col :span="8" class="mt-3 pl-4">
+        <el-col :xs="24" :sm="24" :md="10" :lg="9" :xl="8" class="mt-3 pl-4 pr-4">
           <el-card>
             <div slot="header" class="clearfix">
             <h3>My order</h3>
