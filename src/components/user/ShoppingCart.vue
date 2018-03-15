@@ -76,8 +76,6 @@
 <script>
 import Checkout from './Checkout'
 import OrdersHistory from './OrdersHistory'
-// NOTE: description of items = IPN <<transaction_subject>> = "checkout order id"
-// ( all items descriptions will be concatenated )
 // TODO: check cart no more than 10 items
 export default {
   name: 'ShoppingCart',
@@ -138,8 +136,3 @@ export default {
     margin-left: 1px;
   }
 </style>
-<!--item.description = ''-->
-<!--// it will be orderId-->
-<!--// Added after checkout insert.-->
-<!--// Only for first, because all items description concatenates by PayPal-->
-<!--// into <transaction_subject> field-->

@@ -130,21 +130,21 @@
               <div class="form_3" v-if="activeStep === 3">
                 <h3 class="mb-1">DELIVERY METHOD</h3>
                   <div>
-                    <el-radio v-model="deliveryMethod" label="Courier" border></el-radio>
-                    <el-radio v-model="deliveryMethod" label="Russian Post" border></el-radio>
-                    <el-radio v-model="deliveryMethod" label="PickPoint" border></el-radio>
+                    <el-radio v-model="deliveryMethod" :label="delivery.courier" border></el-radio>
+                    <el-radio v-model="deliveryMethod" :label="delivery.russianPost" border></el-radio>
+                    <el-radio v-model="deliveryMethod" :label="delivery.pickPoint" border></el-radio>
                   </div>
                 <div class="mb-4">
-                  <h4 v-if="deliveryMethod === 'Courier'" class="mt-4">
+                  <h4 v-if="deliveryMethod === delivery.courier" class="mt-4">
                     Free shipping only in Novosibirsk!
                     <v-icon class="ml-2">directions_bike</v-icon>
                   </h4>
-                  <h4 v-if="deliveryMethod === 'Russian Post'" class="mt-4">
+                  <h4 v-if="deliveryMethod === delivery.russianPost" class="mt-4">
                     Shipping is charged
                     <v-icon>train</v-icon>
                     separately on receipt!
                   </h4>
-                  <h4 v-if="deliveryMethod === 'PickPoint'" class="mt-4">
+                  <h4 v-if="deliveryMethod === delivery.pickPoint" class="mt-4">
                     Shipping is charged
                     <v-icon>touch_app</v-icon>
                     separately on receipt!
@@ -152,22 +152,22 @@
                   <v-divider></v-divider>
                   <h3 class="mb-1 mt-4">PAYMENT METHOD</h3>
                   <div>
-                    <el-radio v-model="paymentMethod" label="Online" border></el-radio>
-                    <el-radio v-model="paymentMethod" label="On receipt" border></el-radio>
+                    <el-radio v-model="paymentMethod" :label="payment.online" border></el-radio>
+                    <el-radio v-model="paymentMethod" :label="payment.onReceipt" border></el-radio>
                   </div>
-                  <h4 v-if="paymentMethod === 'Online'" class="mt-4">
+                  <h4 v-if="paymentMethod === payment.online" class="mt-4">
                     <v-icon>credit_card</v-icon><br>
-                    Currently our system only supports payment with PayPal!
+                    Currently our system supports payment with PayPal only!
                   </h4>
-                  <h4 v-if="deliveryMethod === 'Courier' && paymentMethod === 'On receipt'" class="mt-4">
+                  <h4 v-if="deliveryMethod === delivery.courier && paymentMethod === payment.onReceipt" class="mt-4">
                     <v-icon>monetization_on</v-icon><br>
-                    Pay the courier can only cash!
+                    Pay the courier can cash only!
                   </h4>
-                  <h4 v-if="deliveryMethod === 'Russian Post' && paymentMethod === 'On receipt'" class="mt-4">
+                  <h4 v-if="deliveryMethod === delivery.russianPost && paymentMethod === payment.onReceipt" class="mt-4">
                     <v-icon>assignment</v-icon><br>
                     The parcel will be shipped by cash on delivery!
                   </h4>
-                  <h4 v-if="deliveryMethod === 'PickPoint' && paymentMethod === 'On receipt'" class="mt-4">
+                  <h4 v-if="deliveryMethod === delivery.pickPoint && paymentMethod === payment.onReceipt" class="mt-4">
                     <v-icon>donut_small</v-icon><br>
                     You can pay for PickPoint services on receipt!
                   </h4>
@@ -182,11 +182,11 @@
               <el-col :span="18">
                 <div class="form_4" v-if="activeStep === 4">
                   <p>By clicking on the "CHECKOUT" button i I confirm with the
+                    <!--TODO: fix address-->
                     <a target="_blank"
                        href="http://localhost:8080/userAgreement">
                       user agreement
                     </a>
-                      <!--<el-button type="text">user agreement</el-button>-->
                   </p>
                   <el-button class="mb-4"
                              @click="checkout"
@@ -197,7 +197,10 @@
                 </div>
               </el-col>
             </el-row>
-            <el-button @click="prevStep" v-if="activeStep !== 1">Prev step</el-button>
+            <el-button @click="prevStep"
+                       v-if="activeStep !== 1">
+              Prev step
+            </el-button>
             <el-button @click="nextStep"
                        v-if="activeStep !== 4"
                        :type="isValidForm_1 ? 'success' : 'info'"
@@ -209,10 +212,13 @@
         <el-col :xs="24" :sm="24" :md="10" :lg="9" :xl="8" class="mt-3 pl-4 pr-4">
           <el-card>
             <div slot="header" class="clearfix">
-            <h3>My order</h3>
+            <h3>
+              My order
+            </h3>
             </div>
-          <div style="font-size: 16px; margin-bottom: 20px;: 0; padding-top: 0;"
-               v-for="product in orderProducts" :key="product.productId"
+          <div class="order_info"
+               v-for="product in orderProducts"
+               :key="product.productId"
           >
             <span style="font-weight: bold;">{{ product.title }}: </span><br>
             <el-tag>{{ product.price }}</el-tag>
@@ -256,7 +262,16 @@ export default {
     }
     return {
       deliveryMethod: 'Courier',
+      delivery: {
+        courier: 'Courier',
+        russianPost: 'Russian Post',
+        pickPoint: 'PickPoint'
+      },
       paymentMethod: 'On receipt',
+      payment: {
+        online: 'Online',
+        onReceipt: 'On receipt'
+      },
       dialogFormVisible: false,
       activeStep: 1,
       form_1: {
@@ -339,11 +354,12 @@ export default {
       }
       let order = {
         products: lightProducts,
-        checkoutDate: new Date(),
         buyer: this.form_1,
         shipping: this.form_2,
+        checkoutDate: new Date(),
         deliveryMethod: this.deliveryMethod,
         paymentMethod: this.paymentMethod,
+        status: this.paymentMethod === this.payment.online ? 'payPending' : 'sentPending',
         totalPrice: parseFloat(this.totalPrice).toFixed(2),
         currency: 'RUB'
       }
@@ -380,4 +396,9 @@ export default {
 </script>
 
 <style scoped>
+  .order_info {
+    font-size: 16px;
+    margin-bottom: 20px;
+    padding-top: 0;
+  }
 </style>

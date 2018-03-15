@@ -57,14 +57,17 @@ export default {
     totalItems () {
       let orderItems = this.orderItems
       let items = []
+      let isAddedOrderId = false
       for (let product of orderItems) {
         let item = {}
         item.name = product.title
         item.price = product.price
         item.quantity = product.qty
         item.currency = product.currency
-        item.description = ''
+        // Add once: because IPN transaction_subject are concatenates
+        item.description = isAddedOrderId ? '' : this.orderId
         items.push(item)
+        isAddedOrderId = true
       }
       return items
     }

@@ -7,7 +7,7 @@ const oneClickNotification = require('./sub_functions/oneClickNotification')
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
-const db = admin.database();
+// const db = admin.database();
 
 global.ADMIN_EMAIL = 'SmelayaPandaGM@gmail.com'
 let nodemailer = require('nodemailer')
@@ -21,7 +21,7 @@ let transporter = nodemailer.createTransport({
 
 // PAYPAL
 exports.processPayPal = functions.https.onRequest((req, res) => {
-  processPayPal.handler(req, res, db, transporter)
+  processPayPal.handler(req, res, admin, transporter)
 })
 
 // ONE CLICK

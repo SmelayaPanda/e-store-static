@@ -1,3 +1,7 @@
+<!--
+Now Order History placed not in user account -
+In user cart for simple visualization and minimum clicks
+-->
 <template>
   <el-row el-row type="flex" justify="center" class="mt-3" v-if="userOrders.length !== 0">
     <el-col :xs="24" :sm="20" :md="18" :lg="16" :xl="12" type="flex" align="middle">
@@ -39,6 +43,7 @@
                 <pay-now-dialog :orderId="order.id"
                                 :orderItems="order.products"
                                 :amount="order.totalPrice"
+                                v-if="order.status === 'payPending'"
                 >
                 </pay-now-dialog>
               </el-col>
@@ -79,10 +84,6 @@
                       Shipping method:
                       <span style="font-weight: normal;">{{ order.deliveryMethod }}</span><br>
                     </h4>
-                    <!--<h4><v-icon small class="mb-1">monetization_on</v-icon>-->
-                    <!--Payment method:-->
-                    <!--<span style="font-weight: normal;">{{ order.paymentMethod }}</span>-->
-                    <!--</h4>-->
                   </span>
                 </el-col>
               </el-row>

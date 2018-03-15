@@ -79,20 +79,25 @@ export default {
           commit('LOADING', false)
           return
         }
+        let orders = getters.orders ? getters.orders : []
+        let orderId
         firebase.firestore().collection('users').doc(user.uid).collection('orders').add(payload)
           .then((docRef) => {
-            let orders = getters.orders ? getters.orders : []
-            payload.id = docRef.id
+            orderId = docRef.id
+            payload.id = orderId
             orders.unshift(payload)
-            commit('setOrders', orders)
             let actions = []
             // 1. remove items from user cart
             // 2. decrease totalQty of each products
+            // 3. create order-user record for PayPal function
             let updateCart = function (cart) {
               return firebase.firestore().collection('users').doc(user.uid).update({cart: cart})
             }
             let decreaseTotalQty = function (productId, totalQty) {
               return firebase.firestore().collection('products').doc(productId).update({totalQty: totalQty})
+            }
+            let createOrderUserRecord = function (orderId, userId) {
+              return firebase.database().ref('order_user').update({[orderId]: userId})
             }
             let cart = getters.cart
             let product
@@ -114,10 +119,12 @@ export default {
               actions.push(decreaseTotalQty(p.productId,
                 isEndedProducts ? 0 : product.totalQty - p.qty))
             }
+            actions.push(createOrderUserRecord(orderId, user.uid))
             actions.push(updateCart(cart))
             return Promise.all(actions)
           })
           .then(() => {
+            commit('setOrders', orders)
             commit('LOADING', false)
             console.log('Order added')
             router.push('/cart')

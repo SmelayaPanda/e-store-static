@@ -61,7 +61,7 @@ let sendOneClickEmailNotifyToAdmin = function (transporter, info) {
 
 let sendOneClickEmailNotifyToBuyer = function (transporter, info) {
   return new Promise(((resolve, reject) => {
-
+    console.log('To: ' + info.email)
     let mailOptions = {
       from: ADMIN_EMAIL,
       to: info.email,

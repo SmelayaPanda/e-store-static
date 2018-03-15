@@ -1,7 +1,10 @@
-exports.handler = function (req, res, db, transporter) {
+exports.handler = function (req, res, admin, transporter) {
   console.log('>-------------------------------------------------------------------------------------------------------');
   const payInfo = req.body;
-  console.log(payInfo)
+  console.log(payInfo);
+
+  let userId;
+  let orderId;
 
   let handlePaymentOrder = new Promise((resolve, reject) => {
     if (!payInfo.txn_id) {
@@ -9,48 +12,41 @@ exports.handler = function (req, res, db, transporter) {
     } else if (!payInfo.transaction_subject) {
       reject(Error('Transaction subject is Empty!'))
     } else {
-      resolve(payInfo.transaction_subject.split(','))
+      orderId = payInfo.transaction_subject; // (!)
+      resolve(orderId)
     }
   });
 
-  let userId;
-  let orderId;
-  let cartIds;
 
   handlePaymentOrder
-    .then((data) => {
-      cartIds = data;
-      console.log(cartIds);
-      return db.ref('cart_user').child(cartIds[0]).once('value')
+    .then(() => {
+      return admin.database().ref('order_user').once('value')
     })
     .then(data => {
-      userId = data.val();
-      return db.ref(`users/${userId}/orders`).push(payInfo)
-    })
-    .then((data) => {
-      orderId = data.key;
-      return db.ref('order_user').update({[orderId]: userId})
+      userId = data.val()[orderId];
+      return admin.firestore().collection('users').doc(userId).collection('orders').doc(orderId)
+        .update({
+          payPalIPN: payInfo,
+          paymentDate: new Date(),
+          status: 'sentPending'
+        })
     })
     .then(() => {
-      cartIds.forEach(cartId => {
-        if (cartId) { // can be empty string
-          db.ref(`users/${userId}/carts`).child(cartId).update({isPayed: true, orderId: orderId})
-        }
-      });
       logPaymentInfo(payInfo, orderId);
-      payPalSuccessOrderMail(transporter, payInfo, orderId)
+      // Yet not Promise because it is not destroyed payment process
+      payPalSuccessOrderMail(transporter, payInfo, orderId);
       return res.sendStatus(200)
     })
     .catch(err => {
       console.log(err);
-      return res.sendStatus(200) // change to 500
+      return res.sendStatus(200) // TODO: change to 500
     })
 };
 
 function logPaymentInfo(payInfo, orderId) {
   console.log(`PayPal transaction id: ${payInfo.txn_id} / Order farebaseId: ${orderId} /  added!`);
   console.log(`Payer: ${payInfo.first_name} ${payInfo.last_name} ${payInfo.payer_email} -
-                            ${payInfo.mc_gross} ${payInfo.mc_currency}`)
+                      ${payInfo.mc_gross} ${payInfo.mc_currency}`)
 }
 
 function payPalSuccessOrderMail(transporter, info, orderId) {
