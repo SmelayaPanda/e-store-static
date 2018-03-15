@@ -47,10 +47,10 @@
                   Product info:
                 </h3>
                 <p>
-                  Title: {{ props.row.product.title }}<br>
-                  SKU: {{ props.row.product.SKU }}<br>
-                  Price: {{ props.row.product.price }}<br>
-                  <span v-if="props.row.product.totalQty">Total Qty: {{ props.row.product.totalQty }}</span>
+                  Title: {{ props.row.products[0].title }}<br>
+                  SKU: {{ props.row.products[0].SKU }}<br>
+                  Price: {{ props.row.products[0].price }}<br>
+                  <span v-if="props.row.products[0].qty">Total Qty: {{ props.row.products[0].qty }}</span>
                 </p>
                 <span v-if="props.row.comments">
                 <h3><i class="el-icon-warning"></i>
@@ -65,10 +65,12 @@
                   Shipping info:
                 </h3>
                 <p>
+                  Country: {{ props.row.shipping.country }}<br>
                   City: {{ props.row.shipping.city }}<br>
                   Street: {{ props.row.shipping.street }}<br>
                   Build: {{ props.row.shipping.build }}<br>
                   House: {{ props.row.shipping.house }}<br>
+                  Post Code: {{ props.row.shipping.postCode }}<br>
                 </p>
               </span>
               </el-col>
@@ -80,19 +82,19 @@
                   <el-tag type="info">Created
                     <p>
                       {{ props.row.creationDate | date }}<br>
-                      <span v-if="props.row.processDate || props.row.refuseDate">
+                      <span v-if="props.row.checkoutDate">
                         ------------------------------
                       </span>
                     </p>
                   </el-tag>
                 </span>
                 <!--PROCESS-->
-                <span v-if="props.row.processDate">
+                <span v-if="props.row.checkoutDate">
                   <i class="el-icon-caret-right"></i>
-                    <el-tag type="info">Processed
+                    <el-tag type="info">Checkout Date
                       <p>
-                        {{ props.row.processDate | date }}<br>
-                        {{(Math.abs(props.row.processDate - props.row.creationDate) / 36e5).toFixed(1) }} hours
+                        {{ props.row.checkoutDate | date }}<br>
+                        {{(Math.abs(props.row.checkoutDate - props.row.creationDate) / 36e5).toFixed(1) }} hours
                       </p>
                     </el-tag>
                 </span>
@@ -102,7 +104,7 @@
                     <el-tag type="info">Sent
                       <p>
                         {{ props.row.sentDate | date }}<br>
-                        {{(Math.abs(props.row.sentDate - props.row.processDate) / 36e5).toFixed(1) }} hours
+                        {{(Math.abs(props.row.sentDate - props.row.checkoutDate) / 36e5).toFixed(1) }} hours
                       </p>
                     </el-tag>
                 </span>
@@ -145,7 +147,7 @@
           label="Date"
           width="200">
           <template slot-scope="scope">
-            <span><el-tag type="success">{{ scope.row.creationDate | date }}</el-tag></span>
+            <span><el-tag type="success">{{ scope.row.checkoutDate | date }}</el-tag></span>
           </template>
         </el-table-column>
         <!--Title-->
@@ -154,19 +156,22 @@
           width="300">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
-              <p>Title: {{ scope.row.product.title }}</p>
+              <p>Title: {{ scope.row.products[0].title }}</p>
               <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.product.title | snippet(40) }}</el-tag>
+                <el-tag size="medium">{{ scope.row.products[0].title | snippet(40) }}</el-tag>
               </div>
             </el-popover>
           </template>
         </el-table-column>
-        <!--NICKNAME-->
+        <!--NAME-->
         <el-table-column
-          label="Nickname"
+          label="Name"
           width="150">
           <template slot-scope="scope">
-            <p>{{ scope.row.nickname || snippet(20) }}</p>
+            <p>
+              {{ scope.row.buyer.firstname | snippet(20) }}
+              {{ scope.row.buyer.lastname | snippet(20) }}
+            </p>
           </template>
         </el-table-column>
         <!--PHONE-->
@@ -174,7 +179,7 @@
           label="Phone"
           width="140">
           <template slot-scope="scope">
-            <p>{{ scope.row.phone }}</p>
+            <p>{{ scope.row.buyer.phone }}</p>
           </template>
         </el-table-column>
         <!--EMAIL-->
@@ -182,7 +187,7 @@
           label="Email"
           width="200">
           <template slot-scope="scope">
-            <p>{{ scope.row.email }}</p>
+            <p>{{ scope.row.buyer.email }}</p>
           </template>
         </el-table-column>
         <!--Process-->
@@ -235,7 +240,7 @@ export default {
   },
   methods: {
     loadOrdersWithStatus () {
-      this.$store.dispatch('fetchOrders', this.status)
+      this.$store.dispatch('fetchOrders', {status: this.status})
     }
   },
   computed: {

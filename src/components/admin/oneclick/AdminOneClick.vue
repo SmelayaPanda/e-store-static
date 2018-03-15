@@ -166,7 +166,7 @@
           label="Nickname"
           width="150">
           <template slot-scope="scope">
-            <p>{{ scope.row.nickname || snippet(20) }}</p>
+            <p>{{ scope.row.nickname | snippet(20) }}</p>
           </template>
         </el-table-column>
         <!--PHONE-->

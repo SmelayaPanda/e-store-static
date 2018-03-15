@@ -3,7 +3,6 @@ exports.handler = function (req, res, admin, transporter) {
   const payInfo = req.body;
   console.log(payInfo);
 
-  let userId;
   let orderId;
 
   let handlePaymentOrder = new Promise((resolve, reject) => {
@@ -20,11 +19,7 @@ exports.handler = function (req, res, admin, transporter) {
 
   handlePaymentOrder
     .then(() => {
-      return admin.database().ref('order_user').once('value')
-    })
-    .then(data => {
-      userId = data.val()[orderId];
-      return admin.firestore().collection('users').doc(userId).collection('orders').doc(orderId)
+      return admin.firestore().collection('orders').doc(orderId)
         .update({
           payPalIPN: payInfo,
           paymentDate: new Date(),

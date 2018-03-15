@@ -96,13 +96,13 @@ new Vue({
           this.$store.dispatch('autoSignIn', user)
           // console.log(user.email)
         }
+        let isAdminPanel = this.$router.history.current.fullPath.includes('admin') // TODO: fetch by router click
         this.$store.dispatch('fetchProducts', {
           sortAsc: true,
-          category: this.$router.history.current.name === 'admin' ? 'Category A1' : null
+          category: isAdminPanel ? 'Category A1' : null
         })
         this.$store.dispatch('fetchUserCart')
-        this.$store.dispatch('fetchUserOrders')
-        // this.$store.dispatch('fetchAllOrders')
+        this.$store.dispatch('fetchOrders', isAdminPanel ? {status: 'payPending'} : {userId: user.uid})
         this.$store.dispatch('fetchDictionaries')
         this.$store.dispatch('fetchOneClick', 'created') // TODO: determinate admin loads
       })
