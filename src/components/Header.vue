@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-3" v-show="!isAdminPanel">
+  <div class="mb-3">
     <!--Toolbar-->
     <el-row type="flex" justify="center" class="hidden-xs-only">
       <el-menu :default-active="this.$router.history.current.name"
@@ -75,16 +75,11 @@ export default {
     }
   },
   methods: {
-    onLogout:
-        function () {
-          this.$store.dispatch('logout')
-          // window.location.reload()
-        }
+    onLogout () {
+      this.$store.dispatch('logout')
+    }
   },
   computed: {
-    isAdminPanel () {
-      return window.location.pathname === '/admin'
-    },
     productCount () {
       return this.$store.getters.cart.length
     }

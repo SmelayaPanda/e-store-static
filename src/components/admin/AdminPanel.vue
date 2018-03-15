@@ -66,23 +66,14 @@
         </v-btn>
       </v-toolbar-items>
     </v-toolbar>
-
-    <!--Admin panel content-->
-    <div v-if="this.isAdmin">
-      <nav-menu class="left"></nav-menu>
-    </div>
-
     <!--No admin case-->
-    <v-container v-else>
+    <v-container v-if="!this.isAdmin">
       <v-card>
-
         <!--Alert message-->
         <v-layout row v-if="error">
           <v-flex xs12>
-            <!--My component from shared/Alert registered in main.js
-            :text it is a property of Alert.vue-->
             <app-alert
-              v-on:dismissed="onDismissed"
+              :dismissed="onDismissed"
               :text="error.message"
             ></app-alert>
           </v-flex>
@@ -97,20 +88,28 @@
       </v-card>
     </v-container>
 
-    <!--Main-->
-    <main>
-      <router-view></router-view>
-    </main>
+    <el-row type="flex" justify="start">
+      <el-col style="width: 160px" >
+        <div v-if="this.isAdmin">
+          <admin-nav-menu></admin-nav-menu>
+        </div>
+      </el-col>
+      <el-col class="ml-2 mt-2">
+        <main>
+          <router-view></router-view>
+        </main>
+      </el-col>
+    </el-row>
 
   </v-app>
 </template>
 
 <script>
-import AdminTabs from './AdminTabs'
+import AdminNavMenu from './AdminNavMenu'
 
 export default {
   components: {
-    NavMenu: AdminTabs
+    AdminNavMenu
   },
   data: function () {
     return {

@@ -1,7 +1,6 @@
 <template>
   <v-app id="app">
-    <!--Toolbar-->
-    <app-header></app-header>
+    <app-header v-if="!this.$router.history.current.fullPath.includes('admin')"></app-header>
     <!--Content-->
     <transition name="fade">
       <router-view></router-view>
@@ -10,11 +9,13 @@
 </template>
 
 <script>
-import AppHeader from './components/Header'
+import AppHeader from '@/components/Header'
+import AdminPanel from './components/admin/AdminPanel'
 
 export default {
   components: {
-    AppHeader
+    AppHeader,
+    AdminPanel
   },
   name: 'App'
 }

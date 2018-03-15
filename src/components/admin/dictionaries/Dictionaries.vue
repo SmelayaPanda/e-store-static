@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div align="left">
     <p>* Common system constants</p>
     <dictionary-subject title="Brand" name="brands"></dictionary-subject>
     <dictionary-subject title="Color" name="colors"></dictionary-subject>

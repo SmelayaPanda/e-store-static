@@ -1,7 +1,6 @@
 <template>
   <div>
     <el-button type="info"
-               style="margin-left: 2px"
                @click="dialogVisible = true">
       <i class="el-icon-delete"></i>
     </el-button>

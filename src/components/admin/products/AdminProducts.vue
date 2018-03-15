@@ -36,7 +36,7 @@
         <!--THUMBNAIL-->
         <el-table-column
           label="Image"
-          width="70">
+          width="62">
           <template slot-scope="scope">
             <img :src="scope.row.img_0.thumbnail" height="40px" width="auto">
           </template>
@@ -52,12 +52,12 @@
         <!--Title-->
         <el-table-column
           label="Title"
-          width="300">
+          width="260">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
               <p>Title: {{ scope.row.title }}</p>
               <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.title | snippet(40) }}</el-tag>
+                <el-tag size="medium">{{ scope.row.title | snippet(34) }}</el-tag>
               </div>
             </el-popover>
           </template>
@@ -65,12 +65,12 @@
         <!--BRAND-->
         <el-table-column
           label="Brand"
-          width="120">
+          width="114">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
               <p>Brand: {{ scope.row.brand }}</p>
               <div slot="reference" class="name-wrapper">
-                <el-tag size="medium" type="info">{{ scope.row.brand | snippet(20) }}</el-tag>
+                <el-tag size="medium" type="info">{{ scope.row.brand | snippet(14) }}</el-tag>
               </div>
             </el-popover>
           </template>
@@ -78,7 +78,7 @@
         <!--PRICE-->
         <el-table-column
           label="Price"
-          width="120">
+          width="110">
           <template slot-scope="scope">
             <span>{{ scope.row.price }} {{ scope.row.currency }}</span>
           </template>
@@ -86,14 +86,14 @@
         <!--QUANTITY-->
         <el-table-column
           label="Total Qty"
-          width="90">
+          width="82">
           <template slot-scope="scope">
             <span>{{ scope.row.totalQty }}</span>
           </template>
         </el-table-column>
         <!--EDIT/DELETE-->
         <el-table-column
-          width="200"
+          width="180"
           label="Operations">
           <template slot-scope="scope">
             <el-row type="flex" justify="center">
