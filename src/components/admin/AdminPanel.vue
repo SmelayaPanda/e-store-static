@@ -88,9 +88,9 @@
       </v-card>
     </v-container>
 
-    <el-row type="flex" justify="start">
+    <el-row type="flex" justify="start" v-if="this.isAdmin">
       <el-col style="width: 160px" >
-        <div v-if="this.isAdmin">
+        <div>
           <admin-nav-menu></admin-nav-menu>
         </div>
       </el-col>

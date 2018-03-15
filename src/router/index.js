@@ -87,7 +87,7 @@ export default new Router({
           component: AdminOrders
         },
         {
-          path: 'oneclick',
+          path: 'oneClick',
           component: AdminOneClick
         },
         {

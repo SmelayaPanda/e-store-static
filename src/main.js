@@ -94,7 +94,7 @@ new Vue({
       user => {
         if (user) {
           this.$store.dispatch('autoSignIn', user)
-          // console.log(user)
+          // console.log(user.email)
         }
         this.$store.dispatch('fetchProducts', {
           sortAsc: true,

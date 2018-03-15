@@ -24,7 +24,7 @@
         <v-icon class="pb-1">description</v-icon>
         <span slot="title">Orders</span>
       </el-menu-item>
-      <el-menu-item index="oneclick" route="/admin/oneclick">
+      <el-menu-item index="oneClick" route="/admin/oneClick">
         <v-icon>touch_app</v-icon>
         <span slot="title">One Click</span>
       </el-menu-item>
