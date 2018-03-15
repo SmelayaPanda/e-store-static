@@ -18,25 +18,38 @@ In user cart for simple visualization and minimum clicks
                 style="flex-wrap: wrap">
           <el-col :span="24" align="left">
             <el-row type="flex" style="flex-wrap: wrap;" class="mb-3">
-              <el-col :xs="5" :sm="3" :md="3" :lg="3" :xl="3" align="left" class="pr-1">
+              <el-col :xs="6" :sm="3" :md="3" :lg="2" :xl="2" class="pr-1 mt-2 pt-2">
                 <el-switch type="text" class="ml-4 pt-2 mt-2"
                            v-model="order.showDetails">
                   Show details
                 </el-switch>
               </el-col>
-              <el-col :xs="19" :sm="15" :md="15" :lg="15" :xl="15" class="mb-2">
-                <el-tag type="success" class="ml-2 mt-2">ID: {{ order.id }}</el-tag>
+              <el-col :xs="18" :sm="21" :md="21" :lg="22" :xl="22" class="mb-2">
+                <el-tag type="info" class="ml-2 mt-2">ID: {{ order.id }}</el-tag>
                 <el-tag type="info" class="ml-2 mt-2">Date: {{ order.checkoutDate | date }}</el-tag>
                 <el-tag class="ml-2 mt-2">{{ order.totalPrice }} {{ order.currency }}</el-tag>
+                <el-tag v-if="order.paymentDate" class="ml-2 mt-2" type="success">
+                  PAID
+                </el-tag>
+                <el-tag v-if="order.paymentMethod === 'On receipt'" class="ml-2 mt-2" type="warning">
+                  Payment on receipt
+                </el-tag>
                 <el-button type="text" class="ml-2 mt-2 info--text">
                   <!--Status:-->
-                  <el-tag type="danger">
-                    Is not paid
+                  <el-tag type="danger" v-if="order.status === 'payPending'">
+                    Status: Is not paid
                   </el-tag>
-                  <el-tooltip class="item" effect="dark"
-                              content="This status means"
-                              placement="right-start">
-                    <v-icon>lightbulb_outline</v-icon>
+                  <el-tag type="info" v-if="order.status === 'sentPending'">
+                    Status: Sent pending
+                  </el-tag>
+                  <el-tooltip class="item"
+                              effect="dark"
+                              placement="right-start"
+                              v-if="order.status === 'payPending' || order.status === 'sentPending'"
+                              :content="order.status === 'payPending' ?
+                              'If you have already paid for the goods then maybe you should wait for confirmation with PayPal':
+                              `Your purchase will be shipped soon.`"
+                  ><v-icon>lightbulb_outline</v-icon>
                   </el-tooltip>
                 </el-button>
                 <!--PAY NOW-->
