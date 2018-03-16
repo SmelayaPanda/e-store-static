@@ -102,12 +102,12 @@
                     </el-tag>
                 </span>
               <!--DELIVERED-->
-              <span v-if="props.row.deliverDate">
+              <span v-if="props.row.deliveryDate">
                   <i class="el-icon-caret-right"></i>
-                    <el-tag type="info">Delivered
+                    <el-tag type="info">Delivery
                       <p>
-                        {{ props.row.deliverDate | date }}<br>
-                        {{(Math.abs(props.row.deliverDate - props.row.sentDate) / 36e5).toFixed(1) }} hours
+                        {{ props.row.deliveryDate | date }}<br>
+                        {{(Math.abs(props.row.deliveryDate - props.row.sentDate) / 36e5).toFixed(1) }} hours
                       </p>
                     </el-tag>
                 </span>
@@ -117,7 +117,7 @@
                     <el-tag type="info">Returned
                       <p>
                         {{ props.row.returnDate | date }}<br>
-                        {{(Math.abs(props.row.returnDate - props.row.deliverDate) / 36e5).toFixed(1) }} hours
+                        {{(Math.abs(props.row.returnDate - props.row.deliveryDate) / 36e5).toFixed(1) }} hours
                       </p>
                     </el-tag>
                 </span>

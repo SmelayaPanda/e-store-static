@@ -1,11 +1,14 @@
 <template>
   <el-row type="flex" justify="start">
     <el-button @click="dialogVisible = true"
-               v-if="order.status === this.SENT_PEND || order.status === this.SENT">
+               v-if="order.status === this.SENT_PEND || order.status === this.SENT"
+    >
       <v-icon small v-if="order.status === this.SENT_PEND">flight_takeoff</v-icon>
       <v-icon small v-if="order.status === this.SENT">flight_land</v-icon>
     </el-button>
-    <el-button @click="refuseDialogVisible = true">
+    <el-button @click="refuseDialogVisible = true"
+               v-if="order.status !== this.REFUSED"
+    >
       <v-icon small>close</v-icon>
     </el-button>
     <!--Main statuses dialog-->
@@ -28,7 +31,7 @@
     </el-dialog>
     <!--Refuse Dialog-->
     <el-dialog
-      title="Refuse product?"
+      title="Refuse order?"
       :visible.sync="refuseDialogVisible"
       width="500px"
       center>
@@ -65,7 +68,7 @@ export default {
       if (refused) {
         obj.status = this.REFUSED
         obj.comments = this.order.comments
-        obj.sentDate = new Date()
+        obj.refuseDate = new Date()
       } else if (this.order.status === this.SENT_PEND) { // SENT_PEND -> SENT
         obj.status = this.SENT
         obj.comments = this.order.comments

@@ -74,24 +74,14 @@
             <el-col :span="24">
               <h3 class="mt-3">Status history:</h3>
               <span>
-                  <el-tag type="info">Created
+                  <el-tag type="info">Checkout
                     <p>
-                      {{ props.row.creationDate | date }}<br>
+                      {{ props.row.checkoutDate | date }}<br>
                       <span v-if="props.row.checkoutDate">
                         ------------------------------
                       </span>
                     </p>
                   </el-tag>
-                </span>
-              <!--PROCESS-->
-              <span v-if="props.row.checkoutDate">
-                  <i class="el-icon-caret-right"></i>
-                    <el-tag type="info">Checkout Date
-                      <p>
-                        {{ props.row.checkoutDate | date }}<br>
-                        {{(Math.abs(props.row.checkoutDate - props.row.creationDate) / 36e5).toFixed(1) }} hours
-                      </p>
-                    </el-tag>
                 </span>
               <!--SENT-->
               <span v-if="props.row.sentDate">
@@ -104,22 +94,12 @@
                     </el-tag>
                 </span>
               <!--DELIVERED-->
-              <span v-if="props.row.deliverDate">
+              <span v-if="props.row.deliveryDate">
                   <i class="el-icon-caret-right"></i>
-                    <el-tag type="info">Delivered
+                    <el-tag type="info">Delivery
                       <p>
-                        {{ props.row.deliverDate | date }}<br>
-                        {{(Math.abs(props.row.deliverDate - props.row.sentDate) / 36e5).toFixed(1) }} hours
-                      </p>
-                    </el-tag>
-                </span>
-              <!--RETURNED-->
-              <span v-if="props.row.returnDate">
-                  <i class="el-icon-caret-right"></i>
-                    <el-tag type="info">Returned
-                      <p>
-                        {{ props.row.returnDate | date }}<br>
-                        {{(Math.abs(props.row.returnDate - props.row.deliverDate) / 36e5).toFixed(1) }} hours
+                        {{ props.row.deliveryDate | date }}<br>
+                        {{(Math.abs(props.row.deliveryDate - props.row.sentDate) / 36e5).toFixed(1) }} hours
                       </p>
                     </el-tag>
                 </span>
@@ -129,7 +109,7 @@
                     <el-tag type="info">Refuse
                       <p>
                         {{ props.row.refuseDate | date }}<br>
-                        {{(Math.abs(props.row.refuseDate - props.row.creationDate) / 36e5).toFixed(1) }} hours (from creation)
+                        {{(Math.abs(props.row.refuseDate - props.row.checkoutDate) / 36e5).toFixed(1) }} hours (from checkout)
                       </p>
                     </el-tag>
                 </span>

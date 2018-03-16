@@ -40,7 +40,7 @@ export default {
       let obj = {}
       obj.status = 'delivered'
       obj.comments = this.editComments
-      obj.deliverDate = new Date()
+      obj.deliveryDate = new Date()
       this.$store.dispatch('updateOneClick', {
         updateData: obj,
         oneClickId: this.oneClickId

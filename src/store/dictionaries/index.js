@@ -30,7 +30,7 @@ export default {
                 commit('setColors', doc.data().all)
               }
             })
-            console.log('All dictionaries fetched')
+            console.log('Dictionaries fetched')
             commit('LOADING', false)
           })
           .catch(err => {
