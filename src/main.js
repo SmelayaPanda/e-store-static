@@ -22,6 +22,7 @@ import {authMixin} from './mixins/autentication'
 import {image} from './mixins/image'
 import {isLoading} from './mixins/loading'
 import {mailing} from './mixins/mailing'
+import {purchaseStatuses} from './mixins/purchaseStatuses'
 // SHARED
 import AlertComp from './components/shared/Alert'
 import Loader from './components/shared/Loader'
@@ -36,6 +37,7 @@ Vue.mixin(authMixin)
 Vue.mixin(image)
 Vue.mixin(isLoading)
 Vue.mixin(mailing)
+Vue.mixin(purchaseStatuses)
 Vue.filter('date', DateFilter)
 Vue.filter('admin_date', AdminDateFilter)
 Vue.filter('snippet', Snippet)

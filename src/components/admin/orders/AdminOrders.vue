@@ -35,7 +35,7 @@
         <template slot-scope="props">
           <el-row>
             <el-col :span="12">
-              <p><span>Database one click id:</span>
+              <p><span>Database order id:</span>
                 <el-tag size="mini" type="success">{{ props.row.id }}</el-tag>
               </p>
               <h3><i class="el-icon-info"></i>
@@ -190,32 +190,8 @@
         width="150"
         label="Action">
         <template slot-scope="scope">
-          <!--<el-row type="flex" justify="start">-->
-          <!--<process-one-click :oneClickId="scope.row.id"-->
-          <!--v-if="status === 'created'"-->
-          <!--&gt;-->
-          <!--</process-one-click>-->
-          <!--<sent-one-click :oneClickId="scope.row.id"-->
-          <!--:comments="scope.row.comments"-->
-          <!--v-if="status === 'processed'"-->
-          <!--&gt;-->
-          <!--</sent-one-click>-->
-          <!--<deliver-one-click :oneClickId="scope.row.id"-->
-          <!--:comments="scope.row.comments"-->
-          <!--v-if="status === 'sent'"-->
-          <!--&gt;-->
-          <!--</deliver-one-click>-->
-          <!--<refuse-one-click :oneClickId="scope.row.id"-->
-          <!--:comments="scope.row.comments"-->
-          <!--v-if="status !== 'refused' && status !== 'delivered' && status !== 'returned'"-->
-          <!--&gt;-->
-          <!--</refuse-one-click>-->
-          <!--<return-one-click :oneClickId="scope.row.id"-->
-          <!--:comments="scope.row.comments"-->
-          <!--v-if="status === 'delivered'"-->
-          <!--&gt;-->
-          <!--</return-one-click>-->
-          <!--</el-row>-->
+          <change-order-status :orderId="scope.row.id">
+          </change-order-status>
         </template>
       </el-table-column>
     </el-table>
@@ -223,13 +199,15 @@
 </template>
 
 <script>
+import ChangeOrderStatus from './ChangeOrderStatus'
+
 export default {
-  components: {},
+  components: {ChangeOrderStatus},
   name: 'AdminOrders',
   data () {
     return {
       status: 'payPending',
-      statuses: ['payPending', 'sentPending', 'sent', 'delivered', 'returned', 'refused']
+      statuses: ['payPending', 'sentPending', 'sent', 'delivered', 'refused']
     }
   },
   methods: {

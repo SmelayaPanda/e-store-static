@@ -102,12 +102,41 @@ export default {
             console.log(err)
             commit('LOADING', false)
           })
+      },
+    updateOrder:
+      ({commit, getters}, payload) => {
+        commit('LOADING', true)
+        let orders = getters.orders
+        firebase.firestore().collection('orders').doc(payload.orderId).update(payload.updateData)
+          .then(() => {
+            if (payload.updateData.status === 'refused') {
+              // TODO: increase product totalQty ?
+              // return firebase.firestore().collection('products')
+              // .doc(payload.productId).update({totalQty: payload.totalQty})
+            }
+          })
+          .then(() => {
+            orders.splice(orders.indexOf(payload.orderId), 1)
+            console.log('Order updated')
+            commit('setOrders', orders)
+            commit('LOADING', false)
+          })
+          .catch(err => {
+            console.log(err)
+            commit('LOADING', false)
+          })
       }
   },
   getters: {
     orders:
       state => {
         return state.orders
+      },
+    orderById:
+      state => (id) => {
+        return state.orders.find(el => {
+          return el.id === id
+        })
       },
     allOrders:
       state => {
