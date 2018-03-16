@@ -3,7 +3,6 @@ export const purchaseStatuses = {
     return {
       // One click only
       CREATED: 'created',
-      PROCESSED: 'processed',
       // Order only
       PAY_PEND: 'payPending',
       // Common

@@ -106,7 +106,7 @@ export default {
   methods: {
     processOneClick () {
       let obj = {}
-      obj.status = 'processed'
+      obj.status = 'sentPending'
       obj.processDate = new Date()
       obj.qty = this.qty
       obj.shipping = {

@@ -1,12 +1,12 @@
 <template>
-  <!--STATUS:
-1. created
-2. processed
-3. refused
-4. sent
-5. delivered
-6. returned
--->
+  <!--
+ORDER STATUS CHAIN:
+  1. created     - создан (необходимо обработать оператором)
+  2. sentPending - ожидает отправки ( товар с оплатой при получении попадает сразу в данный статус )
+  3. sent        - товар отправлен
+  4. delivered   - товар доставлен
+  5. refused     - отказ
+  -->
   <div v-if="oneClick">
     <el-row type="flex" justify="start" align="middle" class="mb-4">
       <h2 class="ml-3 mr-2">Status</h2>
@@ -34,7 +34,7 @@
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-row>
-            <el-col :span="12">
+            <el-col :span="12" class="pl-1">
               <p><span>Database one click id:</span>
                 <el-tag size="mini" type="success">{{ props.row.id }}</el-tag>
               </p>
@@ -104,7 +104,7 @@
               <!--DELIVERED-->
               <span v-if="props.row.deliveryDate">
                   <i class="el-icon-caret-right"></i>
-                    <el-tag type="info">Delivery
+                    <el-tag type="info">Delivered
                       <p>
                         {{ props.row.deliveryDate | date }}<br>
                         {{(Math.abs(props.row.deliveryDate - props.row.sentDate) / 36e5).toFixed(1) }} hours
@@ -190,26 +190,8 @@
                                v-if="status === 'created'"
             >
             </process-one-click>
-            <sent-one-click :oneClickId="scope.row.id"
-                            :comments="scope.row.comments"
-                            v-if="status === 'processed'"
-            >
-            </sent-one-click>
-            <deliver-one-click :oneClickId="scope.row.id"
-                               :comments="scope.row.comments"
-                               v-if="status === 'sent'"
-            >
-            </deliver-one-click>
-            <refuse-one-click :oneClickId="scope.row.id"
-                              :comments="scope.row.comments"
-                              v-if="status !== 'refused' && status !== 'delivered' && status !== 'returned'"
-            >
-            </refuse-one-click>
-            <return-one-click :oneClickId="scope.row.id"
-                              :comments="scope.row.comments"
-                              v-if="status === 'delivered'"
-            >
-            </return-one-click>
+            <!--CHANGE STATUS-->
+            <change-one-click-status :oneClickId="scope.row.id"></change-one-click-status>
           </el-row>
         </template>
       </el-table-column>
@@ -218,25 +200,19 @@
 </template>
 
 <script>
-import ProcessOneClick from './crud/ProcessOneClick'
-import RefuseOneClick from './crud/RefuseOneClick'
-import SentOneClick from './crud/SentOneClick'
-import DeliverOneClick from './crud/DeliverOneClick'
-import ReturnOneClick from './crud/ReturnOneClick'
+import ProcessOneClick from './ProcessOneClick'
+import ChangeOneClickStatus from './ChangeOneClickStatus'
 
 export default {
   components: {
     ProcessOneClick,
-    SentOneClick,
-    DeliverOneClick,
-    RefuseOneClick,
-    ReturnOneClick
+    ChangeOneClickStatus
   },
   name: 'AdminOneClick',
   data () {
     return {
       status: 'created',
-      statuses: ['created', 'processed', 'sent', 'delivered', 'returned', 'refused']
+      statuses: ['created', 'sentPending', 'sent', 'delivered', 'refused']
     }
   },
   methods: {

@@ -38,6 +38,7 @@ export default {
     updateOneClick:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
+        let oneClick = getters.oneClick
         firebase.firestore().collection('oneclick').doc(payload.oneClickId).update(payload.updateData)
           .then(() => {
             if (payload.updateData.status === 'processed') {
@@ -46,7 +47,9 @@ export default {
             }
           })
           .then(() => {
+            oneClick.splice(oneClick.indexOf(payload.oneClickId), 1)
             console.log('One Click updated')
+            commit('setOneClick', oneClick)
             commit('LOADING', false)
           })
           .catch(err => {

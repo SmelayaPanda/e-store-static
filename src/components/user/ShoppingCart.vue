@@ -76,7 +76,6 @@
 <script>
 import Checkout from './Checkout'
 import OrdersHistory from './OrdersHistory'
-// TODO: check cart no more than 10 items
 export default {
   name: 'ShoppingCart',
   components: {

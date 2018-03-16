@@ -1,12 +1,12 @@
 <template>
-  <!--STATUS:
-1. payPending - ожидает оплаты
-2. sentPending - ожидает отправки ( товар с оплатой при получении попадает сразу в данный статус )
-3. sent - товар отправлен
-4. delivered - товар доставлен
-5. returned - возвращен
-6. refusal - отказ
--->
+  <!--
+ORDER STATUS CHAIN:
+  1. payPending  - ожидает оплаты
+  2. sentPending - ожидает отправки ( товар с оплатой при получении попадает сразу в данный статус )
+  3. sent        - товар отправлен
+  4. delivered   - товар доставлен
+  5. refused     - отказ
+  -->
   <div v-if="orders">
     <el-row type="flex" justify="start" align="middle" class="mb-4">
       <h2 class="ml-3 mr-2">Status</h2>
@@ -34,7 +34,7 @@
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-row>
-            <el-col :span="12">
+            <el-col :span="12" class="pl-1">
               <p><span>Database order id:</span>
                 <el-tag size="mini" type="success">{{ props.row.id }}</el-tag>
               </p>
@@ -96,7 +96,7 @@
               <!--DELIVERED-->
               <span v-if="props.row.deliveryDate">
                   <i class="el-icon-caret-right"></i>
-                    <el-tag type="info">Delivery
+                    <el-tag type="info">Delivered
                       <p>
                         {{ props.row.deliveryDate | date }}<br>
                         {{(Math.abs(props.row.deliveryDate - props.row.sentDate) / 36e5).toFixed(1) }} hours
@@ -106,7 +106,7 @@
               <!--REFUSE-->
               <span v-if="props.row.refuseDate">
                   <i class="el-icon-caret-right"></i>
-                    <el-tag type="info">Refuse
+                    <el-tag type="info">Refused
                       <p>
                         {{ props.row.refuseDate | date }}<br>
                         {{(Math.abs(props.row.refuseDate - props.row.checkoutDate) / 36e5).toFixed(1) }} hours (from checkout)
@@ -170,8 +170,8 @@
         width="150"
         label="Action">
         <template slot-scope="scope">
-          <change-order-status :orderId="scope.row.id">
-          </change-order-status>
+          <!--CHANGE STATUS-->
+          <change-order-status :orderId="scope.row.id"></change-order-status>
         </template>
       </el-table-column>
     </el-table>
