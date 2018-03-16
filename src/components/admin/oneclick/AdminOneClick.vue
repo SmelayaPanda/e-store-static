@@ -211,8 +211,7 @@ export default {
   name: 'AdminOneClick',
   data () {
     return {
-      status: 'created',
-      statuses: ['created', 'sentPending', 'sent', 'delivered', 'refused']
+      status: 'created'
     }
   },
   methods: {
@@ -223,6 +222,15 @@ export default {
   computed: {
     oneClick () {
       return this.$store.getters.oneClick
+    },
+    statuses () {
+      return [
+        this.CREATED,
+        this.SENT_PEND,
+        this.SENT,
+        this.DELIVERED,
+        this.REFUSED
+      ]
     }
   },
   created () {

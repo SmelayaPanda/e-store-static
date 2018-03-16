@@ -186,8 +186,7 @@ export default {
   name: 'AdminOrders',
   data () {
     return {
-      status: 'payPending',
-      statuses: ['payPending', 'sentPending', 'sent', 'delivered', 'refused']
+      status: 'payPending'
     }
   },
   methods: {
@@ -198,6 +197,15 @@ export default {
   computed: {
     orders () {
       return this.$store.getters.orders
+    },
+    statuses () {
+      return [
+        this.PAY_PEND,
+        this.SENT_PEND,
+        this.SENT,
+        this.DELIVERED,
+        this.REFUSED
+      ]
     }
   },
   created () {
