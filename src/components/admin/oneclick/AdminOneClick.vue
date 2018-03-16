@@ -56,7 +56,7 @@ ORDER STATUS CHAIN:
             </el-col>
             <el-col :span="12">
               <span v-if="props.row.shipping">
-                <h3><i class="el-icon-location"></i>
+                <h3><i class="el-icon-location pl-2"></i>
                   Shipping info:
                 </h3>
                 <p>
@@ -146,12 +146,12 @@ ORDER STATUS CHAIN:
       <!--Title-->
       <el-table-column
         label="Title"
-        width="300">
+        width="260">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>Title: {{ scope.row.product.title }}</p>
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.product.title | snippet(40) }}</el-tag>
+              <el-tag size="medium">{{ scope.row.product.title | snippet(32) }}</el-tag>
             </div>
           </el-popover>
         </template>
@@ -161,23 +161,18 @@ ORDER STATUS CHAIN:
         label="Nickname"
         width="150">
         <template slot-scope="scope">
-          <p>{{ scope.row.nickname | snippet(20) }}</p>
+          <p>{{ scope.row.nickname | snippet(14) }}</p>
         </template>
       </el-table-column>
       <!--PHONE-->
       <el-table-column
-        label="Phone"
-        width="140">
-        <template slot-scope="scope">
-          <p>{{ scope.row.phone }}</p>
-        </template>
-      </el-table-column>
-      <!--EMAIL-->
-      <el-table-column
-        label="Email"
+        label="Phone/Email"
         width="200">
         <template slot-scope="scope">
-          <p>{{ scope.row.email }}</p>
+          <p>
+            {{ scope.row.phone }}<br>
+            {{ scope.row.email | snippet(20) }}
+          </p>
         </template>
       </el-table-column>
       <!--Process-->
