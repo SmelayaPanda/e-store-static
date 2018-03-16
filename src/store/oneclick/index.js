@@ -42,8 +42,8 @@ export default {
         firebase.firestore().collection('oneclick').doc(payload.oneClickId).update(payload.updateData)
           .then(() => {
             if (payload.updateData.status === 'processed') {
-              return firebase.firestore().collection('products')
-                .doc(payload.productId).update({totalQty: payload.totalQty})
+              return firebase.firestore().collection('products') // operator can add if absent
+                .doc(payload.productId).update({totalQty: payload.totalQty > 0 ? payload.totalQty : 0})
             }
           })
           .then(() => {

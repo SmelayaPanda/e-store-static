@@ -7,17 +7,17 @@
     <!--</v-container>-->
     <div>
       <el-row type="flex" justify="left" style="flex-wrap: wrap">
-        <el-col :xs="24" :sm="6" :md="5" :lg="4" :xl="4">
-          <el-radio-group v-model="isCollapse" style="margin-bottom: 20px; margin-top: 4px; margin-left: 10px;">
-            <el-radio-button :label="false">expand</el-radio-button>
-            <el-radio-button :label="true">collapse</el-radio-button>
-          </el-radio-group>
+        <el-col :xs="24" :sm="6" :md="5" :lg="4" :xl="4" align="left">
+          <el-button type="text" @click="isCollapse = !isCollapse" class="mt-2 ml-3 pl-1">
+            <v-icon v-if="isCollapse">hdr_strong</v-icon>
+            <v-icon v-if="!isCollapse">hdr_weak</v-icon>
+          </el-button>
           <el-menu default-active="all"
                    @select="changeCategory"
                    :collapse="isCollapse">
             <el-menu-item index="all" @click="filterProducts">
               <!--<i class="el-icon-star-on"></i>-->
-              <v-icon>select_all</v-icon>
+              <v-icon>view_week</v-icon>
               <span slot="title">All categories</span>
             </el-menu-item>
             <el-submenu index="Category A">
