@@ -66,9 +66,8 @@ export default {
       sideNav: false,
       menuItems: [
         {title: 'Home', link: '/', icon: 'home'},
-        {title: 'Category', link: '/about', icon: 'list'},
+        {title: 'Shop', link: '/shop', icon: 'loyalty'},
         {title: 'Info', link: '/info', icon: 'info'},
-        {title: 'About', link: '/services', icon: 'loyalty'},
         {title: 'Account', link: '/account', icon: 'people'},
         {title: 'Sing in', link: '/signin', icon: 'perm_identity'}
       ]

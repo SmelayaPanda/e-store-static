@@ -13,7 +13,7 @@
             <el-card :body-style="{ padding: '0px' }">
               <img src="@/assets/placeholders/person_placeholder.png" height="200px">
               <div style="padding: 14px;">
-                <span>Smelaya Panda</span>
+                <span>I'm wonderful</span>
                 <div class="bottom clearfix">
                   <el-button type="text" class="button">Operating button</el-button>
                 </div>
@@ -21,13 +21,12 @@
             </el-card>
             <el-card class="mt-2" :body-style="{ padding: '0px' }">
               <div style="padding: 14px;">
-                Novosibisk, Akademgorodok
-                <span>Sirenevaya 31</span>
+                Earth, Heart of the mountains 42, Soul of the forest 5/1
               </div>
             </el-card>
             <el-card class="mt-2" :body-style="{ padding: '0px' }">
               <div style="padding: 14px;">
-                8 999 467 78 57
+                {{ this.user.email }}
               </div>
             </el-card>
           </el-col>

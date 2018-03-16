@@ -39,10 +39,6 @@ export default {
       ({commit, getters}) => {
         commit('LOADING', true)
         const user = getters.user
-        if (!user) {
-          commit('LOADING', false)
-          return
-        }
         firebase.firestore().collection('users').doc(user.uid).get()
           .then(snapshot => {
             if (snapshot.data()) {

@@ -63,6 +63,24 @@
                 </div>
                 <v-divider class="mb-3 mt-4"></v-divider>
                 <p>Price: {{ product.price }} {{ product.currency }}</p>
+                <!--Authentication dialog-->
+                <el-dialog
+                  title="Please, register on the site!"
+                  :visible.sync="authDialog"
+                  width="400px"
+                  center
+                >
+                  <h3 class="info--text">If you sign in anonymously, you will not be able to see your purchases on other devices!</h3>
+                  <span slot="footer" class="dialog-footer">
+                    <router-link to="/signup">
+                      <el-button type="primary" class="m-4">Sing up</el-button>
+                    </router-link><br>
+                    <el-button @click="signInAnonymously" class="mt-3">
+                      <img src="@/assets/icons/anonymous-logo.png" height="20px">
+                      <span class="">Anonymously</span>
+                    </el-button>
+                  </span>
+                </el-dialog>
                 <!--Add to cart-->
                 <el-button v-if="!alreadyAddedProduct"
                            size="medium"
@@ -113,6 +131,7 @@ export default {
   components: {ZoomOnHover, OneClick},
   data () {
     return {
+      authDialog: false,
       dialogVisible: false,
       oneClickDialogVisible: false,
       viewImage: ''
@@ -132,7 +151,7 @@ export default {
   methods: {
     addToCart () {
       if (!this.isAuthenticatedUser) {
-        this.$store.dispatch('signInAnonymously')
+        this.authDialog = true
       }
       this.$store.dispatch('updateCart', {operation: 'add', productId: this.id})
     },

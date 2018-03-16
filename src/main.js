@@ -96,18 +96,21 @@ new Vue({
     firebase.initializeApp(config)
     firebase.auth().onAuthStateChanged(
       user => {
+        // console.log(user)
+        let isAdminPanel = this.$router.history.current.fullPath.includes('admin')
         if (user) {
           this.$store.dispatch('autoSignIn', user)
+          if (!isAdminPanel) {
+            this.$store.dispatch('fetchUserCart')
+            this.$store.dispatch('fetchOrders', {userId: user.uid})
+          }
         }
         // In admin panel all data fetched by router click
-        let isAdminPanel = this.$router.history.current.fullPath.includes('admin')
-        if (!isAdminPanel) {
-          this.$store.dispatch('fetchProducts', {sortAsc: true})
-          this.$store.dispatch('fetchUserCart')
-          this.$store.dispatch('fetchOrders', {userId: user.uid})
-        }
         // Always
         this.$store.dispatch('fetchDictionaries')
+        if (!isAdminPanel) {
+          this.$store.dispatch('fetchProducts', {sortAsc: true})
+        }
       })
   }
 })
