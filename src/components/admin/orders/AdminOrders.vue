@@ -115,6 +115,21 @@ ORDER STATUS CHAIN:
                 </span>
             </el-col>
           </el-row>
+          <el-row v-if="props.row.payPalIPN">
+            <el-col :span="20" class="ml-1 mt-2">
+              <h3><i class="el-icon-success"></i>
+                PayPal IPN (Instant Payment Notification):
+              </h3>
+              <el-switch v-model="showPayPalIPN"></el-switch>
+              <span v-for="(prop, key) in props.row.payPalIPN"
+                    :key="prop.txn_id"
+                    v-if="showPayPalIPN"
+              >
+                <span class="primary--text">{{key}}:</span>
+                {{prop}} /
+              </span>
+            </el-col>
+          </el-row>
         </template>
       </el-table-column>
       <!--CREATION DATE-->
@@ -186,7 +201,8 @@ export default {
   name: 'AdminOrders',
   data () {
     return {
-      status: 'payPending'
+      status: 'payPending',
+      showPayPalIPN: false
     }
   },
   methods: {
