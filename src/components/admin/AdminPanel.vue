@@ -32,13 +32,13 @@
           {{ mainTitle }}
         </router-link>
       </v-toolbar-title>
+      <app-balls-loader v-if="this.isLoading"></app-balls-loader>
       <v-toolbar-side-icon
         @click="sideNav = !sideNav"
         class="hidden-md-and-up"
       ></v-toolbar-side-icon>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
-
         <!--Go Home-->
         <v-btn flat @click="goHome" class="primary white--text">
           <v-icon left dark>home</v-icon>

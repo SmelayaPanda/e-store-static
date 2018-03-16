@@ -5,30 +5,30 @@
       <v-icon v-if="!isCollapse">hdr_weak</v-icon>
     </el-button>
     <el-menu
-      default-active="main"
+      :default-active="this.$router.history.current.fullPath"
       class="el-menu-vertical-demo"
       @open="handleOpen"
       @close="handleClose"
       :collapse="isCollapse"
       :router="true"
     >
-      <el-menu-item index="main" route="/admin">
+      <el-menu-item index="/admin" route="/admin">
         <v-icon>insert_chart</v-icon>
         <span slot="title">Dashboard</span>
       </el-menu-item>
-      <el-menu-item index="products" route="/admin/products">
+      <el-menu-item index="/admin/products" route="/admin/products">
         <v-icon>playlist_add</v-icon>
         <span slot="title">Products</span>
       </el-menu-item>
-      <el-menu-item index="orders" route="/admin/orders">
+      <el-menu-item index="/admin/orders" route="/admin/orders">
         <v-icon class="pb-1">description</v-icon>
         <span slot="title">Orders</span>
       </el-menu-item>
-      <el-menu-item index="oneClick" route="/admin/oneClick">
+      <el-menu-item index="/admin/oneClick" route="/admin/oneClick">
         <v-icon>touch_app</v-icon>
         <span slot="title">One Click</span>
       </el-menu-item>
-      <el-menu-item index="dictionaries" route="/admin/dictionaries">
+      <el-menu-item index="/admin/dictionaries" route="/admin/dictionaries">
         <v-icon>text_format</v-icon>
         <span slot="title">Dictionaries</span>
       </el-menu-item>

@@ -3,7 +3,7 @@
 // CORE
 import Vue from 'vue'
 import App from './App'
-import { sync } from 'vuex-router-sync'
+import {sync} from 'vuex-router-sync'
 import router from './router'
 import {store} from './store'
 // import {sync} from 'vuex-router-sync'
@@ -25,6 +25,7 @@ import {mailing} from './mixins/mailing'
 // SHARED
 import AlertComp from './components/shared/Alert'
 import Loader from './components/shared/Loader'
+import BallsLoader from './components/shared/BallsLoader'
 import HelpTooltip from './components/shared/HelpTooltip'
 import MaskedInput from 'vue-masked-input'
 // for router in store
@@ -41,6 +42,7 @@ Vue.filter('snippet', Snippet)
 Vue.component('masked-input', MaskedInput)
 Vue.component('app-alert', AlertComp)
 Vue.component('app-loader', Loader)
+Vue.component('app-balls-loader', BallsLoader)
 Vue.component('app-help-tooltip', HelpTooltip)
 
 Vue.use(ElementUI)
@@ -94,17 +96,16 @@ new Vue({
       user => {
         if (user) {
           this.$store.dispatch('autoSignIn', user)
-          // console.log(user.email)
         }
-        let isAdminPanel = this.$router.history.current.fullPath.includes('admin') // TODO: fetch by router click
-        this.$store.dispatch('fetchProducts', {
-          sortAsc: true,
-          category: isAdminPanel ? 'Category A1' : null
-        })
-        this.$store.dispatch('fetchUserCart')
-        this.$store.dispatch('fetchOrders', isAdminPanel ? {status: 'payPending'} : {userId: user.uid})
+        // In admin panel all data fetched by router click
+        let isAdminPanel = this.$router.history.current.fullPath.includes('admin')
+        if (!isAdminPanel) {
+          this.$store.dispatch('fetchProducts', {sortAsc: true})
+          this.$store.dispatch('fetchUserCart')
+          this.$store.dispatch('fetchOrders', {userId: user.uid})
+        }
+        // Always
         this.$store.dispatch('fetchDictionaries')
-        this.$store.dispatch('fetchOneClick', 'created') // TODO: determinate admin loads
       })
   }
 })

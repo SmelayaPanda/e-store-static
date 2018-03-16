@@ -49,7 +49,7 @@ In user cart for simple visualization and minimum clicks
                               :content="order.status === 'payPending' ?
                               'If you have already paid for the goods then maybe you should wait for confirmation with PayPal':
                               `Your purchase will be shipped soon.`"
-                  ><v-icon>lightbulb_outline</v-icon>
+                  ><v-icon class="mb-1">lightbulb_outline</v-icon>
                   </el-tooltip>
                 </el-button>
                 <!--PAY NOW-->

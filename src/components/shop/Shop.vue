@@ -1,10 +1,11 @@
 <template>
   <div>
     <!--Loading circular-->
-    <v-container v-if="this.isLoading">
-      <app-loader></app-loader>
-    </v-container>
-    <div v-else>
+    <!-- TODO: Need Cool Loader!-->
+    <!--<v-container v-if="this.isLoading">-->
+      <!--<app-loader></app-loader>-->
+    <!--</v-container>-->
+    <div>
       <el-row type="flex" justify="left" style="flex-wrap: wrap">
         <el-col :xs="24" :sm="6" :md="5" :lg="4" :xl="4">
           <el-radio-group v-model="isCollapse" style="margin-bottom: 20px; margin-top: 4px; margin-left: 10px;">

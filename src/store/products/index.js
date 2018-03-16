@@ -24,6 +24,7 @@ export default {
   actions: {
     fetchProducts:
       ({commit, getters}, payload) => {
+        commit('LOADING', true)
         let query = firebase.firestore().collection('products')
         if (payload.maxPrice) {
           query = query
@@ -63,9 +64,11 @@ export default {
               commit('setLastVisible', lastVisible)
             }
             commit('setProducts', products)
+            commit('LOADING', false)
           })
           .catch(err => {
             console.log(err)
+            commit('LOADING', false)
           })
       },
     resetLastVisible:
