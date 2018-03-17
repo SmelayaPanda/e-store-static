@@ -6,7 +6,9 @@ REVIEW STATUSES:
 -->
 <template>
 <div>
-  <el-carousel :interval="4000" type="card" height="410px">
+  <el-carousel :interval="4000"
+               :type="this.$vuetify.breakpoint.name === 'xs' ? '' : 'card'"
+               height="410px">
     <el-carousel-item v-for="(item, idx) in reviews" :key="idx">
       <el-card class="review_card">
         <div slot="header" class="clearfix">
