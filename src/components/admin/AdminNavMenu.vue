@@ -28,6 +28,10 @@
         <v-icon>touch_app</v-icon>
         <span slot="title">One Click</span>
       </el-menu-item>
+      <el-menu-item index="/admin/reviews" route="/admin/reviews">
+        <v-icon>record_voice_over</v-icon>
+        <span slot="title">Reviews</span>
+      </el-menu-item>
       <el-menu-item index="/admin/dictionaries" route="/admin/dictionaries">
         <v-icon>text_format</v-icon>
         <span slot="title">Dictionaries</span>

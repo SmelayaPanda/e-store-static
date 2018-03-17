@@ -2,7 +2,7 @@
   <!--Cashed version-->
   <div v-once>
     <el-row type="flex" justify="center">
-      <el-col :xs="24" :sm="18" :md="16" :lg="14" :xl="12" type="flex" align="middle">
+      <el-col :xs="22" :sm="18" :md="16" :lg="14" :xl="12" type="flex" align="middle">
         <h1>Hello from info</h1>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aut eveniet, impedit provident qui sed
           ut.

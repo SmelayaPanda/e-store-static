@@ -25,7 +25,7 @@ ORDER STATUS CHAIN:
       </el-select>
     </el-row>
     <el-table
-      ref="categoryTable"
+      ref="oneClickTable"
       :data="oneClick"
       :highlight-current-row="true"
       empty-text="No data"
@@ -175,7 +175,7 @@ ORDER STATUS CHAIN:
           </p>
         </template>
       </el-table-column>
-      <!--Process-->
+      <!--ACTIONS-->
       <el-table-column
         width="150"
         label="Action">

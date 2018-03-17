@@ -54,12 +54,36 @@ export default {
       },
     updateReview:
       ({commit, getters}, payload) => {
+        commit('LOADING', true)
+        firebase.firestore().collection('reviews').doc(payload.reviewId)
+          .update({
+            text: payload.text,
+            corrected: true
+          })
+          .then(() => {
+            // let reviews = getters.reviews
+            // reviews[payload.reviewId].text = payload.text
+            // reviews[payload.reviewId].corrected = true
+            // commit('setReviews', reviews)
+            commit('LOADING', false)
+            console.log('Review updated')
+          })
+          .catch(err => {
+            console.log(err)
+            commit('LOADING', false)
+          })
       }
   },
   getters: {
     reviews:
       state => {
         return state.reviews
+      },
+    reviewById:
+      state => (id) => {
+        return state.reviews.find(el => {
+          return el.id === id
+        })
       }
   }
 }
