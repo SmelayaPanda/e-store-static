@@ -1,8 +1,8 @@
 <template>
   <!--Cashed version-->
   <div v-once>
-    <el-row el-row type="flex" justify="center">
-      <el-col :xs="24" :sm="18" :md="14" :lg="12" :xl="6" type="flex" align="middle">
+    <el-row type="flex" justify="center">
+      <el-col :xs="24" :sm="18" :md="16" :lg="14" :xl="12" type="flex" align="middle">
         <h1>Hello from info</h1>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aut eveniet, impedit provident qui sed
           ut.
@@ -10,13 +10,21 @@
           totam!</p>
       </el-col>
     </el-row>
+    <el-row type="flex" justify="center">
+      <el-col :xs="24" :sm="18" :md="16" :lg="14" :xl="12" type="flex" align="middle">
+        <reviews></reviews>
+      </el-col>
+    </el-row>
   </div>
-
 </template>
 
 <script>
+import Reviews from './Reviews'
 export default {
-  name: 'info'
+  name: 'info',
+  components: {
+    Reviews
+  }
 }
 </script>
 

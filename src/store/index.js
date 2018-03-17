@@ -8,6 +8,7 @@ import products from './products/index'
 import orders from './orders/index'
 import dictionaries from './dictionaries/index'
 import oneclick from './oneclick/index'
+import reviews from './reviews/index'
 
 Vue.use(Vuex)
 
@@ -19,6 +20,7 @@ export const store = new Vuex.Store({
     products: products,
     orders: orders,
     dictionaries: dictionaries,
-    oneclick: oneclick
+    oneclick: oneclick,
+    reviews: reviews
   }
 })

@@ -110,6 +110,7 @@ new Vue({
         this.$store.dispatch('fetchDictionaries')
         if (!isAdminPanel) {
           this.$store.dispatch('fetchProducts', {sortAsc: true})
+          this.$store.dispatch('fetchReviews', {status: 'new'}) // change to published
         }
       })
   }

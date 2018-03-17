@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // MAIN
 import Home from '@/components/Home'
-import Info from '@/components/info/Info'
+import About from '@/components/about/About'
 import ShoppingCart from '@/components/user/ShoppingCart'
 // AUTH
 import Signin from '@/components/auth/Signin'
@@ -53,9 +53,9 @@ export default new Router({
       component: ShoppingCart
     },
     {
-      path: '/info',
-      name: 'info',
-      component: Info
+      path: '/about',
+      name: 'about',
+      component: About
     },
     {
       path: '/shop',

@@ -7,7 +7,7 @@
                mode="horizontal">
         <el-menu-item index="home" route="/">ReHigh Store</el-menu-item>
         <el-menu-item index="shop" route="/shop">Shop</el-menu-item>
-        <el-menu-item index="info" route="/info"> Info</el-menu-item>
+        <el-menu-item index="about" route="/about"> About</el-menu-item>
         <el-menu-item index="cart" route="/cart">
           Cart
           <el-tag size="mini" class="mb-1">{{ productCount }}</el-tag>
