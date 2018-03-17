@@ -6,9 +6,8 @@ REVIEW STATUSES:
 -->
 <template>
 <div>
-  {{reviews}}
   <el-carousel :interval="4000" type="card" height="410px">
-    <el-carousel-item v-for="item in 6" :key="item">
+    <el-carousel-item v-for="(item, idx) in reviews" :key="idx">
       <el-card class="review_card">
         <div slot="header" class="clearfix">
           <el-row>
@@ -18,7 +17,7 @@ REVIEW STATUSES:
           </el-row>
           <el-row>
             <el-col :span="24">
-              <span>Anonymous</span>
+              <span>{{ item.name }}</span>
             </el-col>
           </el-row>
         </div>
@@ -26,8 +25,8 @@ REVIEW STATUSES:
         </el-col>
         <el-col :span="24">
           <!--300 symbols-->
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aperiam corporis, dolore eaque eos iure laboriosam magni, modi necessitatibus nemo nesciunt nostrum numquam pariatur quaerat quas quibusdam ullam, ut vero.</p>
-          <p class="info--text right">Date: 23: 12: 53</p>
+          <p>{{ item.text }}</p>
+          <p class="info--text right">{{ item.date | date }}</p>
         </el-col>
       </el-card>
     </el-carousel-item>
@@ -42,7 +41,6 @@ REVIEW STATUSES:
     width="500px"
     center
   >
-    <h3 class="info--text">Add review!</h3>
     <el-input v-model="review.name" placeholder="Name" class="mb-2 mt-2"></el-input>
     <el-input v-model="review.text"
               type="textarea"
@@ -68,7 +66,7 @@ export default {
         name: '',
         text: '',
         status: 'new',
-        data: new Date(),
+        date: new Date(),
         image: null
       }
     }
