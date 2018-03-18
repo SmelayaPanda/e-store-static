@@ -1,5 +1,6 @@
 import * as firebase from 'firebase'
 import 'firebase/firestore'
+import algoliasearch from 'algoliasearch'
 
 export default {
   state: {
@@ -75,6 +76,52 @@ export default {
           .catch(err => {
             console.log(err)
             commit('LOADING', false)
+          })
+      },
+    algoliaSearch:
+      ({commit, dispatch}, payload) => {
+        const ALGOLIA_APP_ID = '2CVO44WQ94'
+        const ALGOLIA_SEARCH_KEY = '68d8a98b0c136d3dbd0a799949007e8d'
+        const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY)
+        const index = client.initIndex('e_store_products')
+        // Search query
+        const query = payload
+
+        // Perform an Algolia search:
+        // https://www.algolia.com/doc/api-reference/api-methods/search/
+        index
+          .search({
+            query
+          })
+          .then(responses => {
+            // Response from Algolia:
+            // https://www.algolia.com/doc/api-reference/api-methods/search/#response-format
+            // console.log(responses.hits)
+            let products = []
+            let getProduct = function (productId) {
+              return firebase.firestore().collection('products').doc(productId).get()
+                .then(snapshot => {
+                  // console.log(snapshot.data())
+                  products.push(snapshot.data())
+                })
+            }
+            let actions = []
+            let resp = responses.hits
+            for (let product in resp) {
+              // console.log(resp[product].objectID)
+              actions.push(getProduct(resp[product].objectID))
+            }
+            Promise.all(actions)
+              .then(() => {
+                // console.log('All fetcheD!')
+                commit('setProducts', products)
+              })
+              .catch(err => {
+                console.log(err)
+              })
+          })
+          .catch(err => {
+            console.log(err)
           })
       },
     resetLastVisible:

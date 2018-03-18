@@ -53,6 +53,16 @@
           </el-menu>
         </el-col>
         <el-col :xs="24" :sm="18" :md="18" :lg="16" :xl="14" type="flex" align="middle">
+          <el-input
+            placeholder="Search product..."
+            prefix-icon="el-icon-search"
+            style="margin-left: 12px; padding-right: 23px"
+            @change="searchProduct"
+            v-model="search">
+            <el-button slot="append" >
+              <img src="@/assets/icons/search_by_algolia.svg">
+            </el-button>
+          </el-input>
           <!--FILTER-->
           <el-collapse v-model="activeName" accordion style="margin-left: 12px; margin-right: 12px">
             <!--PRICE FILTER-->
@@ -152,6 +162,7 @@ export default {
   },
   data () {
     return {
+      search: '',
       sortAsc: true,
       activeName: 1,
       isCollapse: true,
@@ -199,6 +210,9 @@ export default {
         color: this.selectedColor,
         brand: this.selectedBrand
       })
+    },
+    searchProduct () {
+      this.$store.dispatch('algoliaSearch', this.search)
     }
   },
   computed: {
@@ -241,5 +255,6 @@ export default {
     border-radius: 50%;
     font-size: 22px;
     line-height: 22px;
+    color: #1D3657;
   }
 </style>
