@@ -98,6 +98,7 @@ new Vue({
       user => {
         // console.log(user)
         let isAdminPanel = this.$router.history.current.fullPath.includes('admin')
+        // USER DATA
         if (user) {
           this.$store.dispatch('autoSignIn', user)
           if (!isAdminPanel) {
@@ -105,13 +106,12 @@ new Vue({
             this.$store.dispatch('fetchOrders', {userId: user.uid})
           }
         }
-        // In admin panel all data fetched by router click
-        // Always
-        this.$store.dispatch('fetchDictionaries')
+        this.$store.dispatch('fetchDictionaries') // always
         if (!isAdminPanel) {
           this.$store.dispatch('fetchProducts', {sortAsc: true})
-          this.$store.dispatch('fetchReviews', {status: 'new'}) // change to published
+          this.$store.dispatch('fetchReviews', {status: 'published'})
         }
       })
+    // In admin panel all data fetched by router click
   }
 })
