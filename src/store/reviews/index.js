@@ -53,18 +53,11 @@ export default {
           })
       },
     updateReview:
-      ({commit, getters}, payload) => {
+      ({commit, dispatch}, payload) => {
         commit('LOADING', true)
-        firebase.firestore().collection('reviews').doc(payload.reviewId)
-          .update({
-            text: payload.text,
-            corrected: true
-          })
+        firebase.firestore().collection('reviews').doc(payload.reviewId).update(payload.updateData)
           .then(() => {
-            // let reviews = getters.reviews
-            // reviews[payload.reviewId].text = payload.text
-            // reviews[payload.reviewId].corrected = true
-            // commit('setReviews', reviews)
+            dispatch('fetchReviews', {status: payload.oldStatus})
             commit('LOADING', false)
             console.log('Review updated')
           })

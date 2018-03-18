@@ -70,7 +70,7 @@
       </el-table-column>
       <!--ACTIONS-->
       <el-table-column
-        width="150"
+        width="200"
         label="Action">
         <template slot-scope="scope">
           <el-row type="flex" justify="start">
@@ -78,6 +78,15 @@
                             v-if="status === 'new'"
             >
             </process-review>
+            <change-review-status :reviewId="scope.row.id"
+                                  toStatus="published"
+            >
+            </change-review-status>
+            <change-review-status :reviewId="scope.row.id"
+                                  toStatus="archived"
+                                  v-if="status !== 'archived'"
+            >
+            </change-review-status>
           </el-row>
         </template>
       </el-table-column>
@@ -87,16 +96,18 @@
 
 <script>
 import ProcessReview from './ProcessReview'
+import ChangeReviewStatus from './ChangeReviewStatus'
 
 export default {
   name: 'AdminReviews',
   components: {
-    ProcessReview
+    ProcessReview,
+    ChangeReviewStatus
   },
   data () {
     return {
       status: 'new',
-      statuses: ['new', 'published', 'archive']
+      statuses: ['new', 'published', 'archived']
     }
   },
   methods: {

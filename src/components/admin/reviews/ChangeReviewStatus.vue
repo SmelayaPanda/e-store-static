@@ -2,22 +2,17 @@
   <div v-if="review">
     <el-button @click="dialogVisible = true"
     >
-      <v-icon size="medium">edit</v-icon>
+      <v-icon size="medium" v-if="this.toStatus === 'published'">remove_red_eye</v-icon>
+      <v-icon size="medium" v-if="toStatus === 'archived'">archive</v-icon>
     </el-button>
     <el-dialog
-      title="Correct review text"
+      :title="toStatus === 'published' ? 'Publish review?' : 'Archive review?'"
       :visible.sync="dialogVisible"
       width="500px"
       center>
-      <el-input v-model="review.text"
-                type="textarea"
-                placeholder="(max 400 symbols)"
-                :autosize="{ minRows: 3, maxRows: 7}"
-                :maxlength="400"
-      ></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="danger" @click="correctReviewText">Confirm</el-button>
+        <el-button type="danger" @click="changeReviewStatus">Confirm</el-button>
       </span>
     </el-dialog>
   </div>
@@ -25,22 +20,21 @@
 
 <script>
 export default {
-  name: 'ProcessReview',
-  props: ['reviewId'],
+  name: 'ChangeReviewStatus',
+  props: ['reviewId', 'toStatus'],
   data () {
     return {
       dialogVisible: false
     }
   },
   methods: {
-    correctReviewText () {
+    changeReviewStatus () {
       this.dialogVisible = false
       this.$store.dispatch('updateReview', {
         reviewId: this.reviewId,
         oldStatus: this.review.status,
         updateData: {
-          text: this.review.text,
-          corrected: true
+          status: this.toStatus
         }
       })
     }
