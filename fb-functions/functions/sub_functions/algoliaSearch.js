@@ -5,6 +5,7 @@ const algoliasearch = require('algoliasearch');
 
 
 exports.updateProductHandler = function (event, functions) {
+  console.log('>-------------------------------------------------------------------------------------------------------');
 // DON'T FORGET SEE WHAT PRODUCT UPDATED AFTER CREATION!
   const ALGOLIA_INDEX_NAME = 'e_store_products';
   const ALGOLIA_ID = functions.config().algolia.app_id;
@@ -26,12 +27,17 @@ exports.updateProductHandler = function (event, functions) {
   const index = client.initIndex(ALGOLIA_INDEX_NAME);
   return index.saveObject(product, (err) => {
     if (!err) {
-      console.log(`Object ${productId} updated`);
+      console.log(`Object ${event.params.productId} updated`);
+      return true;
+    } else {
+      console.log(err);
+      return false;
     }
   });
 }
 
 exports.deleteProductHandler = function (event, functions) {
+  console.log('>-------------------------------------------------------------------------------------------------------');
   const ALGOLIA_INDEX_NAME = 'e_store_products';
   const ALGOLIA_ID = functions.config().algolia.app_id;
   const ALGOLIA_ADMIN_KEY = functions.config().algolia.api_key;
@@ -39,7 +45,11 @@ exports.deleteProductHandler = function (event, functions) {
   const index = client.initIndex(ALGOLIA_INDEX_NAME);
   return index.deleteObject(event.params.productId, (err) => {
     if (!err) {
-      console.log(`Object ${productId} deleted`);
+      console.log(`Object ${event.params.productId} deleted`);
+      return true;
+    } else {
+      console.log(err);
+      return false;
     }
   });
 }

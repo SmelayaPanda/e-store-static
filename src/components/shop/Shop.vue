@@ -55,11 +55,11 @@
         <el-col :xs="24" :sm="18" :md="18" :lg="16" :xl="14" type="flex" align="middle">
           <el-input
             placeholder="Search product..."
-            prefix-icon="el-icon-search"
+            :prefix-icon="!this.isLoading ? 'el-icon-search' : 'el-icon-loading'"
             style="margin-left: 12px; padding-right: 23px"
             @change="searchProduct"
             v-model="search">
-            <el-button slot="append" >
+            <el-button slot="append" class="pt-3">
               <img src="@/assets/icons/search_by_algolia.svg">
             </el-button>
           </el-input>
@@ -246,15 +246,5 @@ export default {
 
   .card_wrapper:hover {
     cursor: pointer;
-  }
-
-  .btn-to-top {
-    width: 60px;
-    height: 60px;
-    padding: 10px 16px;
-    border-radius: 50%;
-    font-size: 22px;
-    line-height: 22px;
-    color: #1D3657;
   }
 </style>
