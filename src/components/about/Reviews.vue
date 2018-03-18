@@ -2,7 +2,7 @@
 REVIEW STATUSES:
 1. new
 2. published
-3. archive
+3. archived
 -->
 <template>
 <div>

@@ -73,6 +73,7 @@
                   :min="0"
                   :max="2000">
                 </el-slider>
+                <!--TODO: dinamyc max price-->
               </div>
               <!--BRAND-->
               <el-row type="flex" justify="center" style="flex-wrap: wrap" class="pt-2">
@@ -188,6 +189,7 @@ export default {
     },
     filter (loadMore) {
       return this.$store.dispatch('fetchProducts', {
+        limit: 15,
         loadMore: loadMore,
         sortAsc: this.sortAsc,
         minPrice: this.sliderValues[0],

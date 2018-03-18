@@ -1,11 +1,11 @@
 <template>
   <!--Cashed version-->
-  <div v-once>
+  <div>
     <el-row type="flex" justify="center">
       <el-col :xs="22" :sm="18" :md="16" :lg="14" :xl="12" type="flex" align="middle">
         <h1>Hello from info</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aut eveniet, impedit provident qui sed
-          ut.
+        <p v-once>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aut eveniet, impedit provident quised ut.
           Adipisci aspernatur cupiditate distinctio, esse facere fuga harum, illum laboriosam molestiae quam reiciendis,
           totam!</p>
       </el-col>

@@ -47,14 +47,16 @@ export default {
         if (getters.lastVisibleId) {
           query = query.startAfter(getters.lastVisibleId)
         }
+        if (payload.limit) { // Shop case
+          query = query.limit(payload.limit)
+        }
 
-        query
-          .limit(9)
-          .get()
+        query.get()
           .then((snapshot) => {
             let products = payload.loadMore ? getters.products : []
-            if (!getters.isAllLoaded) {
-              if (snapshot.size < 9) {
+            // Shop case
+            if (!getters.isAllLoaded && payload.limit) {
+              if (snapshot.size < payload.limit) {
                 commit('isAllLoaded', true)
               }
               snapshot.docs.forEach(doc => {
@@ -62,6 +64,10 @@ export default {
               })
               let lastVisible = snapshot.docs[snapshot.docs.length - 1]
               commit('setLastVisible', lastVisible)
+            } else { // Admin case - show all
+              snapshot.docs.forEach(doc => {
+                products.push(doc.data())
+              })
             }
             commit('setProducts', products)
             commit('LOADING', false)
@@ -97,7 +103,7 @@ export default {
           })
           .then(() => {
             commit('LOADING', false)
-            window.location.reload()
+            window.location.reload() // TODO: ?
           })
           .catch(err => {
             console.log(err)
@@ -133,7 +139,7 @@ export default {
         return Promise.all(actions)
           .then(() => {
             commit('LOADING', false)
-            window.location.reload()
+            window.location.reload() // TODO: ?
           })
           .catch((error) => {
             console.log(error)

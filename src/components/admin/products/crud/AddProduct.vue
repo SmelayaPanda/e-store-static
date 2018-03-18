@@ -106,7 +106,7 @@ export default {
         brand: '',
         currency: 'RUB',
         price: 100,
-        qty: 10,
+        totalQty: 1,
         color: 'green',
         date: new Date()
       },
