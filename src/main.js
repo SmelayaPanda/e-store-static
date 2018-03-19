@@ -108,10 +108,9 @@ new Vue({
         }
         this.$store.dispatch('fetchDictionaries') // always
         if (!isAdminPanel) {
-          this.$store.dispatch('fetchProducts', {sortAsc: true, limit: 15})
+          this.$store.dispatch('fetchProducts')
           this.$store.dispatch('fetchReviews', {status: 'published'})
         }
-        // this.$store.dispatch('algoliaSearch') // always
       })
     // In admin panel all data fetched by router click
   }

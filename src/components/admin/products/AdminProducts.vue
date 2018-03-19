@@ -162,10 +162,18 @@ export default {
   methods: {
     loadCategoryProducts () {
       this.$store.dispatch('resetLastVisible')
-      this.$store.dispatch('fetchProducts', {
+      this.$store.dispatch('productFilters', {
+        limit: 0, // all
+        loadMore: false,
+        sortAsc: true,
+        minPrice: 0,
+        maxPrice: 0,
         category: this.productOption[1],
-        sortAsc: true
+        group: '',
+        color: '',
+        brand: ''
       })
+      this.$store.dispatch('fetchProducts')
     }
   },
   computed: {

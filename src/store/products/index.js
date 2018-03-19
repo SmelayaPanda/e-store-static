@@ -15,7 +15,7 @@ export default {
       brand: '',
       color: '',
       sortAsc: true,
-      limit: 0,
+      limit: 12,
       loadMore: false
     },
     algoliaSearchText: '',
@@ -74,33 +74,34 @@ export default {
         if (getters.lastVisibleId) {
           query = query.startAfter(getters.lastVisibleId)
         }
-        if (filter.limit) { // Shop case
+        if (filter.limit && !getters.algoliaSearchText) { // Shop case, no limit with algoliaText
           query = query.limit(filter.limit)
         }
 
         query.get()
           .then((snapshot) => {
-            let products = filter.loadMore ? getters.products : []
-            if (!getters.isAllLoaded && filter.limit) { // Shop case
-              if (snapshot.size < filter.limit) {
-                commit('isAllLoaded', true)
-              }
-              snapshot.docs.forEach(doc => {
-                products.push(doc.data())
-              })
-              let lastVisible = snapshot.docs[snapshot.docs.length - 1]
-              commit('setLastVisible', lastVisible)
-            } else { // Admin case - show all
-              snapshot.docs.forEach(doc => {
-                products.push(doc.data())
-              })
+            let products
+            if (!getters.isAllLoaded && !getters.algoliaSearchText && getters.lastVisibleId) {
+              products = getters.products
+            } else {
+              products = []
             }
+            if (!getters.isAllLoaded) {
+              let lastVisible = snapshot.docs[snapshot.docs.length - 1]
+              commit('isAllLoaded', snapshot.size < filter.limit)
+              commit('setLastVisible', lastVisible)
+            }
+            snapshot.docs.forEach(doc => {
+              products.push(doc.data())
+            })
             // Algolia filter
             if (getters.algoliaSearchText) {
               let objectIds = getters.algoliaSearchProductIds
               products = products.filter(el => {
                 return objectIds.indexOf(el.productId) !== -1
               })
+              commit('isAllLoaded', true)
+              commit('setLastVisible', '')
             }
             commit('setProducts', products)
             commit('LOADING', false)
@@ -137,7 +138,7 @@ export default {
             commit('algoliaSearchText', payload)
             commit('algoliaSearchProductIds', objectIds)
             dispatch('resetLastVisible')
-            dispatch('fetchProducts', {sortAsc: true})
+            dispatch('fetchProducts')
           })
           .catch(err => {
             commit('LOADING', false)

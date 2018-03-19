@@ -45,13 +45,13 @@
           </el-menu-item>
         </el-menu>
       </el-col>
-      <!--Search with algolia-->
+      <!--ALGOLIA SEARCH-->
       <el-col :xs="24" :sm="18" :md="18" :lg="16" :xl="14" type="flex" align="middle">
         <el-input
           placeholder="Search product..."
           class="search_input"
-          @change="searchProduct"
-          v-model="search">
+          @change="algoliaSearch"
+          v-model="algoliaSearchText">
           <template slot="prepend" class="pr-3">
             <i v-if="this.isLoading" class="el-icon-loading" style="margin-right: -4px;"></i>
             <el-tooltip placement="bottom" effect="light">
@@ -63,14 +63,15 @@
                 <i v-if="!this.isLoading" class="el-icon-search"></i>
               </el-button>
             </el-tooltip>
-            <span class="ml-1">{{ this.selectedCategory }}</span>
+            <span v-if="this.selectedCategory" class="ml-1">{{ this.selectedCategory }}</span>
+            <span v-if="this.selectedGroup" class="ml-1">{{ this.selectedGroup }}</span>
           </template>
           <el-button slot="append" class="pt-3">
             <img src="@/assets/icons/search_by_algolia.svg">
           </el-button>
         </el-input>
         <!--FILTER-->
-        <el-collapse v-model="activeName" accordion style="margin-left: 12px; margin-right: 12px">
+        <el-collapse v-model="activeName" accordion style="margin-left: 16px; margin-right: 16px">
           <!--PRICE FILTER-->
           <el-collapse-item title="Filter" name="1">
             <el-button type="text" class="pr-4 pb-0" @click="sortByPrice">
@@ -167,7 +168,7 @@ export default {
   },
   data () {
     return {
-      search: this.$store.getters.algoliaSearchText,
+      algoliaSearchText: this.$store.getters.algoliaSearchText,
       sortAsc: this.$store.getters.productFilters.sortAsc,
       sliderValues: [1, 2000],
       selectedBrand: this.$store.getters.productFilters.brand,
@@ -210,7 +211,7 @@ export default {
     },
     filter (loadMore) {
       this.$store.dispatch('productFilters', {
-        limit: 15,
+        limit: this.algoliaSearchText ? 0 : 12, // all with algolia search
         loadMore: loadMore,
         sortAsc: this.sortAsc,
         minPrice: this.sliderValues[0],
@@ -222,8 +223,8 @@ export default {
       })
       return this.$store.dispatch('fetchProducts')
     },
-    searchProduct () {
-      this.$store.dispatch('algoliaSearch', this.search)
+    algoliaSearch () {
+      this.$store.dispatch('algoliaSearch', this.algoliaSearchText)
     }
   },
   computed: {
