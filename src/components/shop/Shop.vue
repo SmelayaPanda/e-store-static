@@ -53,8 +53,16 @@
           @change="searchProduct"
           v-model="search">
           <template slot="prepend" class="pr-3">
-            <i v-if="this.isLoading" class="el-icon-loading"></i>
-            <i v-if="!this.isLoading" class="el-icon-search"></i>
+            <i v-if="this.isLoading" class="el-icon-loading" style="margin-right: -4px;"></i>
+            <el-tooltip placement="bottom" effect="light">
+              <div slot="content">
+                Type something and press enter! <br>
+                Like: cool, beautiful, Sennheiser, black, Group A ...<br>
+              </div>
+              <el-button>
+                <i v-if="!this.isLoading" class="el-icon-search"></i>
+              </el-button>
+            </el-tooltip>
             <span class="ml-1">{{ this.selectedCategory }}</span>
           </template>
           <el-button slot="append" class="pt-3">
