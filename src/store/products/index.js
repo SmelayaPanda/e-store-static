@@ -6,7 +6,7 @@ export default {
   state: {
     products: [],
     lastVisibleId: '',
-    isAllLoaded: false,
+    isAllLoaded: true,
     productFilters: {
       minPrice: 0,
       maxPrice: 0,
@@ -86,9 +86,9 @@ export default {
             } else {
               products = []
             }
+            commit('isAllLoaded', snapshot.size < filter.limit)
             if (!getters.isAllLoaded) {
               let lastVisible = snapshot.docs[snapshot.docs.length - 1]
-              commit('isAllLoaded', snapshot.size < filter.limit)
               commit('setLastVisible', lastVisible)
             }
             snapshot.docs.forEach(doc => {
