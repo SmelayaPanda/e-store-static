@@ -146,7 +146,7 @@
           </el-col>
         </el-row>
         <div class="mb-4 mt-3">
-          <el-button type="text" @click="loadMore" v-if="!this.$store.getters.isAllLoaded">Load more</el-button>
+          <el-button type="text" @click="loadMore" v-if="this.$store.getters.lastVisible">Load more</el-button>
         </div>
       </el-col>
     </el-row>
@@ -170,7 +170,10 @@ export default {
     return {
       algoliaSearchText: this.$store.getters.algoliaSearchText,
       sortAsc: this.$store.getters.productFilters.sortAsc,
-      sliderValues: [1, 2000],
+      sliderValues: [
+        this.$store.getters.productFilters.minPrice,
+        this.$store.getters.productFilters.maxPrice
+      ],
       selectedBrand: this.$store.getters.productFilters.brand,
       selectedColor: this.$store.getters.productFilters.color,
       selectedGroup: this.$store.getters.productFilters.group,
@@ -203,16 +206,15 @@ export default {
       }
     },
     filterProducts () {
-      this.$store.dispatch('resetLastVisible')
-      this.filter(false)
+      this.$store.dispatch('setLastVisible', null)
+      this.filter()
     },
     loadMore () {
-      this.filter(true)
+      this.filter()
     },
-    filter (loadMore) {
+    filter () {
       this.$store.dispatch('productFilters', {
-        limit: this.algoliaSearchText ? 0 : 12, // all with algolia search
-        loadMore: loadMore,
+        limit: this.algoliaSearchText ? null : 6, // all with algolia search
         sortAsc: this.sortAsc,
         minPrice: this.sliderValues[0],
         maxPrice: this.sliderValues[1],

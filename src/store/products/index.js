@@ -5,18 +5,16 @@ import algoliasearch from 'algoliasearch'
 export default {
   state: {
     products: [],
-    lastVisibleId: '',
-    isAllLoaded: true,
+    lastVisible: null, // value means load more button is available
     productFilters: {
       minPrice: 0,
-      maxPrice: 0,
+      maxPrice: 10000,
       group: '',
       category: '',
       brand: '',
       color: '',
       sortAsc: true,
-      limit: 12,
-      loadMore: false
+      limit: 6
     },
     algoliaSearchText: '',
     algoliaSearchProductIds: []
@@ -28,11 +26,7 @@ export default {
       },
     setLastVisible:
       (state, payload) => {
-        state.lastVisibleId = payload
-      },
-    isAllLoaded: // to avoid infinitive load more
-      (state, payload) => {
-        state.isAllLoaded = payload
+        state.lastVisible = payload
       },
     productFilters:
       (state, payload) => {
@@ -71,37 +65,35 @@ export default {
           query = query.where('color', '==', filter.color)
         }
         query = query.orderBy('price', filter.sortAsc ? 'asc' : 'desc')
-        if (getters.lastVisibleId) {
-          query = query.startAfter(getters.lastVisibleId)
+        if (getters.lastVisible) {
+          query = query.startAfter(getters.lastVisible)
         }
-        if (filter.limit && !getters.algoliaSearchText) { // Shop case, no limit with algoliaText
+        if (filter.limit && !getters.algoliaSearchText) { // no limit with algoliaText
           query = query.limit(filter.limit)
         }
 
         query.get()
           .then((snapshot) => {
             let products
-            if (!getters.isAllLoaded && !getters.algoliaSearchText && getters.lastVisibleId) {
+            if (getters.lastVisible && !getters.algoliaSearchText) {
               products = getters.products
             } else {
               products = []
             }
-            commit('isAllLoaded', snapshot.size < filter.limit)
-            if (!getters.isAllLoaded) {
-              let lastVisible = snapshot.docs[snapshot.docs.length - 1]
-              commit('setLastVisible', lastVisible)
+            if (snapshot.size === filter.limit) {
+              commit('setLastVisible', snapshot.docs[snapshot.docs.length - 1])
+            } else {
+              commit('setLastVisible', null)
             }
             snapshot.docs.forEach(doc => {
               products.push(doc.data())
             })
             // Algolia filter
             if (getters.algoliaSearchText) {
-              let objectIds = getters.algoliaSearchProductIds
               products = products.filter(el => {
-                return objectIds.indexOf(el.productId) !== -1
+                return getters.algoliaSearchProductIds.indexOf(el.productId) !== -1
               })
-              commit('isAllLoaded', true)
-              commit('setLastVisible', '')
+              commit('setLastVisible', null) // no limit records with algolia search
             }
             commit('setProducts', products)
             commit('LOADING', false)
@@ -137,7 +129,7 @@ export default {
             commit('LOADING', false)
             commit('algoliaSearchText', payload)
             commit('algoliaSearchProductIds', objectIds)
-            dispatch('resetLastVisible')
+            commit('setLastVisible', null)
             dispatch('fetchProducts')
           })
           .catch(err => {
@@ -145,10 +137,9 @@ export default {
             console.log(err)
           })
       },
-    resetLastVisible:
-      ({commit}) => {
-        commit('isAllLoaded', false)
-        commit('setLastVisible', null)
+    setLastVisible:
+      ({commit}, payload) => {
+        commit('setLastVisible', payload)
       },
     addNewProduct:
       ({commit, getters}, payload) => {
@@ -257,13 +248,9 @@ export default {
           return p.productId === productId
         })
       },
-    lastVisibleId:
+    lastVisible:
       state => {
-        return state.lastVisibleId
-      },
-    isAllLoaded:
-      state => {
-        return state.isAllLoaded
+        return state.lastVisible
       },
     productFilters:
       state => {
