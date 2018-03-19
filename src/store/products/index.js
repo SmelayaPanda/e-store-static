@@ -7,7 +7,8 @@ export default {
     products: [],
     lastVisibleId: '',
     isAllLoaded: false,
-    algoliaSearch: ''
+    algoliaSearchText: '',
+    algoliaSearchProductIds: []
   },
   mutations: {
     setProducts:
@@ -22,9 +23,13 @@ export default {
       (state, payload) => {
         state.isAllLoaded = payload
       },
-    algoliaSearch:
+    algoliaSearchText:
       (state, payload) => {
-        state.algoliaSearch = payload
+        state.algoliaSearchText = payload
+      },
+    algoliaSearchProductIds:
+      (state, payload) => {
+        state.algoliaSearchProductIds = payload
       }
   },
   actions: {
@@ -75,6 +80,13 @@ export default {
                 products.push(doc.data())
               })
             }
+            // Algolia filter
+            if (getters.algoliaSearchText) {
+              let objectIds = getters.algoliaSearchProductIds
+              products = products.filter(el => {
+                return objectIds.indexOf(el.productId) !== -1
+              })
+            }
             commit('setProducts', products)
             commit('LOADING', false)
           })
@@ -83,36 +95,30 @@ export default {
             commit('LOADING', false)
           })
       },
-    algoliaSearch:
+    algoliaSearch: // intersect with fb data as filter
       ({commit, dispatch}, payload) => {
         commit('LOADING', true)
         const ALGOLIA_APP_ID = '2CVO44WQ94'
         const ALGOLIA_SEARCH_KEY = '68d8a98b0c136d3dbd0a799949007e8d'
         const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY)
         const index = client.initIndex('e_store_products')
-        let products = []
+        let objectIds = []
         index
           .search({
             query: payload
           })
           .then(responses => {
-            let getProduct = function (productId) {
-              return firebase.firestore().collection('products').doc(productId).get()
-                .then(snapshot => {
-                  products.push(snapshot.data())
-                })
-            }
-            let actions = []
             let resp = responses.hits
             for (let product in resp) {
-              actions.push(getProduct(resp[product].objectID))
+              objectIds.push(resp[product].objectID)
             }
-            return Promise.all(actions)
           })
           .then(() => {
             commit('LOADING', false)
-            commit('algoliaSearch', payload)
-            commit('setProducts', products)
+            commit('algoliaSearchText', payload)
+            commit('algoliaSearchProductIds', objectIds)
+            dispatch('resetLastVisible')
+            dispatch('fetchProducts', {sortAsc: true})
           })
           .catch(err => {
             commit('LOADING', false)
@@ -239,9 +245,13 @@ export default {
       state => {
         return state.isAllLoaded
       },
-    algoliaSearch:
+    algoliaSearchText:
       state => {
-        return state.algoliaSearch
+        return state.algoliaSearchText
+      },
+    algoliaSearchProductIds:
+      state => {
+        return state.algoliaSearchProductIds
       }
   }
 }
