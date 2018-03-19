@@ -7,6 +7,17 @@ export default {
     products: [],
     lastVisibleId: '',
     isAllLoaded: false,
+    productFilters: {
+      minPrice: 0,
+      maxPrice: 0,
+      group: '',
+      category: '',
+      brand: '',
+      color: '',
+      sortAsc: true,
+      limit: 0,
+      loadMore: false
+    },
     algoliaSearchText: '',
     algoliaSearchProductIds: []
   },
@@ -23,6 +34,10 @@ export default {
       (state, payload) => {
         state.isAllLoaded = payload
       },
+    productFilters:
+      (state, payload) => {
+        state.productFilters = payload
+      },
     algoliaSearchText:
       (state, payload) => {
         state.algoliaSearchText = payload
@@ -34,40 +49,40 @@ export default {
   },
   actions: {
     fetchProducts:
-      ({commit, getters}, payload) => {
+      ({commit, getters}) => {
         commit('LOADING', true)
+        let filter = getters.productFilters
         let query = firebase.firestore().collection('products')
-        if (payload.maxPrice) {
+        if (filter.maxPrice) {
           query = query
-            .where('price', '>=', payload.minPrice)
-            .where('price', '<=', payload.maxPrice)
+            .where('price', '>=', filter.minPrice)
+            .where('price', '<=', filter.maxPrice)
         }
-        if (payload.group) {
-          query = query.where('group', '==', payload.group)
+        if (filter.group) {
+          query = query.where('group', '==', filter.group)
         }
-        if (payload.category) {
-          query = query.where('category', '==', payload.category)
+        if (filter.category) {
+          query = query.where('category', '==', filter.category)
         }
-        if (payload.brand) {
-          query = query.where('brand', '==', payload.brand)
+        if (filter.brand) {
+          query = query.where('brand', '==', filter.brand)
         }
-        if (payload.color) {
-          query = query.where('color', '==', payload.color)
+        if (filter.color) {
+          query = query.where('color', '==', filter.color)
         }
-        query = query.orderBy('price', payload.sortAsc ? 'asc' : 'desc')
+        query = query.orderBy('price', filter.sortAsc ? 'asc' : 'desc')
         if (getters.lastVisibleId) {
           query = query.startAfter(getters.lastVisibleId)
         }
-        if (payload.limit) { // Shop case
-          query = query.limit(payload.limit)
+        if (filter.limit) { // Shop case
+          query = query.limit(filter.limit)
         }
 
         query.get()
           .then((snapshot) => {
-            let products = payload.loadMore ? getters.products : []
-            // Shop case
-            if (!getters.isAllLoaded && payload.limit) {
-              if (snapshot.size < payload.limit) {
+            let products = filter.loadMore ? getters.products : []
+            if (!getters.isAllLoaded && filter.limit) { // Shop case
+              if (snapshot.size < filter.limit) {
                 commit('isAllLoaded', true)
               }
               snapshot.docs.forEach(doc => {
@@ -94,6 +109,10 @@ export default {
             console.log(err)
             commit('LOADING', false)
           })
+      },
+    productFilters:
+      ({commit, getters}, payload) => {
+        commit('productFilters', payload)
       },
     algoliaSearch: // intersect with fb data as filter
       ({commit, dispatch}, payload) => {
@@ -244,6 +263,10 @@ export default {
     isAllLoaded:
       state => {
         return state.isAllLoaded
+      },
+    productFilters:
+      state => {
+        return state.productFilters
       },
     algoliaSearchText:
       state => {
