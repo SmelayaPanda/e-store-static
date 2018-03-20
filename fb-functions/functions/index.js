@@ -3,7 +3,7 @@
 const processPayPal = require('./sub_functions/processPayPal')
 const generateProductImages = require('./sub_functions/generateProductImages')
 const oneClickNotification = require('./sub_functions/oneClickNotification')
-const algoliaSearch = require('./sub_functions/algoliaSearch')
+const productHandlers = require('./sub_functions/productsHandlers')
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
@@ -35,11 +35,12 @@ exports.generateProductImages = functions.storage.object().onChange((event) => {
   return generateProductImages.handler(event, admin)
 })
 
-// ALGOLIA SEARCH
+// 1. ALGOLIA SEARCH
+// 2. MAX PRICE KEEPER
 // Now, product updated after insertion (.onWrite not necessary)
 exports.onProductUpdated = functions.firestore.document('products/{productId}').onUpdate((event) => {
-  return algoliaSearch.updateProductHandler(event, functions)
+  return productHandlers.updateProductHandler(event, functions, admin)
 })
 exports.onProductDeleted = functions.firestore.document('products/{productId}').onDelete((event) => {
-  return algoliaSearch.deleteProductHandler(event, functions)
+  return productHandlers.deleteProductHandler(event, functions, admin)
 })
