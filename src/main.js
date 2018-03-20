@@ -108,6 +108,7 @@ new Vue({
         }
         this.$store.dispatch('fetchDictionaries') // always
         if (!isAdminPanel) {
+          this.$store.dispatch('fetchGlobalMaxPrice')
           this.$store.dispatch('fetchProducts')
           this.$store.dispatch('fetchReviews', {status: 'published'})
         }

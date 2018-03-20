@@ -88,9 +88,8 @@
                 range
                 :step="100"
                 :min="0"
-                :max="2000">
+                :max="this.$store.getters.globalMaxPrice">
               </el-slider>
-              <!--TODO: dinamyc max price-->
             </div>
             <!--BRAND-->
             <el-row type="flex" justify="center" style="flex-wrap: wrap" class="pt-2">
@@ -173,6 +172,8 @@ export default {
       sliderValues: [
         this.$store.getters.productFilters.minPrice,
         this.$store.getters.productFilters.maxPrice
+          ? this.$store.getters.productFilters.maxPrice
+          : this.$store.getters.globalMaxPrice
       ],
       selectedBrand: this.$store.getters.productFilters.brand,
       selectedColor: this.$store.getters.productFilters.color,
