@@ -2,12 +2,22 @@ import * as firebase from 'firebase'
 
 export default {
   state: {
-    reviews: []
+    reviews: [],
+    reviewStatistics: {
+      newReview: 0,
+      published: 0,
+      archived: 0,
+      totalReviews: 0
+    }
   },
   mutations: {
     setReviews:
       (state, payload) => {
         state.reviews = payload
+      },
+    reviewStatistics:
+      (state, payload) => {
+        state.reviewStatistics = payload
       }
   },
   actions: {
@@ -65,6 +75,17 @@ export default {
             console.log(err)
             commit('LOADING', false)
           })
+      },
+    fetchReviewStatistics:
+      ({commit}) => {
+        firebase.firestore().collection('statistics').doc('reviews').get()
+          .then(snapshot => {
+            console.log('Reviews statistics fetched')
+            commit('reviewStatistics', snapshot.data())
+          })
+          .catch(err => {
+            console.log(err)
+          })
       }
   },
   getters: {
@@ -77,6 +98,10 @@ export default {
         return state.reviews.find(el => {
           return el.id === id
         })
+      },
+    reviewStatistics:
+      state => {
+        return state.reviewStatistics
       }
   }
 }

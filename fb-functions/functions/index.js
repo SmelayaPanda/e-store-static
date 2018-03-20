@@ -6,6 +6,7 @@ const oneClickNotification = require('./sub_functions/oneClickNotification')
 const productHandlers = require('./sub_functions/productHandlers')
 const orderHandlers = require('./sub_functions/orderHandlers')
 const oneClickHandlers = require('./sub_functions/oneClickHandlers')
+const reviewHandlers = require('./sub_functions/reviewHandlers')
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
@@ -44,25 +45,34 @@ exports.generateProductImages = functions.storage.object().onChange((event) => {
 // 1. ALGOLIA SEARCH
 // 2. STATISTICS
 // Now, product updated after insertion (.onWrite not necessary)
-exports.onProductUpdated = functions.firestore.document('products/{productId}').onUpdate((event) => {
+exports.onProductUpdate = functions.firestore.document('products/{productId}').onUpdate((event) => {
   return productHandlers.updateProductHandler(event, functions, admin)
 })
-exports.onProductDeleted = functions.firestore.document('products/{productId}').onDelete((event) => {
+exports.onProductDelete = functions.firestore.document('products/{productId}').onDelete((event) => {
   return productHandlers.deleteProductHandler(event, functions, admin)
 })
 
 
 // ORDER HANDLERS:
 // 1. STATISTICS
-exports.onOrderUpdated = functions.firestore.document('orders/{orderId}').onUpdate((event) => {
+exports.onOrderUpdate = functions.firestore.document('orders/{orderId}').onUpdate((event) => {
   return orderHandlers.updateOrderHandler(event, functions, admin)
 })
 
 // ONE CLICK HANDLERS:
 // 1. STATISTICS
-exports.onOrderUpdated = functions.firestore.document('oneclick/{oneClickId}').onUpdate((event) => {
+exports.onOrderUpdate = functions.firestore.document('oneclick/{oneClickId}').onUpdate((event) => {
   return oneClickHandlers.updateOneClickHandler(event, functions, admin)
 })
-exports.onOrderUpdated = functions.firestore.document('oneclick/{oneClickId}').onWrite((event) => {
+exports.onOrderWrite = functions.firestore.document('oneclick/{oneClickId}').onWrite((event) => {
   return oneClickHandlers.updateOneClickHandler(event, functions, admin)
+})
+
+// REVIEW HANDLERS:
+// 1. STATISTICS
+exports.onReviewUpdate = functions.firestore.document('reviews/{reviewId}').onUpdate((event) => {
+  return reviewHandlers.updateReviewHandler(event, functions, admin)
+})
+exports.onReviewWrite = functions.firestore.document('reviews/{reviewId}').onWrite((event) => {
+  return reviewHandlers.updateReviewHandler(event, functions, admin)
 })

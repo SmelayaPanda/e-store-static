@@ -2,8 +2,8 @@
   <div>
     <el-row type="flex" justify="left" style="flex-wrap: wrap">
       <!--ORDERS-->
-      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2">
-        <el-card>
+      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2 mt-2">
+        <el-card style="height: 100%">
           <div slot="header" class="clearfix">
             <h3>
               <v-icon>description</v-icon>
@@ -21,8 +21,8 @@
         </el-card>
       </el-col>
       <!--ONE CLICK-->
-      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2">
-        <el-card>
+      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2 mt-2">
+        <el-card style="height: 100%">
           <div slot="header" class="clearfix">
             <h3>
               <v-icon>touch_app</v-icon>
@@ -40,8 +40,8 @@
         </el-card>
       </el-col>
       <!--PRODUCTS-->
-      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2">
-        <el-card>
+      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2 mt-2">
+        <el-card style="height: 100%">
           <div slot="header" class="clearfix">
             <h3>
               <v-icon>playlist_add</v-icon>
@@ -54,6 +54,23 @@
             <p>Unique Products Qty: <el-tag type="info">{{ productStatistics.uniqueProductQty }}</el-tag></p>
             <p>Total Products Qty: <el-tag type="info">{{ productStatistics.totalProductQty }}</el-tag></p>
             <p>Total Store coast: <el-tag type="info">{{ productStatistics.totalStoreCoast }} RUB</el-tag></p>
+          </div>
+        </el-card>
+      </el-col>
+      <!--REVIEW-->
+      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2 mt-2">
+        <el-card style="height: 100%">
+          <div slot="header" class="clearfix">
+            <h3>
+              <v-icon>record_voice_over</v-icon>
+              Review statistics
+            </h3>
+          </div>
+          <div>
+            <p>New: <el-tag type="danger">{{ reviewStatistics.newReview }}</el-tag></p>
+            <p>Published: <el-tag type="success">{{ reviewStatistics.published }}</el-tag></p>
+            <p>Archived: <el-tag type="info">{{ reviewStatistics.archived }}</el-tag></p>
+            <p>Total: <el-tag type="info">{{ reviewStatistics.totalReviews }}</el-tag></p>
           </div>
         </el-card>
       </el-col>
@@ -73,6 +90,9 @@ export default {
     },
     oneClickStatistics () {
       return this.$store.getters.oneClickStatistics
+    },
+    reviewStatistics () {
+      return this.$store.getters.reviewStatistics
     }
   }
 }

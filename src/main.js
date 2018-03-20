@@ -111,6 +111,7 @@ new Vue({
         if (isAdminPanel) {
           this.$store.dispatch('fetchOrderStatistics')
           this.$store.dispatch('fetchOneClickStatistics')
+          this.$store.dispatch('fetchReviewStatistics')
         } else {
           this.$store.dispatch('fetchProducts')
           this.$store.dispatch('fetchReviews', {status: 'published'})
