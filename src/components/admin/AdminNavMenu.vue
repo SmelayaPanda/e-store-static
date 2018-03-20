@@ -21,7 +21,7 @@
         <span slot="title">Products</span>
       </el-menu-item>
       <el-menu-item index="/admin/orders" route="/admin/orders">
-        <v-icon class="pb-1">description</v-icon>
+        <v-icon>description</v-icon>
         <span slot="title">Orders</span>
       </el-menu-item>
       <el-menu-item index="/admin/oneClick" route="/admin/oneClick">

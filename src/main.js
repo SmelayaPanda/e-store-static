@@ -106,8 +106,10 @@ new Vue({
             this.$store.dispatch('fetchOrders', {userId: user.uid})
           }
         }
-        this.$store.dispatch('fetchDictionaries') // always
+        // ALWAYS
+        this.$store.dispatch('fetchDictionaries')
         this.$store.dispatch('fetchProductStatistics')
+        this.$store.dispatch('fetchOrderStatistics')
         if (!isAdminPanel) {
           this.$store.dispatch('fetchProducts')
           this.$store.dispatch('fetchReviews', {status: 'published'})

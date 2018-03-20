@@ -4,7 +4,15 @@ import router from '../../router'
 export default {
   state: {
     orders: [],
-    allOrders: []
+    allOrders: [],
+    orderStatistics: {
+      payPending: 0,
+      sentPending: 0,
+      sent: 0,
+      delivered: 0,
+      refused: 0,
+      totalOrders: 0
+    }
   },
   mutations: {
     setOrders:
@@ -14,6 +22,10 @@ export default {
     setAllOrders:
       (state, payload) => {
         state.allOrders = payload
+      },
+    orderStatistics:
+      (state, payload) => {
+        state.orderStatistics = payload
       }
   },
   actions: {
@@ -126,6 +138,17 @@ export default {
             console.log(err)
             commit('LOADING', false)
           })
+      },
+    fetchOrderStatistics:
+      ({commit}) => {
+        firebase.firestore().collection('statistics').doc('orders').get()
+          .then(snapshot => {
+            console.log('Orders statistics fetched')
+            commit('orderStatistics', snapshot.data())
+          })
+          .catch(err => {
+            console.log(err)
+          })
       }
   },
   getters: {
@@ -142,6 +165,10 @@ export default {
     allOrders:
       state => {
         return state.allOrders
+      },
+    orderStatistics:
+      state => {
+        return state.orderStatistics
       }
   }
 }

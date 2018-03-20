@@ -102,7 +102,7 @@ function updateProductStatistics(event, admin) {
       })
     })
     .then(() => {
-      console.log('Statistics: product statistics is updated!')
+      console.log('Statistics: product data updated!')
       return true
     })
     .catch(err => {
