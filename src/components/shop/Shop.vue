@@ -88,7 +88,7 @@
                 range
                 :step="100"
                 :min="0"
-                :max="this.$store.getters.globalMaxPrice">
+                :max="this.$store.getters.productStatistics.maxPrice">
               </el-slider>
             </div>
             <!--BRAND-->
@@ -173,7 +173,7 @@ export default {
         this.$store.getters.productFilters.minPrice,
         this.$store.getters.productFilters.maxPrice
           ? this.$store.getters.productFilters.maxPrice
-          : this.$store.getters.globalMaxPrice
+          : this.$store.getters.productStatistics.maxPrice
       ],
       selectedBrand: this.$store.getters.productFilters.brand,
       selectedColor: this.$store.getters.productFilters.color,

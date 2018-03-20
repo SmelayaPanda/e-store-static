@@ -107,8 +107,8 @@ new Vue({
           }
         }
         this.$store.dispatch('fetchDictionaries') // always
+        this.$store.dispatch('fetchProductStatistics')
         if (!isAdminPanel) {
-          this.$store.dispatch('fetchGlobalMaxPrice')
           this.$store.dispatch('fetchProducts')
           this.$store.dispatch('fetchReviews', {status: 'published'})
         }

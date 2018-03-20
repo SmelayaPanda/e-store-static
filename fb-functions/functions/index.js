@@ -3,7 +3,7 @@
 const processPayPal = require('./sub_functions/processPayPal')
 const generateProductImages = require('./sub_functions/generateProductImages')
 const oneClickNotification = require('./sub_functions/oneClickNotification')
-const productHandlers = require('./sub_functions/productsHandlers')
+const productHandlers = require('./sub_functions/productHandlers')
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');

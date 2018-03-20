@@ -4,7 +4,7 @@ const productHandlers = require('algoliasearch');
 exports.updateProductHandler = function (event, functions, admin) {
   console.log('>-------------------------------------------------------------------------------------------------------');
   return Promise.all([
-    handleMaxPrice(event, admin, 'update'),
+    updateProductStatistics(event, admin),
     updateAlgoliaIndex(functions, event, 'update')
   ])
     .then(val => {
@@ -18,7 +18,7 @@ exports.updateProductHandler = function (event, functions, admin) {
 exports.deleteProductHandler = function (event, functions, admin) {
   console.log('>-------------------------------------------------------------------------------------------------------');
   return Promise.all([
-    handleMaxPrice(event, admin, 'delete'),
+    updateProductStatistics(event, admin),
     updateAlgoliaIndex(functions, event, 'delete')
   ])
     .then(val => {
@@ -75,37 +75,35 @@ let updateAlgoliaIndex = function (functions, event, operation) {
   })
 }
 
-function handleMaxPrice(event, admin, operation) {
-  const product = event.data.data();
-  let oldMaxPrice;
-  let newMaxPrice = 0;
-
-  admin.firestore().collection('statistics').doc('products').get()
+function updateProductStatistics(event, admin) {
+  admin.firestore().collection('products').get()
     .then(snapshot => {
-      oldMaxPrice = snapshot.data().maxPrice;
-      if (operation === 'update') {
-        return admin.firestore().collection('products').doc(product.productId).get()
-      } else { // delete operation
-        return admin.firestore().collection('products').get()
-      }
+      let maxPrice = 0
+      let totalPrice = 0
+      let totalStoreCoast = 0
+      let totalProductQty = 0
+      let i = 0
+      snapshot.docs.forEach(doc => {
+        i++
+        totalPrice += doc.data().price
+        totalStoreCoast += doc.data().price * doc.data().totalQty
+        totalProductQty += doc.data().totalQty
+        if (doc.data().price > maxPrice) {
+          maxPrice = doc.data().price
+        }
+      })
+      let avgPrice = totalPrice / i
+      return admin.firestore().collection('statistics').doc('products').update({
+        maxPrice: maxPrice,
+        avgPrice: Number((avgPrice).toFixed(2)),
+        uniqueProductQty: i,
+        totalProductQty: totalProductQty,
+        totalStoreCoast: totalStoreCoast
+      })
     })
-    .then(snapshot => {
-      if (operation === 'update') {
-        newMaxPrice = snapshot.data().price
-      } else { // delete operation
-        snapshot.docs.forEach(doc => {
-          if (doc.data().price > newMaxPrice) {
-            newMaxPrice = doc.data().price
-          }
-        })
-      }
-      if (Number(oldMaxPrice) > Number(newMaxPrice) && operation === 'update') {
-        console.log('Statistics: old max price greater!')
-        return true
-      } else {
-        console.log(`Statistics: new maxPrice of products - ${newMaxPrice}!`);
-        return admin.firestore().collection('statistics').doc('products').update({maxPrice: newMaxPrice})
-      }
+    .then(() => {
+      console.log('Statistics: product statistics is updated!')
+      return true
     })
     .catch(err => {
       console.log(err)

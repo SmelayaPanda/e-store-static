@@ -5,7 +5,13 @@ import algoliasearch from 'algoliasearch'
 export default {
   state: {
     products: [],
-    globalMaxPrice: 1000000, // auto updated by cloud function
+    productStatistics: { // auto updated from cloud function
+      maxPrice: 1000000,
+      avgPrice: 0,
+      uniqueProductQty: 0,
+      totalProductQty: 0,
+      totalStoreCoast: 0
+    },
     lastVisible: null, // value means load more button is available
     productFilters: {
       minPrice: 0,
@@ -41,9 +47,9 @@ export default {
       (state, payload) => {
         state.algoliaSearchProductIds = payload
       },
-    globalMaxPrice:
+    productStatistics:
       (state, payload) => {
-        state.globalMaxPrice = payload
+        state.productStatistics = payload
       }
   },
   actions: {
@@ -240,12 +246,12 @@ export default {
             commit('LOADING', false)
           })
       },
-    fetchGlobalMaxPrice:
+    fetchProductStatistics:
       ({commit}) => {
         firebase.firestore().collection('statistics').doc('products').get()
           .then(snapshot => {
-            console.log('Global max price fetched')
-            commit('globalMaxPrice', snapshot.data().maxPrice)
+            console.log('Products statistics fetched')
+            commit('productStatistics', snapshot.data())
           })
           .catch(err => {
             console.log(err)
@@ -280,9 +286,9 @@ export default {
       state => {
         return state.algoliaSearchProductIds
       },
-    globalMaxPrice:
+    productStatistics:
       state => {
-        return state.globalMaxPrice
+        return state.productStatistics
       }
   }
 }
