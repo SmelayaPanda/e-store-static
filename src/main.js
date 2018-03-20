@@ -96,7 +96,6 @@ new Vue({
     firebase.initializeApp(config)
     firebase.auth().onAuthStateChanged(
       user => {
-        // console.log(user)
         let isAdminPanel = this.$router.history.current.fullPath.includes('admin')
         // USER DATA
         if (user) {
@@ -108,9 +107,11 @@ new Vue({
         }
         // ALWAYS
         this.$store.dispatch('fetchDictionaries')
-        this.$store.dispatch('fetchProductStatistics')
-        this.$store.dispatch('fetchOrderStatistics')
-        if (!isAdminPanel) {
+        this.$store.dispatch('fetchProductStatistics') // MaxPrice for shop
+        if (isAdminPanel) {
+          this.$store.dispatch('fetchOrderStatistics')
+          this.$store.dispatch('fetchOneClickStatistics')
+        } else {
           this.$store.dispatch('fetchProducts')
           this.$store.dispatch('fetchReviews', {status: 'published'})
         }

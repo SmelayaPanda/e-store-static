@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-row type="flex" justify="left" style="flex-wrap: wrap">
+      <!--ORDERS-->
       <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2">
         <el-card>
           <div slot="header" class="clearfix">
@@ -10,7 +11,7 @@
             </h3>
           </div>
           <div>
-            <p>Pay Pending: <el-tag>{{ orderStatistics.payPending }}</el-tag></p>
+            <p>Pay Pending: <el-tag type="danger">{{ orderStatistics.payPending }}</el-tag></p>
             <p>Sent Pending: <el-tag type="danger">{{ orderStatistics.sentPending }}</el-tag></p>
             <p>Sent: <el-tag>{{ orderStatistics.sent }}</el-tag></p>
             <p>Delivered: <el-tag type="success">{{ orderStatistics.delivered }}</el-tag></p>
@@ -19,6 +20,26 @@
           </div>
         </el-card>
       </el-col>
+      <!--ONE CLICK-->
+      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2">
+        <el-card>
+          <div slot="header" class="clearfix">
+            <h3>
+              <v-icon>touch_app</v-icon>
+              One click statistics
+            </h3>
+          </div>
+          <div>
+            <p>Created: <el-tag type="danger">{{ oneClickStatistics.created }}</el-tag></p>
+            <p>Sent Pending: <el-tag type="danger">{{ oneClickStatistics.sentPending }}</el-tag></p>
+            <p>Sent: <el-tag>{{ oneClickStatistics.sent }}</el-tag></p>
+            <p>Delivered: <el-tag type="success">{{ oneClickStatistics.delivered }}</el-tag></p>
+            <p>Refused: <el-tag type="warning">{{ oneClickStatistics.refused }}</el-tag></p>
+            <p>Total One Click count: <el-tag type="info">{{ oneClickStatistics.totalOneClick }}</el-tag></p>
+          </div>
+        </el-card>
+      </el-col>
+      <!--PRODUCTS-->
       <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2">
         <el-card>
           <div slot="header" class="clearfix">
@@ -49,6 +70,9 @@ export default {
     },
     orderStatistics () {
       return this.$store.getters.orderStatistics
+    },
+    oneClickStatistics () {
+      return this.$store.getters.oneClickStatistics
     }
   }
 }

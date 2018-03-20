@@ -5,18 +5,22 @@ const generateProductImages = require('./sub_functions/generateProductImages')
 const oneClickNotification = require('./sub_functions/oneClickNotification')
 const productHandlers = require('./sub_functions/productHandlers')
 const orderHandlers = require('./sub_functions/orderHandlers')
+const oneClickHandlers = require('./sub_functions/oneClickHandlers')
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
-global.ADMIN_EMAIL = 'SmelayaPandaGM@gmail.com'
+// firebase functions:config:set admin.email="SmelayaPandaGM@gmail.com"
+// firebase functions:config:set admin.password="***"
+global.ADMIN_EMAIL = functions.config().admin.email
+global.ADMIN_PASS = functions.config().admin.password
 let nodemailer = require('nodemailer')
 let transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: ADMIN_EMAIL,
-    pass: '***'
+    pass: ADMIN_PASS
   }
 });
 
@@ -52,4 +56,13 @@ exports.onProductDeleted = functions.firestore.document('products/{productId}').
 // 1. STATISTICS
 exports.onOrderUpdated = functions.firestore.document('orders/{orderId}').onUpdate((event) => {
   return orderHandlers.updateOrderHandler(event, functions, admin)
+})
+
+// ONE CLICK HANDLERS:
+// 1. STATISTICS
+exports.onOrderUpdated = functions.firestore.document('oneclick/{oneClickId}').onUpdate((event) => {
+  return oneClickHandlers.updateOneClickHandler(event, functions, admin)
+})
+exports.onOrderUpdated = functions.firestore.document('oneclick/{oneClickId}').onWrite((event) => {
+  return oneClickHandlers.updateOneClickHandler(event, functions, admin)
 })

@@ -2,12 +2,24 @@ import * as firebase from 'firebase'
 
 export default {
   state: {
-    oneClick: []
+    oneClick: [],
+    oneClickStatistics: {
+      created: 0,
+      sentPending: 0,
+      sent: 0,
+      delivered: 0,
+      refused: 0,
+      totalOneClick: 0
+    }
   },
   mutations: {
     setOneClick:
       (state, payload) => {
         state.oneClick = payload
+      },
+    oneClickStatistics:
+      (state, payload) => {
+        state.oneClickStatistics = payload
       }
   },
   actions: {
@@ -56,6 +68,17 @@ export default {
             console.log(err)
             commit('LOADING', false)
           })
+      },
+    fetchOneClickStatistics:
+      ({commit}) => {
+        firebase.firestore().collection('statistics').doc('oneclick').get()
+          .then(snapshot => {
+            console.log('Orders statistics fetched')
+            commit('oneClickStatistics', snapshot.data())
+          })
+          .catch(err => {
+            console.log(err)
+          })
       }
   },
   getters: {
@@ -68,6 +91,10 @@ export default {
         return state.oneClick.find(el => {
           return el.id === id
         })
+      },
+    oneClickStatistics:
+      state => {
+        return state.oneClickStatistics
       }
   }
 }
