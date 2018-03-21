@@ -1,5 +1,5 @@
 <template>
-  <el-card class="mb-4">
+  <el-card class="mb-4" v-if="companyInfo">
     <h2>About our company</h2>
     <p>More than studio</p>
     <el-row>
@@ -13,11 +13,15 @@
       </el-col>
       <el-col :xs="22" :sm="12" :md="12" :lg="12" :xl="12" class="pl-2 pr-2">
         <h3>Address:</h3>
-        <p> Novosibirsk, Sirenevaya 31, ap. 65</p>
+        <p>
+          {{ companyInfo.address.country }}, {{ companyInfo.address.city }},
+          {{ companyInfo.address.street }}, {{ companyInfo.address.build }},
+          {{ companyInfo.address.house }}, {{ companyInfo.address.postCode }}
+        </p>
         <h3>Contacts:</h3>
         <p>
-          SmelayaPandaGM@gmail.com <br>
-          8 999 467 78 57
+          {{ companyInfo.contacts.email }} <br>
+          {{ companyInfo.contacts.phone }}
         </p>
       </el-col>
     </el-row>
@@ -26,7 +30,12 @@
 
 <script>
 export default {
-  name: 'Contacts'
+  name: 'Contacts',
+  computed: {
+    companyInfo () {
+      return this.$store.getters.companyInfo
+    }
+  }
 }
 </script>
 
