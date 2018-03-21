@@ -109,6 +109,7 @@ new Vue({
           }
         }
         // ALWAYS
+        this.$store.dispatch('fetchCompanyInfo')
         this.$store.dispatch('fetchDictionaries')
         this.$store.dispatch('fetchProductStatistics') // MaxPrice for shop
         if (isAdminPanel) {

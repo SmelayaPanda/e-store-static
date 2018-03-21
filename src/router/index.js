@@ -16,6 +16,7 @@ import AdminProducts from '@/components/admin/products/AdminProducts'
 import AdminOrders from '@/components/admin/orders/AdminOrders'
 import AdminOneClick from '@/components/admin/oneclick/AdminOneClick'
 import AdminReviews from '@/components/admin/reviews/AdminReviews'
+import CompanyInfo from '@/components/admin/company_info/CompanyInfo'
 import Dictionaries from '@/components/admin/dictionaries/Dictionaries'
 
 // SHOP
@@ -94,6 +95,10 @@ export default new Router({
         {
           path: 'reviews',
           component: AdminReviews
+        },
+        {
+          path: 'company',
+          component: CompanyInfo
         },
         {
           path: 'dictionaries',
