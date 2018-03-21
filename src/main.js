@@ -13,6 +13,8 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+import 'swiper/dist/css/swiper.css'
 // FILTERS
 import DateFilter from './filters/date'
 import AdminDateFilter from './filters/admin_date'
@@ -47,6 +49,7 @@ Vue.component('app-loader', Loader)
 Vue.component('app-balls-loader', BallsLoader)
 Vue.component('app-help-tooltip', HelpTooltip)
 
+Vue.use(VueAwesomeSwiper)
 Vue.use(ElementUI)
 Vue.use(Vuetify, {
   theme: {

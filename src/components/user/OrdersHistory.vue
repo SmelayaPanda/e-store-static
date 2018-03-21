@@ -26,7 +26,7 @@ In user cart for simple visualization and minimum clicks
               </el-col>
               <el-col :xs="18" :sm="21" :md="21" :lg="22" :xl="22" class="mb-2">
                 <el-tag type="info" class="ml-2 mt-2">ID: {{ order.id }}</el-tag>
-                <el-tag type="info" class="ml-2 mt-2">Date: {{ order.checkoutDate | date }}</el-tag>
+                <el-tag type="info" class="ml-2 mt-2">{{ order.checkoutDate | date }}</el-tag>
                 <el-tag class="ml-2 mt-2">{{ order.totalPrice }} {{ order.currency }}</el-tag>
                 <el-tag v-if="order.paymentDate" class="ml-2 mt-2" type="success">
                   PAID
