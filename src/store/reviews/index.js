@@ -80,7 +80,7 @@ export default {
       ({commit}) => {
         firebase.firestore().collection('statistics').doc('reviews').get()
           .then(snapshot => {
-            console.log('Reviews statistics fetched')
+            console.log('Statistics: for reviews fetched')
             commit('reviewStatistics', snapshot.data())
           })
           .catch(err => {

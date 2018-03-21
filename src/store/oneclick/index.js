@@ -73,7 +73,7 @@ export default {
       ({commit}) => {
         firebase.firestore().collection('statistics').doc('oneclick').get()
           .then(snapshot => {
-            console.log('Orders statistics fetched')
+            console.log('Statistics: for one click fetched')
             commit('oneClickStatistics', snapshot.data())
           })
           .catch(err => {

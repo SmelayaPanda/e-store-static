@@ -250,7 +250,7 @@ export default {
       ({commit}) => {
         firebase.firestore().collection('statistics').doc('products').get()
           .then(snapshot => {
-            console.log('Products statistics fetched')
+            console.log('Statistics: for products fetched')
             commit('productStatistics', snapshot.data())
           })
           .catch(err => {
