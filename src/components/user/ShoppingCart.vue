@@ -14,7 +14,7 @@
           <i class="el-icon-goods mb-3" style="transform: scale(2)"></i>
           <p>
             <router-link to="/shop">
-              <el-button type="text" v-if="userCart.length === 0">Go to shop</el-button>
+              <el-button type="text" v-if="userCart.length === 0" class="mt-3">Go to shop</el-button>
             </router-link>
           </p>
           <!--PRODUCTS-->
@@ -76,6 +76,7 @@
 <script>
 import Checkout from './Checkout'
 import OrdersHistory from './OrdersHistory'
+
 export default {
   name: 'ShoppingCart',
   components: {
@@ -109,11 +110,13 @@ export default {
     totalItems () {
       let items = []
       let cart = this.userCart
-      for (let el of cart) {
-        let item = {}
-        item.productId = el.productId
-        item.qty = el.qty
-        items.push(item)
+      if (this.userCart) {
+        for (let el of cart) {
+          let item = {}
+          item.productId = el.productId
+          item.qty = el.qty
+          items.push(item)
+        }
       }
       return items
     }

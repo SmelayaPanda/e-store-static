@@ -29,7 +29,8 @@ exports.handler = function (req, res, admin, transporter) {
     .then(() => {
       logPaymentInfo(payInfo, orderId);
       // Yet not Promise because it is not destroyed payment process
-      payPalSuccessOrderMail(transporter, payInfo, orderId);
+      payPalSuccessOrderMail(transporter, payInfo, orderId, ADMIN_EMAIL);
+      payPalSuccessOrderMail(transporter, payInfo, orderId, payInfo.payer_email);
       return res.sendStatus(200)
     })
     .catch(err => {
@@ -44,10 +45,10 @@ function logPaymentInfo(payInfo, orderId) {
                       ${payInfo.mc_gross} ${payInfo.mc_currency}`)
 }
 
-function payPalSuccessOrderMail(transporter, info, orderId) {
+function payPalSuccessOrderMail(transporter, info, orderId, to) {
   let mailOptions = {
     from: ADMIN_EMAIL,
-    to: ADMIN_EMAIL,
+    to: to,
     subject: `New PayPal order: ${info.txn_id}`,
     text:
       `Re:High Store message:
@@ -68,16 +69,16 @@ function payPalSuccessOrderMail(transporter, info, orderId) {
        Fee: ${info.mc_fee} ${info.mc_currency}
        
        Items Info:
-       1 Item name: ${info.item_name1} ( ${info.mc_gross_1} x ${info.quantity1} )
-       ${info.item_name2 ? `2 Item name: ${info.item_name2} ( ${info.mc_gross_2} x ${info.quantity2} )` : ''}
-       ${info.item_name3 ? `3 Item name: ${info.item_name3} ( ${info.mc_gross_3} x ${info.quantity3} )` : ''}
-       ${info.item_name4 ? `4 Item name: ${info.item_name4} ( ${info.mc_gross_4} x ${info.quantity4} )` : ''}
-       ${info.item_name5 ? `5 Item name: ${info.item_name5} ( ${info.mc_gross_5} x ${info.quantity5} )` : ''}
-       ${info.item_name5 ? `6 Item name: ${info.item_name6} ( ${info.mc_gross_6} x ${info.quantity6} )` : ''}
-       ${info.item_name5 ? `7 Item name: ${info.item_name7} ( ${info.mc_gross_7} x ${info.quantity7} )` : ''}
-       ${info.item_name5 ? `8 Item name: ${info.item_name8} ( ${info.mc_gross_8} x ${info.quantity8} )` : ''}
-       ${info.item_name5 ? `9 Item name: ${info.item_name9} ( ${info.mc_gross_9} x ${info.quantity9} )` : ''}
-       ${info.item_name5 ? `10 Item name: ${info.item_name10} ( ${info.mc_gross_10} x ${info.quantity10} )` : ''}
+       #1 Item name: ${info.item_name1} - ${info.mc_gross_1} ( ${info.quantity1}x )
+       ${info.item_name2 ? `#2 Item name: ${info.item_name2} - ${info.mc_gross_2} ( ${info.quantity2}x )` : ''}
+       ${info.item_name3 ? `#3 Item name: ${info.item_name3} - ${info.mc_gross_3} ( ${info.quantity3}x )` : ''}
+       ${info.item_name4 ? `#4 Item name: ${info.item_name4} - ${info.mc_gross_4} ( ${info.quantity4}x )` : ''}
+       ${info.item_name5 ? `#5 Item name: ${info.item_name5} - ${info.mc_gross_5} ( ${info.quantity5}x )` : ''}
+       ${info.item_name5 ? `#6 Item name: ${info.item_name6} - ${info.mc_gross_6} ( ${info.quantity6}x )` : ''}
+       ${info.item_name5 ? `#7 Item name: ${info.item_name7} - ${info.mc_gross_7} ( ${info.quantity7}x )` : ''}
+       ${info.item_name5 ? `#8 Item name: ${info.item_name8} - ${info.mc_gross_8} ( ${info.quantity8}x )` : ''}
+       ${info.item_name5 ? `#9 Item name: ${info.item_name9} - ${info.mc_gross_9} ( ${info.quantity9}x )` : ''}
+       ${info.item_name5 ? `#10 Item name: ${info.item_name10} - ${info.mc_gross_10} ( ${info.quantity10}x )` : ''}
        `
   };
 
