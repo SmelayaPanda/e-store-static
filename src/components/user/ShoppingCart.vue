@@ -18,7 +18,9 @@
             </router-link>
           </p>
           <!--PRODUCTS-->
-          <el-row v-for="product in userCart" :key="product.productId"
+          <el-row v-for="product in userCart"
+                  :key="product.productId"
+                  v-if="product"
                   type="flex"
                   justify="center"
                   class="mb-3"
@@ -93,9 +95,11 @@ export default {
       let cart = this.$store.getters.cart
       let products = []
       let product
-      for (const productId of cart) {
-        product = this.$store.getters.productById(productId)
-        products.push(product)
+      if (cart.length > 0) {
+        for (const productId of cart) {
+          product = this.$store.getters.productById(productId)
+          products.push(product)
+        }
       }
       return products
     },
@@ -103,15 +107,17 @@ export default {
       let total = 0
       let cart = this.userCart
       for (let product of cart) {
-        total += product.qty * product.price
+        if (product) {
+          total += product.qty * product.price
+        }
       }
       return total
     },
     totalItems () {
       let items = []
       let cart = this.userCart
-      if (this.userCart) {
-        for (let el of cart) {
+      for (let el of cart) {
+        if (el) {
           let item = {}
           item.productId = el.productId
           item.qty = el.qty

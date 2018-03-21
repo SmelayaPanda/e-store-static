@@ -11,6 +11,28 @@
                :visible.sync="dialogFormVisible"
                :fullscreen="true">
       <el-row type="flex" justify="center" style="flex-wrap: wrap">
+                <!--ITEMS INFO-->
+        <el-col :xs="24" :sm="24" :md="9" :lg="8" :xl="7" class="mt-3 pl-4 pr-4 mb-4">
+          <el-card>
+            <div slot="header" class="clearfix">
+            <h3>
+              My order
+            </h3>
+            </div>
+          <div class="order_info"
+               v-for="product in orderProducts"
+               :key="product.productId"
+          >
+            <span style="font-weight: bold;">{{ product.title }}: </span><br>
+            <el-tag>{{ product.price }}</el-tag>
+            x
+            <el-tag>{{ product.qty }}</el-tag>
+            =
+            <el-tag class="mb-2">{{ parseFloat(product.price * product.qty).toFixed(2) }} {{ product.currency }}</el-tag>
+          </div>
+          <b class="success--text">Total: {{ this.totalPrice }} RUB</b>
+          </el-card>
+        </el-col>
         <el-col :xs="24" :sm="16" :md="14" :lg="12" :xl="10">
           <!--Stepper-->
           <el-row class="mt-4">
@@ -207,28 +229,6 @@
                        :disabled="!isValidForm_1 || (activeStep === 2 && !isValidForm_2)">
               Next step
              </el-button>
-        </el-col>
-        <!--ITEMS INFO-->
-        <el-col :xs="24" :sm="24" :md="10" :lg="9" :xl="8" class="mt-3 pl-4 pr-4">
-          <el-card>
-            <div slot="header" class="clearfix">
-            <h3>
-              My order
-            </h3>
-            </div>
-          <div class="order_info"
-               v-for="product in orderProducts"
-               :key="product.productId"
-          >
-            <span style="font-weight: bold;">{{ product.title }}: </span><br>
-            <el-tag>{{ product.price }}</el-tag>
-            x
-            <el-tag>{{ product.qty }}</el-tag>
-            =
-            <el-tag class="mb-2">{{ parseFloat(product.price * product.qty).toFixed(2) }} {{ product.currency }}</el-tag>
-          </div>
-          <b class="success--text">Total: {{ this.totalPrice }} RUB</b>
-          </el-card>
         </el-col>
       </el-row>
     </el-dialog>

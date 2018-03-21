@@ -55,24 +55,21 @@ exports.onProductDelete = functions.firestore.document('products/{productId}').o
 
 // ORDER HANDLERS:
 // 1. STATISTICS
-exports.onOrderUpdate = functions.firestore.document('orders/{orderId}').onUpdate((event) => {
+exports.onOrderWrire = functions.firestore.document('orders/{orderId}').onWrite((event) => {
   return orderHandlers.updateOrderHandler(event, functions, admin)
 })
 
 // ONE CLICK HANDLERS:
 // 1. STATISTICS
-exports.onOrderUpdate = functions.firestore.document('oneclick/{oneClickId}').onUpdate((event) => {
-  return oneClickHandlers.updateOneClickHandler(event, functions, admin)
-})
-exports.onOrderWrite = functions.firestore.document('oneclick/{oneClickId}').onWrite((event) => {
+exports.onOneCLickWrite = functions.firestore.document('oneclick/{oneClickId}').onWrite((event) => {
   return oneClickHandlers.updateOneClickHandler(event, functions, admin)
 })
 
 // REVIEW HANDLERS:
 // 1. STATISTICS
-exports.onReviewUpdate = functions.firestore.document('reviews/{reviewId}').onUpdate((event) => {
-  return reviewHandlers.updateReviewHandler(event, functions, admin)
-})
 exports.onReviewWrite = functions.firestore.document('reviews/{reviewId}').onWrite((event) => {
   return reviewHandlers.updateReviewHandler(event, functions, admin)
 })
+
+
+// onWrite = created, updated, or deleted
