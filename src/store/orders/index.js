@@ -49,7 +49,7 @@ export default {
                 order.showDetails = false
                 orders.push(order)
               })
-              console.log('Orders data fetched')
+              console.log('Fetched: orders data')
               commit('setOrders', orders)
               commit('LOADING', false)
             })
@@ -143,7 +143,7 @@ export default {
       ({commit}) => {
         firebase.firestore().collection('statistics').doc('orders').get()
           .then(snapshot => {
-            console.log('Statistics: for orders fetched')
+            console.log('Statistics: for orders')
             commit('orderStatistics', snapshot.data())
           })
           .catch(err => {

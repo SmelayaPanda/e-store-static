@@ -18,6 +18,7 @@ import AdminOneClick from '@/components/admin/oneclick/AdminOneClick'
 import AdminReviews from '@/components/admin/reviews/AdminReviews'
 import CompanyInfo from '@/components/admin/company_info/CompanyInfo'
 import Dictionaries from '@/components/admin/dictionaries/Dictionaries'
+import AdminLiveChat from '@/components/admin/live_chat/AdminLiveChat'
 
 // SHOP
 import Shop from '@/components/shop/Shop'
@@ -103,6 +104,10 @@ export default new Router({
         {
           path: 'dictionaries',
           component: Dictionaries
+        },
+        {
+          path: 'liveChat',
+          component: AdminLiveChat
         }
       ]
     },

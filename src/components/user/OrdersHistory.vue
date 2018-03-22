@@ -19,7 +19,7 @@ In user cart for simple visualization and minimum clicks
           <el-col :span="24" align="left">
             <el-row type="flex" style="flex-wrap: wrap;" class="mb-3">
               <el-col :xs="6" :sm="3" :md="3" :lg="2" :xl="2" class="pr-1 mt-2 pt-2">
-                <el-switch type="text" class="ml-4 pt-2 mt-2"
+                <el-switch type="text" class="ml-4 mb-2"
                            v-model="order.showDetails">
                   Show details
                 </el-switch>
@@ -49,7 +49,8 @@ In user cart for simple visualization and minimum clicks
                               :content="order.status === 'payPending' ?
                               'If you have already paid for the goods then maybe you should wait for confirmation with PayPal':
                               `Your purchase will be shipped soon.`"
-                  ><v-icon class="mb-1">lightbulb_outline</v-icon>
+                  >
+                    <v-icon class="mb-1">lightbulb_outline</v-icon>
                   </el-tooltip>
                 </el-button>
                 <!--PAY NOW-->
@@ -117,14 +118,14 @@ In user cart for simple visualization and minimum clicks
                         Price: {{ order.products[i-1].price }} {{ order.products[i-1].currency }}<br>
                         Quantity: {{ order.products[i-1].qty }}
                       </p>
-                      <span v-if="order.comments">
+                    </div>
+                  </div>
+                  <span v-if="order.comments">
                         <h3><i class="el-icon-warning"></i>
                           Comments:
                         </h3>
                         {{ order.comments }}<br>
-                      </span>
-                    </div>
-                  </div>
+                  </span>
                 </el-col>
               </el-row>
             </div>
@@ -138,6 +139,7 @@ In user cart for simple visualization and minimum clicks
 
 <script>
 import PayNowDialog from './PayNowDialog'
+
 export default {
   name: 'OrdersHistory',
   components: {PayNowDialog},

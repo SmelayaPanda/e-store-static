@@ -7,7 +7,7 @@
           <div slot="header" class="clearfix">
             <h3>
               <v-icon>description</v-icon>
-              Orders statistics
+              Orders
             </h3>
           </div>
           <div>
@@ -26,7 +26,7 @@
           <div slot="header" class="clearfix">
             <h3>
               <v-icon>touch_app</v-icon>
-              One click statistics
+              One clicks
             </h3>
           </div>
           <div>
@@ -45,7 +45,7 @@
           <div slot="header" class="clearfix">
             <h3>
               <v-icon>playlist_add</v-icon>
-              Products statistics
+              Products
             </h3>
           </div>
           <div>
@@ -63,7 +63,7 @@
           <div slot="header" class="clearfix">
             <h3>
               <v-icon>record_voice_over</v-icon>
-              Review statistics
+              Reviews
             </h3>
           </div>
           <div>

@@ -40,6 +40,10 @@
         <v-icon>text_format</v-icon>
         <span slot="title">Dictionaries</span>
       </el-menu-item>
+      <el-menu-item index="/admin/liveChat" route="/admin/liveChat">
+        <v-icon>chat</v-icon>
+        <span slot="title">Live Chat</span>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>

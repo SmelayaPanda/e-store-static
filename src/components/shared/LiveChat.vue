@@ -1,40 +1,37 @@
 <template>
-  <el-row type="flex" justify="center" style="flex-wrap: wrap">
-    <el-col :span="8">
-      <el-card>
-        <div class="chat_header">
-          <h3>Live Chat</h3>
-        </div>
-        <div class="chat_messages">
-          <div v-for="(chat, key) in chatMessages"
-               :key="key">
-            <el-row>
-              <el-col :span="24" class="info--text" style="font-size: 10px">
+  <el-card>
+    <div class="chat_header">
+      <h3>Live Chat</h3>
+    </div>
+    <div class="chat_messages">
+      <div v-for="(chat, key) in chatMessages"
+           :key="key">
+        <el-row>
+          <el-col :span="24" class="info--text" style="font-size: 10px">
                 <span :class="chat.creator ? 'left' : 'right'">
                 {{chat.creator ? 'You' : 'ReHigh' }}:
                 {{ new Date(chat.date) | chatTime }}
                 </span>
-              </el-col>
-            </el-row>
-            <el-row :class="chat.creator ? 'left' : 'right'"
-                    style="word-wrap: break-word;">
-              <el-col :span="24">
+          </el-col>
+        </el-row>
+        <el-row :class="chat.creator ? 'left' : 'right'"
+                style="word-wrap: break-word;">
+          <el-col :span="24">
                 <span :class="chat.creator ? 'primary--text' : 'success--text'">
                   {{ chat.msg }}
                 </span>
-              </el-col>
-            </el-row>
-          </div>
-        </div>
-        <span v-if="isTyping">
-          User is typing
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+    <span v-if="isUserSide ? isTypingAdmin : isTypingUser">
+          <span v-if="!isUserSide">User is typing</span>
+          <span v-if="isUserSide">Admin is typing</span>
           ...<v-icon size="medium" class="pb-1">edit</v-icon>
         </span>
-        <v-text-field v-model="msg" @input="detectTyping"></v-text-field>
-        <el-button @click="sendChatMessage">Add message</el-button>
-      </el-card>
-    </el-col>
-  </el-row>
+    <v-text-field v-model="msg" @input="detectTyping"></v-text-field>
+    <el-button @click="sendChatMessage">Add message</el-button>
+  </el-card>
 </template>
 
 <script>
@@ -42,6 +39,8 @@ import chatTime from '@/filters/chatTime'
 
 export default {
   name: 'LiveChat',
+  // isUserSide - no = admin
+  props: ['chatId', 'isUserSide'],
   data () {
     return {
       msg: '',
@@ -52,9 +51,9 @@ export default {
   methods: {
     sendChatMessage () {
       this.$store.dispatch('sendChatMessage', {
-        chatId: this.user.uid,
+        chatId: this.chatId,
         msg: this.msg,
-        creator: 1
+        creator: this.isUserSide ? 1 : 0
       })
         .then(() => {
           this.$nextTick(function () {
@@ -66,15 +65,15 @@ export default {
     detectTyping () {
       this.isTyping = true
       this.$store.dispatch('setTyping', {
-        chatId: this.$store.getters.user.uid,
-        whoTyping: 'isTypingUser',
+        chatId: this.chatId,
+        whoTyping: this.isUserSide ? 'isTypingUser' : 'isTypingAdmin',
         value: this.isTyping
       })
       setTimeout(() => {
         this.isTyping = false
         this.$store.dispatch('setTyping', {
-          chatId: this.$store.getters.user.uid,
-          whoTyping: 'isTypingUser',
+          chatId: this.chatId,
+          whoTyping: this.isUserSide ? 'isTypingUser' : 'isTypingAdmin',
           value: this.isTyping
         })
       }, 3000)
@@ -84,8 +83,11 @@ export default {
     chatMessages () {
       return this.$store.getters.chatMessages
     },
-    user () {
-      return this.$store.getters.user
+    isTypingUser () {
+      return this.$store.getters.isTypingUser
+    },
+    isTypingAdmin () {
+      return this.$store.getters.isTypingAdmin
     }
   }
 }

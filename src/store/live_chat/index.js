@@ -4,7 +4,7 @@ export default {
   state: {
     isTypingUser: false,
     isTypingAdmin: false,
-    allMessages: {}, // for admin
+    allChats: {}, // for admin
     chatMessages: {} // for single user only
     // chatId: { msg: "", date: "", creator: 1/0 }
     //
@@ -13,9 +13,9 @@ export default {
     // 3. date in timestamp format ( new Date().getTime() )
   },
   mutations: {
-    setAllMessages:
+    setAllChats:
       (state, payload) => {
-        state.allMessages = payload
+        state.allChats = payload
       },
     setChatMessages:
       (state, payload) => {
@@ -31,7 +31,7 @@ export default {
       }
   },
   actions: {
-    initializeUserChat:
+    initializeChat:
       ({commit, getters, dispatch}, payload) => {
         let chatRef = firebase.database().ref('liveChat/' + payload.chatId)
         chatRef.once('value')
@@ -43,6 +43,7 @@ export default {
           })
           .then(() => {
             // Add new messages listener:
+            // TODO: detatch from on (off) when user offline
             return chatRef.on('child_added', data => {
               if (data.val()) {
                 let chatMessages = {...getters.chatMessages}
@@ -83,24 +84,20 @@ export default {
           })
           .catch(err => console.log(err))
       },
-    fetchChatMessages:
+    fetchAllChats:
       ({commit, getters}, payload) => {
-        firebase.database().ref('liveChat/' + payload.chatId).once('value')
+        firebase.database().ref('liveChat').once('value')
           .then(snapshot => {
-            commit('isTypingUser', snapshot.child('isTypingUser').val())
-            commit('isTypingAdmin', snapshot.child('isTypingAdmin').val())
-            delete snapshot.child('isTypingUser')
-            delete snapshot.child('isTypingAdmin').delete()
-            commit('setChatMessages', snapshot.val())
-            console.log('Messages fetched')
+            commit('setAllChats', snapshot.val())
+            console.log('Fetched: live chat messages')
           })
           .catch(err => console.log(err))
       }
   },
   getters: {
-    allMessages:
+    allChats:
       state => {
-        return state.allMessages
+        return state.allChats
       },
     chatMessages:
       state => {

@@ -45,7 +45,7 @@ export default {
               commit('setCart', snapshot.data().cart)
             }
             commit('LOADING', false)
-            console.log('Cart data fetched')
+            console.log('Fetched: user cart data')
           })
           .catch(
             error => {

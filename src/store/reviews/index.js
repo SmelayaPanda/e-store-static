@@ -38,7 +38,7 @@ export default {
             })
             commit('setReviews', reviews)
             commit('LOADING', false)
-            console.log('Review data fetched')
+            console.log('Fetched: reviews')
           })
           .catch(
             error => {
@@ -80,7 +80,7 @@ export default {
       ({commit}) => {
         firebase.firestore().collection('statistics').doc('reviews').get()
           .then(snapshot => {
-            console.log('Statistics: for reviews fetched')
+            console.log('Statistics: for reviews')
             commit('reviewStatistics', snapshot.data())
           })
           .catch(err => {

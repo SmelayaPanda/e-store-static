@@ -21,7 +21,7 @@ export default {
               companyInfo[doc.id] = doc.data()
             })
             commit('setCompanyInfo', companyInfo)
-            console.log('Company Info fetched')
+            console.log('Fetched: company info')
             commit('LOADING', false)
           })
           .catch(err => {
