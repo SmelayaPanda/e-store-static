@@ -1,43 +1,56 @@
 <template>
-  <v-card v-if="!isCollapsedChat" class="live_chat">
-    <v-card-title class="chat_header primary">
-      <el-button type="text" class="right" style="margin: 0; padding: 0;">
-        <v-icon class="white--text">close</v-icon>
-      </el-button>
-      <h3 class="ml-3 white--text">
-        Live Chat
-      </h3>
-      <transition name="fade">
-      <span v-if="isUserSide ? isTypingAdmin : isTypingUser" class="ml-4 white--text">
-          <span v-if="!isUserSide">User is typing</span>
-          <span v-if="isUserSide">Admin is typing</span>
-          ...<v-icon size="medium" class="pb-1 white--text">edit</v-icon>
-      </span>
-      </transition>
-    </v-card-title>
-    <!--<v-divider></v-divider>-->
-    <v-card-text ref="chatMessages" class="chat_messages">
-      <div v-for="(chat, key) in chatMessages"
-           :key="key">
-        <el-row>
-          <el-col :span="24" class="info--text" style="font-size: 10px">
+  <transition name="bounce">
+    <v-btn fab class="primary collapsed_chat"
+           v-if="isCollapsedChat"
+           @click="isCollapsedChat = false"
+    >
+      <v-icon>chat</v-icon>
+    </v-btn>
+    <v-card v-if="!isCollapsedChat" class="live_chat">
+      <v-card-title class="chat_header primary">
+        <el-button type="text" class="right"
+                   style="margin: 0; padding: 0;"
+                   @click="isCollapsedChat = true"
+        >
+          <v-icon class="white--text">close</v-icon>
+        </el-button>
+        <h3 class="ml-3 white--text">
+          Live Chat
+        </h3>
+        <transition name="fade">
+            <span v-if="isUserSide ? isTypingAdmin : isTypingUser" class="ml-4 white--text">
+                <span v-if="!isUserSide">User is typing</span>
+                <span v-if="isUserSide">Admin is typing</span>
+                ...<v-icon size="medium" class="pb-1 white--text">edit</v-icon>
+            </span>
+        </transition>
+      </v-card-title>
+      <v-card-text ref="chatMessages" class="chat_messages">
+          <span v-if="Object.keys(chatMessages).length === 0">
+            <h2 class="mt-5 info--text">Have question?</h2>
+          </span>
+        <div v-for="(chat, key) in chatMessages"
+             :key="key"
+        >
+          <el-row>
+            <el-col :span="24" class="info--text" style="font-size: 10px">
                 <span :class="chat.creator ? 'left' : 'right'">
                 {{chat.creator ? 'You' : 'ReHigh' }}:
                 {{ new Date(chat.date) | chatTime }}
                 </span>
-          </el-col>
-        </el-row>
-        <el-row :class="chat.creator ? 'left' : 'right'">
-          <el-col :span="24">
-            <p :class="chat.creator ? 'pr-4 primary--text' : 'pl-4 success--text'"
-               style="white-space: pre-wrap; text-align: left"
-            >{{ chat.msg }}</p>
-          </el-col>
-        </el-row>
-      </div>
-    </v-card-text>
-    <v-divider></v-divider>
-    <v-card-actions>
+            </el-col>
+          </el-row>
+          <el-row :class="chat.creator ? 'left' : 'right'">
+            <el-col :span="24">
+              <p :class="chat.creator ? 'pr-4 primary--text' : 'pl-4 success--text'"
+                 style="white-space: pre-wrap; text-align: left"
+              >{{ chat.msg }}</p>
+            </el-col>
+          </el-row>
+        </div>
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions>
       <textarea v-model="msg"
                 cols="40" rows="3"
                 placeholder="Type..."
@@ -49,8 +62,9 @@
                 @keydup.meta.enter="msg+='\n'"
                 @keydup.down="msg+='\n'"
                 @keyup.enter.exact="sendChatMessage"></textarea>
-    </v-card-actions>
-  </v-card>
+      </v-card-actions>
+    </v-card>
+  </transition>
 </template>
 
 <script>
@@ -64,7 +78,7 @@ export default {
     return {
       msg: '',
       isTyping: false,
-      isCollapsedChat: false
+      isCollapsedChat: this.isUserSide
     }
   },
   filters: {chatTime},
@@ -150,6 +164,12 @@ export default {
     height: 400px;
   }
 
+  .collapsed_chat {
+    position: fixed;
+    bottom: 30px;
+    right: 40px;
+  }
+
   textarea {
     border: 1px solid lightgrey;
     border-radius: 3px;
@@ -162,5 +182,25 @@ export default {
   .fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */
   {
     opacity: 0;
+  }
+
+  .bounce-enter-active {
+    animation: bounce-in .5s;
+  }
+
+  .bounce-leave-active {
+    animation: bounce-in .5s reverse;
+  }
+
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 </style>
