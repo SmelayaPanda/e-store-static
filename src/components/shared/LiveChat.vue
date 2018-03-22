@@ -84,18 +84,20 @@ export default {
   filters: {chatTime},
   methods: {
     sendChatMessage () {
-      this.$store.dispatch('sendChatMessage', {
-        chatId: this.chatId,
-        msg: this.msg,
-        creator: this.isUserSide ? 1 : 0
-      })
-        .then(() => {
-          this.$nextTick(function () {
-            this.msg = ''
-            this.$forceUpdate()
-            this.scrollToBottom()
-          })
+      if (this.msg.trim()) {
+        this.$store.dispatch('sendChatMessage', {
+          chatId: this.chatId,
+          msg: this.msg,
+          creator: this.isUserSide ? 1 : 0
         })
+          .then(() => {
+            this.$nextTick(function () {
+              this.msg = ''
+              this.$forceUpdate()
+              this.scrollToBottom()
+            })
+          })
+      }
     },
     detectTyping () {
       this.isTyping = true
