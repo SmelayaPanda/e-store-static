@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     getFBData: function () {
-      firebase.database().ref('books').once('value')
+      firebase.database().ref('greeting').once('value')
         .then(data => {
           this.msg = data.val()
         })

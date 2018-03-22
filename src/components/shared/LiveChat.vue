@@ -26,8 +26,12 @@
             </el-row>
           </div>
         </div>
-        <el-input v-model="msg"></el-input>
-        <el-button @click="sendMessage">Add message</el-button>
+        <span v-if="isTyping">
+          User is typing
+          ...<v-icon size="medium" class="pb-1">edit</v-icon>
+        </span>
+        <v-text-field v-model="msg" @input="detectTyping"></v-text-field>
+        <el-button @click="sendChatMessage">Add message</el-button>
       </el-card>
     </el-col>
   </el-row>
@@ -40,13 +44,14 @@ export default {
   name: 'LiveChat',
   data () {
     return {
-      msg: ''
+      msg: '',
+      isTyping: false
     }
   },
   filters: {chatTime},
   methods: {
-    sendMessage () {
-      this.$store.dispatch('sendMessage', {
+    sendChatMessage () {
+      this.$store.dispatch('sendChatMessage', {
         chatId: this.user.uid,
         msg: this.msg,
         creator: 1
@@ -57,11 +62,26 @@ export default {
             this.$forceUpdate()
           })
         })
+    },
+    detectTyping () {
+      this.isTyping = true
+      this.$store.dispatch('setTyping', {
+        chatId: this.$store.getters.user.uid,
+        whoTyping: 'isTypingUser',
+        value: this.isTyping
+      })
+      setTimeout(() => {
+        this.isTyping = false
+        this.$store.dispatch('setTyping', {
+          chatId: this.$store.getters.user.uid,
+          whoTyping: 'isTypingUser',
+          value: this.isTyping
+        })
+      }, 3000)
     }
   },
   computed: {
     chatMessages () {
-      console.log(this.$store.getters.chatMessages)
       return this.$store.getters.chatMessages
     },
     user () {

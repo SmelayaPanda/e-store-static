@@ -106,7 +106,7 @@ new Vue({
           if (!isAdminPanel) {
             this.$store.dispatch('fetchUserCart')
             this.$store.dispatch('fetchOrders', {userId: user.uid})
-            this.$store.dispatch('fetchMessages', {chatId: user.uid})
+            this.$store.dispatch('initializeUserChat', {chatId: user.uid})
           }
         }
         // ALWAYS
