@@ -149,10 +149,10 @@
         </div>
       </el-col>
     </el-row>
-    <back-to-top visibleOffset="500" :right="60" :bottom="30">
-      <el-button round>
-        <el-icon class="el-icon-arrow-up"></el-icon>
-      </el-button>
+    <back-to-top visibleOffset="500" :right="110" :bottom="30">
+      <v-btn fab class="success">
+        <v-icon>keyboard_arrow_up</v-icon>
+      </v-btn>
     </back-to-top>
   </div>
 </template>

@@ -162,12 +162,14 @@ export default {
     right: 40px;
     width: 320px;
     height: 400px;
+    z-index: 10000;
   }
 
   .collapsed_chat {
     position: fixed;
     bottom: 30px;
     right: 40px;
+    z-index: 10000;
   }
 
   textarea {

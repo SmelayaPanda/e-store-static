@@ -8,22 +8,14 @@
       <el-button @click="getFBData">SayHi</el-button>
     </div>
     <p style="font-size: 48px">{{ msg }}</p>
-    <!--LIVE CHAT-->
-    <div v-if="this.$store.getters.user">
-      <live-chat :chatId="this.$store.getters.user.uid" :isUserSide="true"></live-chat>
-    </div>
   </div>
 </template>
 
 <script>
 import * as firebase from 'firebase'
-import LiveChat from '@/components/shared/LiveChat'
 
 export default {
   name: 'HelloWorld',
-  components: {
-    LiveChat
-  },
   data () {
     return {
       msg: '',

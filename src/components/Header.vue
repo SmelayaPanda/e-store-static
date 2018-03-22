@@ -56,11 +56,20 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
+    <!--LIVE CHAT-->
+    <div v-if="this.$store.getters.user">
+      <live-chat :chatId="this.$store.getters.user.uid" :isUserSide="true"></live-chat>
+    </div>
   </div>
 </template>
 
 <script>
+import LiveChat from '@/components/shared/LiveChat'
+
 export default {
+  components: {
+    LiveChat
+  },
   data () {
     return {
       sideNav: false,
