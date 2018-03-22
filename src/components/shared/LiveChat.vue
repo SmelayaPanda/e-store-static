@@ -1,9 +1,22 @@
 <template>
-  <el-card>
-    <div class="chat_header">
-      <h3>Live Chat</h3>
-    </div>
-    <div class="chat_messages">
+  <v-card v-if="!isCollapsedChat" class="live_chat">
+    <v-card-title class="chat_header primary">
+      <el-button type="text" class="right" style="margin: 0; padding: 0;">
+        <v-icon class="white--text">close</v-icon>
+      </el-button>
+      <h3 class="ml-3 white--text">
+        Live Chat
+      </h3>
+      <transition name="fade">
+      <span v-if="isUserSide ? isTypingAdmin : isTypingUser" class="ml-4 white--text">
+          <span v-if="!isUserSide">User is typing</span>
+          <span v-if="isUserSide">Admin is typing</span>
+          ...<v-icon size="medium" class="pb-1 white--text">edit</v-icon>
+      </span>
+      </transition>
+    </v-card-title>
+    <!--<v-divider></v-divider>-->
+    <v-card-text ref="chatMessages" class="chat_messages">
       <div v-for="(chat, key) in chatMessages"
            :key="key">
         <el-row>
@@ -14,24 +27,30 @@
                 </span>
           </el-col>
         </el-row>
-        <el-row :class="chat.creator ? 'left' : 'right'"
-                style="word-wrap: break-word;">
+        <el-row :class="chat.creator ? 'left' : 'right'">
           <el-col :span="24">
-                <span :class="chat.creator ? 'primary--text' : 'success--text'">
-                  {{ chat.msg }}
-                </span>
+            <p :class="chat.creator ? 'pr-4 primary--text' : 'pl-4 success--text'"
+               style="white-space: pre-wrap; text-align: left"
+            >{{ chat.msg }}</p>
           </el-col>
         </el-row>
       </div>
-    </div>
-    <span v-if="isUserSide ? isTypingAdmin : isTypingUser">
-          <span v-if="!isUserSide">User is typing</span>
-          <span v-if="isUserSide">Admin is typing</span>
-          ...<v-icon size="medium" class="pb-1">edit</v-icon>
-        </span>
-    <v-text-field v-model="msg" @input="detectTyping"></v-text-field>
-    <el-button @click="sendChatMessage">Add message</el-button>
-  </el-card>
+    </v-card-text>
+    <v-divider></v-divider>
+    <v-card-actions>
+      <textarea v-model="msg"
+                cols="40" rows="3"
+                placeholder="Type..."
+                class="chat_input"
+                @input="detectTyping"
+                @keydup.shift.enter="msg+='\n'"
+                @keydup.ctrl.enter="msg+='\n'"
+                @keydup.alt.enter="msg+='\n'"
+                @keydup.meta.enter="msg+='\n'"
+                @keydup.down="msg+='\n'"
+                @keyup.enter.exact="sendChatMessage"></textarea>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
@@ -39,12 +58,13 @@ import chatTime from '@/filters/chatTime'
 
 export default {
   name: 'LiveChat',
-  // isUserSide - no = admin
+  // isUserSide === false -> admin
   props: ['chatId', 'isUserSide'],
   data () {
     return {
       msg: '',
-      isTyping: false
+      isTyping: false,
+      isCollapsedChat: false
     }
   },
   filters: {chatTime},
@@ -59,24 +79,30 @@ export default {
           this.$nextTick(function () {
             this.msg = ''
             this.$forceUpdate()
+            this.scrollToBottom()
           })
         })
     },
     detectTyping () {
       this.isTyping = true
+      this.setTyping()
+      setTimeout(() => {
+        this.isTyping = false
+        this.setTyping()
+      }, 4000)
+    },
+    setTyping () {
       this.$store.dispatch('setTyping', {
         chatId: this.chatId,
         whoTyping: this.isUserSide ? 'isTypingUser' : 'isTypingAdmin',
         value: this.isTyping
       })
-      setTimeout(() => {
-        this.isTyping = false
-        this.$store.dispatch('setTyping', {
-          chatId: this.chatId,
-          whoTyping: this.isUserSide ? 'isTypingUser' : 'isTypingAdmin',
-          value: this.isTyping
-        })
-      }, 3000)
+    },
+    scrollToBottom () {
+      if (this.$refs.chatMessages) {
+        let chat = this.$refs.chatMessages
+        chat.scrollTop = chat.scrollHeight
+      }
     }
   },
   computed: {
@@ -89,20 +115,52 @@ export default {
     isTypingAdmin () {
       return this.$store.getters.isTypingAdmin
     }
+  },
+  watch: {
+    chatMessages () {
+      this.$nextTick(function () {
+        this.scrollToBottom()
+      })
+    }
   }
 }
 </script>
 
 <style scoped>
   .chat_header {
-    border-bottom: 1px solid grey;
     margin-bottom: 1px;
     padding-bottom: 12px;
   }
 
   .chat_messages {
     width: 100%;
-    height: 320px;
+    height: 280px;
     overflow: scroll;
+  }
+
+  .chat_input {
+    padding: 5px;
+  }
+
+  .live_chat {
+    position: fixed;
+    bottom: 30px;
+    right: 40px;
+    width: 320px;
+    height: 400px;
+  }
+
+  textarea {
+    border: 1px solid lightgrey;
+    border-radius: 3px;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .3s;
+  }
+
+  .fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */
+  {
+    opacity: 0;
   }
 </style>

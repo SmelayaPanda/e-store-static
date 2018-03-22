@@ -8,14 +8,10 @@
       <el-button @click="getFBData">SayHi</el-button>
     </div>
     <p style="font-size: 48px">{{ msg }}</p>
-    <el-row type="flex" justify="left" style="flex-wrap: wrap">
-      <!--LIVE CHAT-->
-      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2 mt-2"
-              v-if="this.$store.getters.user"
-      >
-        <live-chat :chatId="this.$store.getters.user.uid" :isUserSide="true"></live-chat>
-      </el-col>
-    </el-row>
+    <!--LIVE CHAT-->
+    <div v-if="this.$store.getters.user">
+      <live-chat :chatId="this.$store.getters.user.uid" :isUserSide="true"></live-chat>
+    </div>
   </div>
 </template>
 

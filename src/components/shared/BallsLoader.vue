@@ -21,7 +21,7 @@ export default {
     border-radius: 100%;
     position: relative;
     margin-left: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   #balls_loader span {

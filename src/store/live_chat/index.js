@@ -39,6 +39,11 @@ export default {
             if (!data.val()) {
               console.log('New chat initialized!')
               return chatRef.set({isTypingUser: false, isTypingAdmin: false})
+            } else {
+              let chatMessages = data.val()
+              delete chatMessages.isTypingUser
+              delete chatMessages.isTypingAdmin
+              commit('setChatMessages', chatMessages)
             }
           })
           .then(() => {
@@ -48,6 +53,8 @@ export default {
               if (data.val()) {
                 let chatMessages = {...getters.chatMessages}
                 chatMessages[data.key] = data.val()
+                delete chatMessages.isTypingUser
+                delete chatMessages.isTypingAdmin
                 commit('setChatMessages', chatMessages)
               }
             })
