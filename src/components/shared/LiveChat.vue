@@ -2,7 +2,7 @@
   <transition name="bounce">
     <v-btn fab class="primary collapsed_chat"
            v-if="isCollapsedChat"
-           @click="isCollapsedChat = false"
+           @click="openChat"
     >
       <v-icon>chat</v-icon>
     </v-btn>
@@ -83,6 +83,12 @@ export default {
   },
   filters: {chatTime},
   methods: {
+    openChat () {
+      this.isCollapsedChat = false
+      this.$nextTick(function () {
+        this.scrollToBottom()
+      })
+    },
     sendChatMessage () {
       if (this.msg.trim()) {
         this.$store.dispatch('sendChatMessage', {
