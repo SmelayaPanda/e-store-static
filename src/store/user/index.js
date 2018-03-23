@@ -25,31 +25,41 @@ export default {
       ({commit}, payload) => {
         commit('CLEAR_ERR')
         commit('LOADING', true)
+        let user
         firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
-          .then(
-            user => {
-              commit('setUser', user)
-              commit('LOADING', false)
-              firebase.auth().currentUser.sendEmailVerification()
-                .then(function () {
-                  Notification({
-                    title: 'Congratulations',
-                    message: 'The account was created!',
-                    type: 'success',
-                    showClose: true,
-                    duration: 10000,
-                    offset: 50
-                  })
-                })
+          .then(data => {
+            user = {
+              cart: [],
+              orders: [],
+              oneclick: [],
+              uid: data.user.uid,
+              email: data.user.email,
+              emailVerified: data.user.emailVerified,
+              isAnonymous: data.user.isAnonymous,
+              phoneNumber: data.user.phoneNumber
             }
-          )
-          .catch(
-            error => {
-              commit('LOADING', false)
-              commit('ERR', error)
-              console.log(error)
-            }
-          )
+            return firebase.firestore().collection('users').doc(user.uid).set(user)
+          })
+          .then(() => {
+            Notification({
+              title: 'Congratulations',
+              message: 'The account was created!',
+              type: 'success',
+              showClose: true,
+              duration: 10000,
+              offset: 50
+            })
+            return firebase.auth().currentUser.sendEmailVerification()
+          })
+          .then(() => {
+            console.log('User register. Email verification sent.')
+            commit('LOADING', false)
+          })
+          .catch(err => {
+            commit('LOADING', false)
+            commit('ERR', err)
+            console.log(err)
+          })
       },
     signUserIn:
       ({commit}, payload) => {
@@ -59,36 +69,21 @@ export default {
         commit('CLEAR_ERR')
         commit('LOADING', true)
         firebase.auth().signInAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
-          .then(
-            user => {
-              console.log('Successful Login')
-              commit('setUser', user)
-              commit('LOADING', false)
-            }
-          )
+          .then(() => { // onAuthStateChanged works
+            console.log('Successful Login')
+            commit('LOADING', false)
+          })
           .catch(
             error => {
-              console.log(error)
               commit('ERR', error)
               commit('LOADING', false)
-            }
-          )
-        let user = firebase.auth().currentUser
-        if (user != null) {
-          user.providerData.forEach(function (profile) {
-            if (profile.email === 'smelayapandagm@gmail.com') {
-              commit('setAdmin', true)
-            } else {
-              commit('setAdmin', false)
-            }
-          })
-        }
+            })
       },
     signInAnonymously:
-      ({commit}) => {
+      () => {
         firebase.auth().signInAnonymouslyAndRetrieveData()
-          .then((user) => {
-            commit('setUser', user)
+          .then(() => { // onAuthStateChanged works
+            console.log('You are sign in anonymously')
           })
           .catch(err => {
             console.log(err)
@@ -96,18 +91,22 @@ export default {
       },
     autoSignIn:
       ({commit}, payload) => {
-        commit('CLEAR_ERR')
         commit('setUser', payload)
-        let user = payload
-        if (user != null) {
-          user.providerData.forEach(function (profile) {
-            if (profile.email === 'smelayapandagm@gmail.com') {
-              commit('setAdmin', true)
-            } else {
-              commit('setAdmin', false)
-            }
+      },
+    setAdmin:
+      ({commit}, payload) => {
+        commit('setAdmin', payload)
+      },
+    logout:
+      () => {
+        firebase.auth().signOut()
+          .then(() => {
+            router.push('/')
+            window.location.reload()
           })
-        }
+          .catch(err => {
+            console.log(err)
+          })
       },
     resetPassword:
       ({commit}, payload) => {
@@ -141,18 +140,6 @@ export default {
                 duration: 10000
               })
             }
-            console.log(err)
-          })
-      },
-    logout:
-      ({commit}) => {
-        firebase.auth().signOut()
-          .then(() => {
-            commit('setUser', '')
-            router.push('/')
-            window.location.reload()
-          })
-          .catch(err => {
             console.log(err)
           })
       }

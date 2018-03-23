@@ -25,7 +25,7 @@ export default {
         } else if (payload.operation === 'remove') {
           cart.splice(cart.indexOf(payload), 1)
         }
-        firebase.firestore().collection('users').doc(user.uid).set({cart: cart})
+        firebase.firestore().collection('users').doc(user.uid).update({cart: cart})
           .then(() => {
             commit('setCart', cart)
             commit('LOADING', false)

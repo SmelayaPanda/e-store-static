@@ -81,6 +81,14 @@
 <script>
 export default {
   name: 'Dashboard',
+  methods: {
+    fetchDashboardStatistics () {
+      // this.$store.dispatch('fetchProductStatistics') always fetched for max price
+      this.$store.dispatch('fetchOrderStatistics')
+      this.$store.dispatch('fetchOneClickStatistics')
+      this.$store.dispatch('fetchReviewStatistics')
+    }
+  },
   computed: {
     productStatistics () {
       return this.$store.getters.productStatistics
@@ -94,6 +102,9 @@ export default {
     reviewStatistics () {
       return this.$store.getters.reviewStatistics
     }
+  },
+  created () {
+    this.fetchDashboardStatistics()
   }
 }
 </script>

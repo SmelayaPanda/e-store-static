@@ -103,24 +103,17 @@ new Vue({
         // USER DATA
         if (user) {
           this.$store.dispatch('autoSignIn', user)
+          this.$store.dispatch('setAdmin', user.email === 'smelayapandagm@gmail.com')
           if (!isAdminPanel) {
             this.$store.dispatch('fetchUserCart')
             this.$store.dispatch('fetchOrders', {userId: user.uid})
             this.$store.dispatch('initializeChat', {chatId: user.uid})
+            this.$store.dispatch('fetchProducts')
           }
         }
         // ALWAYS
-        this.$store.dispatch('fetchCompanyInfo')
-        this.$store.dispatch('fetchDictionaries')
+        this.$store.dispatch('fetchDictionaries') // product dropdowns
         this.$store.dispatch('fetchProductStatistics') // MaxPrice for shop
-        if (isAdminPanel) {
-          this.$store.dispatch('fetchOrderStatistics')
-          this.$store.dispatch('fetchOneClickStatistics')
-          this.$store.dispatch('fetchReviewStatistics')
-        } else {
-          this.$store.dispatch('fetchProducts')
-          this.$store.dispatch('fetchReviews', {status: 'published'})
-        }
       })
     // In admin panel all data fetched by router click
   }

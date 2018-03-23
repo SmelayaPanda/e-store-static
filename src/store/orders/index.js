@@ -4,7 +4,6 @@ import router from '../../router'
 export default {
   state: {
     orders: [],
-    allOrders: [],
     orderStatistics: {
       payPending: 0,
       sentPending: 0,
@@ -18,10 +17,6 @@ export default {
     setOrders:
       (state, payload) => {
         state.orders = payload
-      },
-    setAllOrders:
-      (state, payload) => {
-        state.allOrders = payload
       },
     orderStatistics:
       (state, payload) => {
@@ -67,17 +62,22 @@ export default {
           commit('LOADING', false)
           return
         }
+        let orderId
         let orders = getters.orders ? getters.orders : []
         payload.userId = user.uid
         firebase.firestore().collection('orders').add(payload)
           .then((docRef) => {
-            payload.id = docRef.id
+            orderId = docRef.id
+            payload.id = orderId
             orders.unshift(payload)
             let actions = []
-            // 1. remove items from user cart
+            // 1. remove items from user cart, add orderIds
             // 2. decrease totalQty of each products
-            let updateCart = function (cart) {
-              return firebase.firestore().collection('users').doc(user.uid).update({cart: cart})
+            let updateUserData = function (cart, ordersIds) {
+              return firebase.firestore().collection('users').doc(user.uid).update({
+                cart: cart,
+                orders: ordersIds
+              })
             }
             let decreaseTotalQty = function (productId, totalQty) {
               return firebase.firestore().collection('products').doc(productId).update({totalQty: totalQty})
@@ -102,7 +102,11 @@ export default {
               actions.push(decreaseTotalQty(p.productId,
                 isEndedProducts ? 0 : product.totalQty - p.qty))
             }
-            actions.push(updateCart(cart))
+            let orderIds = []
+            orders.forEach(order => {
+              orderIds.push(order.id)
+            })
+            actions.push(updateUserData(cart, orderIds))
             return Promise.all(actions)
           })
           .then(() => {
@@ -161,10 +165,6 @@ export default {
         return state.orders.find(el => {
           return el.id === id
         })
-      },
-    allOrders:
-      state => {
-        return state.allOrders
       },
     orderStatistics:
       state => {
