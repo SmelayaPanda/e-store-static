@@ -32,7 +32,7 @@ export default {
   methods: {
     fetchAboutData () {
       this.$store.dispatch('fetchReviews', {status: 'published'})
-      this.$store.dispatch('fetchCompanyInfo', {status: 'published'})
+      this.$store.dispatch('fetchCompanyInfo')
     }
   },
   created () {

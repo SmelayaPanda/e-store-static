@@ -35,13 +35,19 @@ ORDER STATUS CHAIN:
         <template slot-scope="props">
           <el-row>
             <el-col :span="12" class="pl-1">
-              <p><span>Database one click id:</span>
+              <p>
+                One click id:
                 <el-tag size="mini" type="success">{{ props.row.id }}</el-tag>
+              </p>
+              <p>
+                User id:
+                <el-tag size="mini" type="success">{{ props.row.userId }}</el-tag>
               </p>
               <h3><i class="el-icon-info"></i>
                 Product info:
               </h3>
               <p>
+                Product Id: <el-tag size="mini" type="success">{{ props.row.product.id }}</el-tag><br>
                 Title: {{ props.row.product.title }}<br>
                 SKU: {{ props.row.product.SKU }}<br>
                 Price: {{ props.row.product.price }}<br>
@@ -161,18 +167,29 @@ ORDER STATUS CHAIN:
         label="Nickname"
         width="150">
         <template slot-scope="scope">
-          <p>{{ scope.row.nickname | snippet(14) }}</p>
+          <el-popover trigger="hover" placement="top">
+            <p>{{ scope.row.nickname }}</p>
+            <div slot="reference" class="name-wrapper">
+              <p>{{ scope.row.nickname | snippet(14) }}</p>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
-      <!--PHONE-->
+      <!--PHONE/EMAIL-->
       <el-table-column
         label="Phone/Email"
         width="200">
         <template slot-scope="scope">
-          <p>
-            {{ scope.row.phone }}<br>
-            {{ scope.row.email | snippet(20) }}
-          </p>
+          <el-popover trigger="hover" placement="top">
+            <p>Phone: {{ scope.row.phone }}</p>
+            <p>Email: {{ scope.row.email }}</p>
+            <div slot="reference" class="name-wrapper">
+              <p>
+                {{ scope.row.phone }}<br>
+                {{ scope.row.email | snippet(20) }}
+              </p>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <!--ACTIONS-->

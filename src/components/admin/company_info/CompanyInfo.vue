@@ -151,10 +151,18 @@ export default {
   components: {
     EditCompanyInfoField
   },
+  methods: {
+    fetchCompanyInfo () {
+      this.$store.dispatch('fetchCompanyInfo')
+    }
+  },
   computed: {
     companyInfo () {
       return this.$store.getters.companyInfo
     }
+  },
+  created () {
+    this.fetchCompanyInfo()
   }
 }
 </script>

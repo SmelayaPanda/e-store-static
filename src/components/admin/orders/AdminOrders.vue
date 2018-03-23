@@ -35,16 +35,17 @@ ORDER STATUS CHAIN:
         <template slot-scope="props">
           <el-row>
             <el-col :span="12" class="pl-1">
-              <p><span>Database order id:</span>
+              <p><span>Order id:</span>
                 <el-tag size="mini" type="success">{{ props.row.id }}</el-tag>
               </p>
-              <p><span>Database user id:</span>
+              <p><span>User id:</span>
                 <el-tag size="mini" type="success">{{ props.row.userId }}</el-tag>
               </p>
               <h3><i class="el-icon-info"></i>
                 Product info:
               </h3>
               <p>
+                Product Id: <el-tag size="mini" type="success">{{ props.row.products[0].productId }}</el-tag><br>
                 Title: {{ props.row.products[0].title }}<br>
                 SKU: {{ props.row.products[0].SKU }}<br>
                 Price: {{ props.row.products[0].price }}<br>
@@ -161,20 +162,29 @@ ORDER STATUS CHAIN:
         label="Name"
         width="140">
         <template slot-scope="scope">
-          <p>
-            {{ scope.row.buyer.firstname.concat(' ',scope.row.buyer.lastname )| snippet(14) }}
-          </p>
+          <el-popover trigger="hover" placement="top">
+            <p>{{ scope.row.buyer.firstname.concat(' ',scope.row.buyer.lastname ) }}</p>
+            <div slot="reference" class="name-wrapper">
+              <p>{{ scope.row.buyer.firstname.concat(' ',scope.row.buyer.lastname ) | snippet(14) }}</p>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
-      <!--PHONE-->
+      <!--PHONE/EMAIL-->
       <el-table-column
         label="Phone/Email"
         width="200">
         <template slot-scope="scope">
-          <p>
-            {{ scope.row.buyer.phone }}<br>
-            {{ scope.row.buyer.email }}
-          </p>
+          <el-popover trigger="hover" placement="top">
+            <p>Phone: {{ scope.row.buyer.phone }}</p>
+            <p>Email: {{ scope.row.buyer.email }}</p>
+            <div slot="reference" class="name-wrapper">
+              <p>
+                {{ scope.row.buyer.phone }}<br>
+                {{ scope.row.buyer.email | snippet(20) }}
+              </p>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <!--Process-->
