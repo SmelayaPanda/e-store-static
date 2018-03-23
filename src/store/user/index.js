@@ -79,7 +79,6 @@ export default {
             console.log(err)
           })
       },
-
     upgradeAnonymousAccount:
       ({commit, dispatch}, payload) => {
         let credential = firebase.auth.EmailAuthProvider.credential(payload.email, payload.password)

@@ -2,11 +2,15 @@ import * as firebase from 'firebase'
 
 export default {
   state: {
-    isTypingUser: false,
-    isTypingAdmin: false,
-    allChats: {}, // for admin
-    chatMessages: {} // for single user only
-    // chatId: { msg: "", date: "", creator: 1/0 }
+    chat: {
+      props: {
+        isTypingUser: false,
+        isTypingAdmin: false
+      },
+      messages: []
+    },
+    allChats: {} // for admin
+    // msgId: { msg: [], date: "", creator: 1/0 }
     //
     // 1. chatId equals to userId
     // 2. creator: 1 - user, 0 - admin
@@ -19,15 +23,15 @@ export default {
       },
     setChatMessages:
       (state, payload) => {
-        state.chatMessages = payload
+        state.chat.messages = payload
       },
     isTypingUser:
       (state, payload) => {
-        state.isTypingUser = payload
+        state.chat.props.isTypingUser = payload
       },
     isTypingAdmin:
       (state, payload) => {
-        state.isTypingAdmin = payload
+        state.chat.props.isTypingAdmin = payload
       }
   },
   actions: {
@@ -38,30 +42,19 @@ export default {
           .then(data => {
             if (!data.val()) {
               console.log('New chat initialized!')
-              return chatRef.set({isTypingUser: false, isTypingAdmin: false})
-            } else {
-              let chatMessages = data.val()
-              delete chatMessages.isTypingUser
-              delete chatMessages.isTypingAdmin
-              commit('setChatMessages', chatMessages)
+              return chatRef.child('props').set({isTypingUser: false, isTypingAdmin: false})
             }
           })
           .then(() => {
-            // Add new messages listener:
-            // TODO: detatch from on (off) when user offline
-            return chatRef.on('child_added', data => {
+            // TODO: detach from on (off) when user offline
+            chatRef.child('messages').on('child_added', data => {
               if (data.val()) {
                 let chatMessages = {...getters.chatMessages}
                 chatMessages[data.key] = data.val()
-                delete chatMessages.isTypingUser
-                delete chatMessages.isTypingAdmin
                 commit('setChatMessages', chatMessages)
               }
             })
-          })
-          .then(() => {
-            // Add typing listener: data.key = 'isTypingAdmin' || 'isTypingUser'
-            return chatRef.on('child_changed', data => {
+            chatRef.child('props').on('child_changed', data => {
               commit(data.key, data.val())
             })
           })
@@ -74,25 +67,27 @@ export default {
           creator: payload.creator,
           date: new Date().getTime()
         }
-        firebase.database().ref('liveChat/' + payload.chatId).push(newMsg)
+        firebase.database().ref(`liveChat/${payload.chatId}/messages`).push(newMsg)
           .then((data) => {
-            let chatMessages = {...getters.chatMessages} // new object for vuex watch
+            let chatMessages = {...getters.chatMessages}
             chatMessages[data.key] = newMsg
             commit('setChatMessages', chatMessages)
-            console.log('Message added')
           })
           .catch(err => console.log(err))
       },
     setTyping:
       ({commit, getters}, payload) => {
-        firebase.database().ref('liveChat/' + payload.chatId).update({[payload.whoTyping]: payload.value})
+        firebase.database().ref(`liveChat/${payload.chatId}/props`)
+          .update({
+            [payload.whoTyping]: payload.value
+          })
           .then(() => {
             commit(payload.whoTyping, payload.value)
           })
           .catch(err => console.log(err))
       },
     fetchAllChats:
-      ({commit, getters}, payload) => {
+      ({commit}) => {
         firebase.database().ref('liveChat').once('value')
           .then(snapshot => {
             commit('setAllChats', snapshot.val())
@@ -102,21 +97,21 @@ export default {
       }
   },
   getters: {
-    allChats:
-      state => {
-        return state.allChats
-      },
     chatMessages:
       state => {
-        return state.chatMessages
+        return state.chat.messages
       },
     isTypingUser:
       state => {
-        return state.isTypingUser
+        return state.chat.props.isTypingUser
       },
     isTypingAdmin:
       state => {
-        return state.isTypingAdmin
+        return state.chat.props.isTypingAdmin
+      },
+    allChats:
+      state => {
+        return state.allChats
       }
   }
 }
