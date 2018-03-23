@@ -3,8 +3,10 @@
     <el-row type="flex" justify="left" style="flex-wrap: wrap">
       <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2 mt-2">
         <h2 class="mb-2">Live Chat Rooms</h2>
-        <el-card v-for="chatId of Object.keys(allChats)" :key="chatId">
-          <el-button type="text" @click="openChat(chatId)">{{ chatId }}</el-button>
+        <el-card v-for="(chat, chatId) of allChats" :key="chatId">
+          <el-button type="text" @click="openChat(chatId)">
+            {{ chat.props.userEmail ? ( chat.props.userEmail ) : `Anonymous ( ${chatId.substring(0, 5)} )` }}
+          </el-button>
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2 mt-2"

@@ -105,9 +105,8 @@ new Vue({
           this.$store.dispatch('autoSignIn', user)
           this.$store.dispatch('setAdmin', user.email === 'smelayapandagm@gmail.com')
           if (!isAdminPanel) {
-            this.$store.dispatch('fetchUserCart')
-            this.$store.dispatch('fetchOrders', {userId: user.uid})
-            this.$store.dispatch('initializeChat', {chatId: user.uid})
+            this.$store.dispatch('fetchUserData')
+            this.$store.dispatch('initializeChat', {chatId: user.uid, userEmail: user.email})
             this.$store.dispatch('fetchProducts')
             this.$store.dispatch('updateEmailVerification', user) // always check - because there is no another way
           }

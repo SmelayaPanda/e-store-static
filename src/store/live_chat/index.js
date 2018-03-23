@@ -5,7 +5,8 @@ export default {
     chat: {
       props: {
         isTypingUser: false,
-        isTypingAdmin: false
+        isTypingAdmin: false,
+        userEmail: null
       },
       messages: []
     },
@@ -42,7 +43,13 @@ export default {
           .then(data => {
             if (!data.val()) {
               console.log('New chat initialized!')
-              return chatRef.child('props').set({isTypingUser: false, isTypingAdmin: false})
+              return chatRef.child('props').set({
+                isTypingUser: false,
+                isTypingAdmin: false,
+                userEmail: payload.userEmail
+              })
+            } else { // update chat for admin
+              commit('setChatMessages', data.val().messages)
             }
           })
           .then(() => {

@@ -44,7 +44,6 @@ export default {
                 order.showDetails = false
                 orders.push(order)
               })
-              console.log('Fetched: orders data')
               commit('setOrders', orders)
               commit('LOADING', false)
             })

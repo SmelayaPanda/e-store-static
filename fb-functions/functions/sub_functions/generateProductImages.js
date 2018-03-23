@@ -32,7 +32,7 @@ const CARD_PREFIX = 'card_';
 
 
 exports.handler = function (event, admin) {
-  console.log('>-------------------------------------------------------------------------------------------------------');
+  console.log(LOG_DELIMITER)
   // File and directory paths.
   const contentType = event.data.contentType; // This is the image Mime type
   const originalFilePath = event.data.name;

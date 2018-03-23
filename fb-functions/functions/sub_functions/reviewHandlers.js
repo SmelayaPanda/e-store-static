@@ -1,5 +1,5 @@
 exports.updateReviewHandler = function (event, functions, admin) {
-  console.log('>-------------------------------------------------------------------------------------------------------');
+  console.log(LOG_DELIMITER)
   let newReview = 0
   let published = 0
   let archived = 0

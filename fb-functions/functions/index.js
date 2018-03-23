@@ -7,6 +7,7 @@ const productHandlers = require('./sub_functions/productHandlers')
 const orderHandlers = require('./sub_functions/orderHandlers')
 const oneClickHandlers = require('./sub_functions/oneClickHandlers')
 const reviewHandlers = require('./sub_functions/reviewHandlers')
+const userHandlers = require('./sub_functions/userHandlers')
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
@@ -16,6 +17,7 @@ admin.initializeApp(functions.config().firebase);
 // firebase functions:config:set admin.password="***"
 global.ADMIN_EMAIL = functions.config().admin.email
 global.ADMIN_PASS = functions.config().admin.password
+global.LOG_DELIMITER = '>-------------------------------------------------------------------------------------------------------'
 let nodemailer = require('nodemailer')
 let transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -26,6 +28,9 @@ let transporter = nodemailer.createTransport({
 });
 
 // ---------------------------[ ALL FUNCTIONS ]---------------------------
+exports.onUserCreate = functions.auth.user().onCreate((event) => {
+  return userHandlers.onUserCreate(event, admin)
+})
 // PAYPAL
 exports.processPayPal = functions.https.onRequest((req, res) => {
   processPayPal.handler(req, res, admin, transporter)

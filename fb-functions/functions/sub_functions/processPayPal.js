@@ -1,5 +1,5 @@
 exports.handler = function (req, res, admin, transporter) {
-  console.log('>-------------------------------------------------------------------------------------------------------');
+  console.log(LOG_DELIMITER)
   const payInfo = req.body;
   console.log(payInfo);
 

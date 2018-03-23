@@ -1,5 +1,5 @@
 exports.updateOrderHandler = function (event, functions, admin) {
-  console.log('>-------------------------------------------------------------------------------------------------------');
+  console.log(LOG_DELIMITER)
   let payPending = 0
   let sentPending = 0
   let sent = 0

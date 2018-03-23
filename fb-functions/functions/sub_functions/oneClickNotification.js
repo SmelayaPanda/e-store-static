@@ -1,7 +1,7 @@
 const cors = require('cors')({origin: true});
 
 exports.handler = function (req, res, admin, transporter) {
-  console.log('>-------------------------------------------------------------------------------------------------------');
+  console.log(LOG_DELIMITER)
   cors(req, res, () => {
     let info = req.body
     info.creationDate = new Date()

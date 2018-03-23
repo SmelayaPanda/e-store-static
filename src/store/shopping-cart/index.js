@@ -30,24 +30,6 @@ export default {
             console.log(err)
             commit('LOADING', false)
           })
-      },
-    fetchUserCart:
-      ({commit, getters}) => {
-        commit('LOADING', true)
-        const user = getters.user
-        firebase.firestore().collection('users').doc(user.uid).get()
-          .then(snapshot => {
-            if (snapshot.data()) {
-              commit('setCart', snapshot.data().cart)
-            }
-            commit('LOADING', false)
-            console.log('Fetched: user cart data')
-          })
-          .catch(
-            error => {
-              console.log(error)
-              commit('LOADING', false)
-            })
       }
   },
   getters: {

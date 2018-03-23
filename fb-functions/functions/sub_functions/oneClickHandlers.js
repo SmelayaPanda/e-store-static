@@ -1,5 +1,5 @@
 exports.updateOneClickHandler = function (event, functions, admin) {
-  console.log('>-------------------------------------------------------------------------------------------------------');
+  console.log(LOG_DELIMITER)
   let created = 0
   let sentPending = 0
   let sent = 0

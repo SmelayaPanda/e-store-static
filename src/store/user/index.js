@@ -21,6 +21,29 @@ export default {
   },
   // Actions ---------------------------------------------------
   actions: { // specify the mutation
+    fetchUserData:
+      ({commit, dispatch, getters}) => {
+        commit('LOADING', true)
+        const user = getters.user
+        firebase.firestore().collection('users').doc(user.uid).get()
+          .then(snapshot => {
+            if (snapshot.data()) {
+              user.userNo = snapshot.data().userNo
+              commit('setCart', snapshot.data().cart)
+              commit('setUser', user)
+            }
+            dispatch('fetchOrders', {userId: user.uid})
+          })
+          .then(() => {
+            commit('LOADING', false)
+            console.log('Fetched: user data')
+          })
+          .catch(
+            error => {
+              console.log(error)
+              commit('LOADING', false)
+            })
+      },
     signUserUp:
       ({commit, dispatch}, payload) => {
         commit('CLEAR_ERR')
@@ -112,8 +135,8 @@ export default {
         commit('setAdmin', payload)
       },
     logout:
-      () => {
-        firebase.auth().signOut()
+      ({dispatch}) => {
+        dispatch('signInAnonymously')
           .then(() => {
             router.push('/')
             window.location.reload()
