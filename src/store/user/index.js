@@ -22,24 +22,10 @@ export default {
   // Actions ---------------------------------------------------
   actions: { // specify the mutation
     signUserUp:
-      ({commit}, payload) => {
+      ({commit, dispatch}, payload) => {
         commit('CLEAR_ERR')
         commit('LOADING', true)
-        let user
-        firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
-          .then(data => {
-            user = {
-              cart: [],
-              orders: [],
-              oneclick: [],
-              uid: data.user.uid,
-              email: data.user.email,
-              emailVerified: data.user.emailVerified,
-              isAnonymous: data.user.isAnonymous,
-              phoneNumber: data.user.phoneNumber
-            }
-            return firebase.firestore().collection('users').doc(user.uid).set(user)
-          })
+        dispatch('upgradeAnonymousAccount', payload)
           .then(() => {
             Notification({
               title: 'Congratulations',
@@ -49,10 +35,7 @@ export default {
               duration: 10000,
               offset: 50
             })
-            return firebase.auth().currentUser.sendEmailVerification()
-          })
-          .then(() => {
-            console.log('User register. Email verification sent.')
+            router.push('/account')
             commit('LOADING', false)
           })
           .catch(err => {
@@ -63,9 +46,6 @@ export default {
       },
     signUserIn:
       ({commit}, payload) => {
-        if (firebase.auth().currentUser) {
-          firebase.auth().signOut()
-        }
         commit('CLEAR_ERR')
         commit('LOADING', true)
         firebase.auth().signInAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
@@ -80,14 +60,49 @@ export default {
             })
       },
     signInAnonymously:
+    // All users initially register as anonymous
       () => {
         firebase.auth().signInAnonymouslyAndRetrieveData()
-          .then(() => { // onAuthStateChanged works
+          .then((data) => { // onAuthStateChanged works
+            return firebase.firestore().collection('users').doc(data.user.uid)
+              .set({ // initialize user for quick update
+                cart: [],
+                orders: [],
+                oneclick: [],
+                isAnonymous: data.user.isAnonymous
+              })
+          })
+          .then(() => {
             console.log('You are sign in anonymously')
           })
           .catch(err => {
             console.log(err)
           })
+      },
+
+    upgradeAnonymousAccount:
+      ({commit, dispatch}, payload) => {
+        let credential = firebase.auth.EmailAuthProvider.credential(payload.email, payload.password)
+        firebase.auth().currentUser.linkWithCredential(credential)
+          .then(user => {
+            user.sendEmailVerification()
+            commit('setUser', {...user})
+            console.log('User register. Email verification sent.')
+            console.log('Anonymous account successfully upgraded', user)
+            return firebase.firestore().collection('users').doc(user.uid).update({
+              email: user.email,
+              emailVerified: user.emailVerified,
+              isAnonymous: false
+            })
+          })
+          .catch(err => {
+            console.log('Error upgrading anonymous account', err)
+          })
+      },
+    updateEmailVerification:
+      ({commit}, payload) => {
+        firebase.firestore().collection('users').doc(payload.uid).update({emailVerified: payload.emailVerified})
+          .catch((err) => console.log(err))
       },
     autoSignIn:
       ({commit}, payload) => {

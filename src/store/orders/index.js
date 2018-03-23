@@ -58,10 +58,6 @@ export default {
       ({commit, getters}, payload) => {
         commit('LOADING', true)
         const user = getters.user
-        if (!user) {
-          commit('LOADING', false)
-          return
-        }
         let orderId
         let orders = getters.orders ? getters.orders : []
         payload.userId = user.uid

@@ -109,7 +109,10 @@ new Vue({
             this.$store.dispatch('fetchOrders', {userId: user.uid})
             this.$store.dispatch('initializeChat', {chatId: user.uid})
             this.$store.dispatch('fetchProducts')
+            this.$store.dispatch('updateEmailVerification', user) // always check - because there is no another way
           }
+        } else {
+          this.$store.dispatch('signInAnonymously')
         }
         // ALWAYS
         this.$store.dispatch('fetchDictionaries') // product dropdowns

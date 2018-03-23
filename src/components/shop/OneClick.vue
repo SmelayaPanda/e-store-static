@@ -105,6 +105,7 @@ export default {
         nickname: this.oneClickForm.nickname,
         email: this.oneClickForm.email,
         phone: this.oneClickForm.phone,
+        userId: this.$store.getters.user.uid,
         qty: 1,
         product: {
           title: this.product.title,

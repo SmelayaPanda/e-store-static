@@ -38,6 +38,9 @@ ORDER STATUS CHAIN:
               <p><span>Database order id:</span>
                 <el-tag size="mini" type="success">{{ props.row.id }}</el-tag>
               </p>
+              <p><span>Database user id:</span>
+                <el-tag size="mini" type="success">{{ props.row.userId }}</el-tag>
+              </p>
               <h3><i class="el-icon-info"></i>
                 Product info:
               </h3>

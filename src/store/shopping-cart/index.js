@@ -15,10 +15,6 @@ export default {
       ({commit, getters}, payload) => {
         commit('LOADING', true)
         const user = getters.user
-        if (!user) {
-          commit('LOADING', false)
-          return
-        }
         let cart = getters.cart
         if (payload.operation === 'add') {
           cart.push(payload.productId)

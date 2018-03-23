@@ -14,9 +14,7 @@
           <v-list-tile-content>{{ item.title }}</v-list-tile-content>
         </v-list-tile>
         <!--Logout-->
-        <v-list-tile v-if="this.isAuthenticatedUser"
-                     @click="onLogout"
-        >
+        <v-list-tile v-if="!this.isAnonymousUser" @click="onLogout">
           <v-list-tile-action>
             <v-icon>exit_to_app</v-icon>
           </v-list-tile-action>
@@ -57,7 +55,7 @@
 
         <!--Logout-->
         <v-btn flat
-               v-if="this.isAuthenticatedUser"
+               v-if="!this.isAnonymousUser"
                @click="onLogout"
                class="primary white--text"
         >
@@ -121,7 +119,7 @@ export default {
     menuItems:
         function () {
           let menuItems = []
-          if (!this.isAuthenticatedUser) {
+          if (this.isAnonymousUser) {
             menuItems = [
               {icon: 'account_circle', title: 'Singup', link: '/signup'},
               {icon: 'lock_open', title: 'Singin', link: '/signin'}

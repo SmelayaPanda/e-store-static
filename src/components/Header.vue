@@ -14,20 +14,16 @@
         </el-menu-item>
         <el-submenu index="user">
           <template slot="title">User</template>
-          <el-menu-item index="account" route="/account"
-                        v-if="this.isAuthenticatedUser">
+          <el-menu-item index="account" route="/account">
             Account
           </el-menu-item>
-          <el-menu-item index="signin" route="/signin"
-                        v-if="!this.isAuthenticatedUser">
+          <el-menu-item index="signin" route="/signin" v-if="this.isAnonymousUser">
             Sign in
           </el-menu-item>
-          <el-menu-item index="signup" route="/signup"
-                        v-if="!this.isAuthenticatedUser">
+          <el-menu-item index="signup" route="/signup" v-if="this.isAnonymousUser">
             Sign up
           </el-menu-item>
-          <el-menu-item index="logout" route="/logout"
-                        v-if="this.isAuthenticatedUser"
+          <el-menu-item index="logout" route="/logout" v-if="!this.isAnonymousUser"
                         @click="onLogout"> Logout
           </el-menu-item>
         </el-submenu>

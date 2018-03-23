@@ -8,7 +8,7 @@ exports.handler = function (req, res, admin, transporter) {
     info.status = 'created'
     admin.firestore().collection('oneclick').add(info)
       .then(() => {
-        console.log('One click message added into database!')
+        console.log('One click message added into database!', info)
         return Promise.all([
           sendOneClickEmailNotifyToAdmin(transporter, info),
           sendOneClickEmailNotifyToBuyer(transporter, info)
@@ -39,10 +39,11 @@ let sendOneClickEmailNotifyToAdmin = function (transporter, info) {
        Nickname ........... ${info.nickname}
        Email .................. ${info.email}
        Phone ................. ${info.phone}
+       UserId ............... ${info.userId}
        
        
        WANT TO BUY:
-       SKU ........................... ${info.product.SKU}
+       SKU .................... ${info.product.SKU}
        Title ...................... ${info.product.title}
        Price .................... ${info.product.price} RUB
        `

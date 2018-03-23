@@ -45,15 +45,19 @@
         <p>Email with verification link sent to address: <br><span>{{ user.email }}</span></p>
       </div>
       <div v-if="this.isAnonymousUser">
-        <h2 class="mb-2">You are sign in as anonymous user.</h2>
-        <p>Section "Account" is accessible only for
+        <h2 class="mb-2">
+          Welcome anonymous user!
+        </h2>
+        <img src="@/assets/icons/anonymous-logo.png" height="40px" class="mb-4 mt-3"> <br>
+        <p class="error--text">
+          <el-tag type="danger">
+            * Note: Your data is not accessible on other devices and you can't manage full account.
+          </el-tag>
+          <br>
           <router-link to="/signup">
-            <span class="primary--text">
-              registered users!
-            </span>
+            <el-button type="text" class="primary--text">Register</el-button>
           </router-link>
         </p>
-        <p class="error--text">* Attention, your items in shopping cart may be lost if you click logout!</p>
       </div>
     </div>
   </div>
@@ -70,9 +74,6 @@ export default {
   computed: {
     user () {
       return this.$store.getters.user
-    },
-    userOrders () {
-      return this.$store.getters.orders
     }
   }
 }
