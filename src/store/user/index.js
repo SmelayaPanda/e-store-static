@@ -135,11 +135,11 @@ export default {
         commit('setAdmin', payload)
       },
     logout:
-      ({dispatch}) => {
+      ({commit, dispatch}) => {
         dispatch('signInAnonymously')
           .then(() => {
             router.push('/')
-            window.location.reload()
+            commit('setChatMessages', [])
           })
           .catch(err => {
             console.log(err)
