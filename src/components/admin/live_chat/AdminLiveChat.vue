@@ -1,33 +1,59 @@
 <template>
   <div>
     <el-row type="flex" justify="left" style="flex-wrap: wrap">
-      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2 mt-2">
-        <h2 class="mb-2 mt-1">Live Chat Users</h2>
-        <el-card v-for="(chat, chatId) of allChats" :key="chatId">
-          <el-button type="text" @click="openChat(chatId)">
-            {{ chat.props.userEmail ? ( chat.props.userEmail ) : `Anonymous ( ${chatId.substring(0, 5)} )` }}
-          </el-button>
-        </el-card>
+      <!--ALL USERS-->
+      <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8"
+              class="pl-2 pr-2 mt-2">
+        <v-card>
+          <v-card-title class="event_header primary white--text">
+            <h3 class="pl-3 white--text">
+              Live chat users
+            </h3>
+          </v-card-title>
+          <v-card>
+            <div id="chat_users" ref="chatUsers">
+              <div v-for="(chat, id) of allChats"
+                   :key="id"
+                   :class="chatId === id ? 'primary' : ''">
+                <el-button type="text"
+                           :class="chatId === id ? 'white--text' : ''"
+                           @click="openChat(id)">
+                  {{ chat.props.userEmail ? ( chat.props.userEmail ) : `Anonymous ( ${id.substring(0, 5)} )` }}
+                </el-button>
+              </div>
+            </div>
+          </v-card>
+        </v-card>
       </el-col>
-      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2 mt-2"
-              v-if="userEvents"
-      >
-        <h2 class="mb-2 mt-1">User events</h2>
-        <el-card>
-          <div ref="userEvents" class="event_messages">
+      <!--USER EVENTS-->
+      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8"
+              class="pl-2 pr-2 mt-2"
+              v-if="userEvents">
+        <v-card>
+          <v-card-title class="event_header primary white--text">
+            <h3 class="pl-3 white--text">
+              User Events
+            </h3>
+          </v-card-title>
+          <div ref="userEvents" id="event_messages">
             <el-row v-for="(event, idx) in userEvents"
                     :key="idx"
                     justify="left">
               <el-col :span="6" class="info--text left pr-1">{{ new Date(event.date) | chatTime }}</el-col>
-              <el-col :span="18" align="left">{{ event.name }}</el-col>
+              <el-col :span="18" align="left" class="pb-2">{{ event.name }}</el-col>
             </el-row>
           </div>
-        </el-card>
+        </v-card>
       </el-col>
-      <live-chat :chatId="chatId"
-                 :isUserSide="false"
-                 :isCollapsed="false">
-      </live-chat>
+      <!--LIVE CHAT-->
+      <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8"
+              class="pl-2 pr-2 mt-2"
+              v-if="userEvents">
+        <live-chat :chatId="chatId"
+                   :isUserSide="false"
+                   :isCollapsed="false">
+        </live-chat>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -98,9 +124,20 @@ export default {
 </script>
 
 <style scoped>
-  .event_messages {
+  .event_header {
+    margin-bottom: 1px;
+    padding-bottom: 12px;
+  }
+
+  #event_messages {
     width: 100%;
-    height: 480px;
+    height: 420px;
+    overflow: scroll;
+  }
+
+  #chat_users {
+    width: 100%;
+    height: 420px;
     overflow: scroll;
   }
 </style>

@@ -17,11 +17,11 @@
         >
           <v-icon class="white--text">close</v-icon>
         </el-button>
-        <h3 class="ml-3 white--text">
+        <h3 class="pl-3 white--text">
           Live Chat
         </h3>
         <transition name="fade">
-            <span v-if="isUserSide ? isTypingAdmin : isTypingUser" class="ml-4 white--text">
+            <span v-if="isUserSide ? isTypingAdmin : isTypingUser" class="pl-4 white--text">
                 <span v-if="!isUserSide">User is typing</span>
                 <span v-if="isUserSide">Admin is typing</span>
                 ...<v-icon size="medium" class="pb-1 white--text">edit</v-icon>
@@ -30,7 +30,7 @@
       </v-card-title>
       <v-card-text ref="chatMessages" :class="isUserSide ? 'user_chat_messages' : 'admin_chat_messages'">
           <span v-if="Object.keys(chatMessages).length === 0">
-            <h2 class="mt-5 info--text">Have question?</h2>
+            <h2 class="pt-5 info--text">Have question?</h2>
           </span>
         <div v-for="(chat, key) in chatMessages"
              :key="key">
@@ -201,7 +201,7 @@ export default {
 
   .admin_chat_messages {
     width: 100%;
-    height: 420px;
+    height: 326px;
     overflow: scroll;
   }
 
