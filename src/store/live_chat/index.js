@@ -4,12 +4,12 @@ export default {
   state: {
     chat: {
       props: {
-        isOnlineUser: false, // handle it (delete chat if user is offline)
-        isOnlineAdmin: false, // handle it
-        isTypingUser: false, // to 0 and 1 - firebase JSON
-        isTypingAdmin: false,
-        isCollapsedUser: true,
-        isCollapsedAdmin: true,
+        isOnlineUser: 0, // handle it (delete chat if user is offline)
+        isOnlineAdmin: 0, // handle it
+        isTypingUser: 0,
+        isTypingAdmin: 0,
+        isCollapsedUser: 1,
+        isCollapsedAdmin: 1,
         unreadByUser: 0,
         unreadByAdmin: 0,
         userEmail: null
@@ -103,10 +103,10 @@ export default {
             if (!data.val()) {
               console.log('New chat initialized!')
               return chatRef.child('props').set({
-                isTypingUser: false,
-                isTypingAdmin: false,
-                isCollapsedUser: true,
-                isCollapsedAdmin: true,
+                isTypingUser: 0,
+                isTypingAdmin: 0,
+                isCollapsedUser: 1,
+                isCollapsedAdmin: 1,
                 unreadByUser: 0,
                 unreadByAdmin: 0,
                 userEmail: payload.userEmail

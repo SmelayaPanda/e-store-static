@@ -129,14 +129,14 @@ export default {
       this.$store.dispatch('setChatProp', {
         chatId: this.chatId,
         props: this.isUserSide ? 'isTypingUser' : 'isTypingAdmin',
-        value: this.isTyping
+        value: this.isTyping ? 1 : 0
       })
     },
     setCollapse () {
       this.$store.dispatch('setChatProp', {
         chatId: this.chatId,
         props: this.isUserSide ? 'isCollapsedUser' : 'isCollapsedAdmin',
-        value: this.isCollapsedChat
+        value: this.isCollapsedChat ? 1 : 0
       })
     },
     setUnread (by, count) {

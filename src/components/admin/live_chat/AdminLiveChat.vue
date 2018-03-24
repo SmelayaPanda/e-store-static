@@ -94,7 +94,7 @@ export default {
         this.$store.dispatch('setChatProp', {
           chatId: this.chatId,
           props: 'isCollapsedAdmin',
-          value: true
+          value: 1
         })
         this.$store.dispatch('unsubscribeFromChat', this.chatId)
       }
@@ -102,7 +102,7 @@ export default {
       this.$store.dispatch('setChatProp', {
         chatId: chatId,
         props: 'isCollapsedAdmin',
-        value: false
+        value: 0
       })
       this.$store.dispatch('setChatProp', {
         chatId: chatId,
