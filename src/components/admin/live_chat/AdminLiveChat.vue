@@ -15,6 +15,9 @@
               <div v-for="(chat, id) of liveChats"
                    :key="id"
                    :class="chatId === id ? 'primary' : ''">
+                <span v-if="chat.props.isTypingUser">
+                  ...<v-icon size="small" class="primary--text">edit</v-icon>
+                </span>
                 <el-button type="text"
                            :class="chatId === id ? 'white--text' : ''"
                            @click="openChat(id)">

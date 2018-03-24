@@ -120,9 +120,7 @@ export default {
             })
           })
           .then(() => {
-            firebase.database().ref(`liveChats/${userId}/props`).update({
-              userEmail: payload.email
-            })
+            return firebase.database().ref(`liveChats/${userId}/props`).update({userEmail: payload.email})
           })
           .then(() => {
             console.log('Live chat email updated', payload.email)
