@@ -4,12 +4,15 @@
            v-if="isCollapsedChat"
            @click="openChat"
     >
-      <v-icon>chat</v-icon>
+      <v-icon v-if="isUserSide && !unreadByUser">chat</v-icon>
+      <v-icon v-if="!isUserSide && !unreadByAdmin">chat</v-icon>
+      <h2 v-if="isUserSide && unreadByUser"> +{{ unreadByUser }}</h2>
+      <h2 v-if="!isUserSide && unreadByAdmin"> +{{ unreadByAdmin }}</h2>
     </v-btn>
     <v-card v-if="!isCollapsedChat" class="live_chat">
       <v-card-title class="chat_header primary">
-        <el-button type="text" class="right"
-                   style="margin: 0; padding: 0;"
+        <el-button type="text"
+                   class="closeChat"
                    @click="closeChat"
         >
           <v-icon class="white--text">close</v-icon>
@@ -33,7 +36,7 @@
              :key="key"
         >
           <el-row>
-            <el-col :span="24" class="info--text" style="font-size: 10px">
+            <el-col :span="24" class="info--text chat_msg_meta">
                 <span :class="chat.creator ? 'left' : 'right'">
                 {{chat.creator ? 'You' : 'ReHigh' }}:
                 {{ new Date(chat.date) | chatTime }}
@@ -43,8 +46,7 @@
           <el-row :class="chat.creator ? 'left' : 'right'">
             <el-col :span="24">
               <p :class="chat.creator ? 'pr-4 primary--text' : 'pl-4 success--text'"
-                 style="white-space: pre-wrap; text-align: left"
-              >{{ chat.msg }}</p>
+                 class="chat_msg">{{ chat.msg }}</p>
             </el-col>
           </el-row>
         </div>
@@ -86,6 +88,7 @@ export default {
     openChat () {
       this.isCollapsedChat = false
       this.setCollapse()
+      this.setUnread(this.isUserSide ? 'unreadByUser' : 'unreadByAdmin', 0)
       this.$nextTick(function () {
         this.scrollToBottom()
       })
@@ -108,6 +111,11 @@ export default {
               this.scrollToBottom()
             })
           })
+      }
+      if (this.isCollapsedUser && !this.isUserSide) { // message from admin
+        this.setUnread('unreadByUser', this.unreadByUser + 1)
+      } else if (this.isCollapsedAdmin && this.isUserSide) { // message from user
+        this.setUnread('unreadByAdmin', this.unreadByAdmin + 1)
       }
     },
     detectTyping () {
@@ -132,6 +140,13 @@ export default {
         value: this.isCollapsedChat
       })
     },
+    setUnread (by, count) {
+      this.$store.dispatch('setChatProp', {
+        chatId: this.chatId,
+        props: by,
+        value: count
+      })
+    },
     scrollToBottom () {
       if (this.$refs.chatMessages) {
         let chat = this.$refs.chatMessages
@@ -154,6 +169,12 @@ export default {
     },
     isCollapsedAdmin () {
       return this.$store.getters.chatPropByName('isCollapsedAdmin')
+    },
+    unreadByUser () {
+      return this.$store.getters.chatPropByName('unreadByUser')
+    },
+    unreadByAdmin () {
+      return this.$store.getters.chatPropByName('unreadByAdmin')
     }
   },
   watch: {
@@ -230,5 +251,19 @@ export default {
     100% {
       transform: scale(1);
     }
+  }
+
+  .closeChat {
+    margin: 0;
+    padding: 0;
+  }
+
+  .chat_msg_meta {
+    font-size: 10px
+  }
+
+  .chat_msg {
+    white-space: pre-wrap;
+    text-align: left;
   }
 </style>

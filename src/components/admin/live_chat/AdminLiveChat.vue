@@ -38,15 +38,24 @@ export default {
       this.$store.dispatch('fetchAllChats')
     },
     openChat (chatId) {
-      console.log('Close ' + this.chatId)
+      // CLOSE OLD CHAT
+      if (this.chatId && this.chatId !== chatId) {
+        this.$store.dispatch('setChatProp', {
+          chatId: this.chatId,
+          props: 'isCollapsedAdmin',
+          value: true
+        })
+        console.log(`Chat ${this.chatId} closed`)
+      }
+      // OPEN NEW CHAT
       this.$store.dispatch('setChatProp', {
-        chatId: this.chatId,
+        chatId: chatId,
         props: 'isCollapsedAdmin',
-        value: true
+        value: false
       })
-      console.log('Open ' + chatId)
       this.$store.dispatch('initializeChat', {chatId: chatId})
       this.chatId = chatId
+      console.log(`Chat ${chatId} opened`)
     }
   },
   computed: {

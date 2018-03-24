@@ -15,7 +15,7 @@ export default {
       messages: []
     },
     allChats: {} // for admin
-    // msgId: { msg: [], date: "", creator: 1/0 }
+    // chatId -> msgId: { msg: "", date: "", creator: 1/0 }
     //
     // 1. chatId equals to userId
     // 2. creator: 1 - user, 0 - admin
@@ -48,6 +48,8 @@ export default {
                 isTypingAdmin: false,
                 isCollapsedUser: true,
                 isCollapsedAdmin: true,
+                unreadByUser: 0,
+                unreadByAdmin: 0,
                 userEmail: payload.userEmail
               })
             } else { // update chat for admin
