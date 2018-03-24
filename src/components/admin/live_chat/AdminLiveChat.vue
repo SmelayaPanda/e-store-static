@@ -19,6 +19,15 @@
                            :class="chatId === id ? 'white--text' : ''"
                            @click="openChat(id)">
                   {{ chat.props.userEmail ? ( chat.props.userEmail ) : `Anonymous ( ${id.substring(0, 5)} )` }}
+                  <el-tag size="mini"
+                          :type="chatId === id ? '' : 'success'">
+                    {{ chat.props.unreadByAdmin }}
+                  </el-tag>
+                  <span :class="chatId === id ? 'primary--text' : 'info--text'">/</span>
+                  <el-tag size="mini"
+                          :type="chatId === id ? '' : 'info'">
+                    {{ Object.keys(chat.events).length }}
+                  </el-tag>
                 </el-button>
               </div>
             </div>
@@ -74,6 +83,7 @@ export default {
   methods: {
     fetchAllChats () {
       this.$store.dispatch('fetchAllChats')
+      this.$store.dispatch('subscribeToAllChats')
     },
     openChat (chatId) {
       // CLOSE OLD CHAT
@@ -90,6 +100,11 @@ export default {
         chatId: chatId,
         props: 'isCollapsedAdmin',
         value: false
+      })
+      this.$store.dispatch('setChatProp', {
+        chatId: chatId,
+        props: 'unreadByAdmin',
+        value: 0
       })
       this.$store.dispatch('initializeChat', {chatId: chatId})
       this.chatId = chatId

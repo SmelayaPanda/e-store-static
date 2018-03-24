@@ -43,6 +43,24 @@ export default {
       }
   },
   actions: {
+    fetchAllChats: // for admin
+      ({commit}) => {
+        firebase.database().ref('liveChats').once('value')
+          .then(snapshot => {
+            commit('setLiveChats', snapshot.val())
+            console.log('Fetched: live chat messages')
+          })
+          .catch(err => console.log(err))
+      },
+    subscribeToAllChats: // for admin
+      ({commit, getters}) => {
+        firebase.database().ref('liveChats').on('child_changed',
+          data => {
+            let liveChats = {...getters.liveChats}
+            liveChats[data.key] = data.val()
+            commit('setLiveChats', liveChats)
+          })
+      },
     subscribeToChat:
       ({commit, getters}, payload) => {
         let chatRef = firebase.database().ref('liveChats/' + payload)
@@ -140,15 +158,6 @@ export default {
               propName: payload.props,
               propValue: payload.value
             })
-          })
-          .catch(err => console.log(err))
-      },
-    fetchAllChats:
-      ({commit}) => {
-        firebase.database().ref('liveChats').once('value')
-          .then(snapshot => {
-            commit('setLiveChats', snapshot.val())
-            console.log('Fetched: live chat messages')
           })
           .catch(err => console.log(err))
       }
