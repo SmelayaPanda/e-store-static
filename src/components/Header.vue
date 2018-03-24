@@ -54,7 +54,10 @@
     </v-navigation-drawer>
     <!--LIVE CHAT-->
     <div v-if="this.$store.getters.user">
-      <live-chat :chatId="this.$store.getters.user.uid" :isUserSide="true"></live-chat>
+      <live-chat :chatId="this.$store.getters.user.uid"
+                 :isUserSide="true"
+                 :isCollapsed="true"
+      ></live-chat>
     </div>
   </div>
 </template>

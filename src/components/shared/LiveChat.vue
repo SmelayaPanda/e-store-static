@@ -10,7 +10,7 @@
       <v-card-title class="chat_header primary">
         <el-button type="text" class="right"
                    style="margin: 0; padding: 0;"
-                   @click="isCollapsedChat = true"
+                   @click="closeChat"
         >
           <v-icon class="white--text">close</v-icon>
         </el-button>
@@ -73,21 +73,26 @@ import chatTime from '@/filters/chatTime'
 export default {
   name: 'LiveChat',
   // isUserSide === false -> admin
-  props: ['chatId', 'isUserSide'],
+  props: ['chatId', 'isUserSide', 'isCollapsed'],
   data () {
     return {
       msg: '',
       isTyping: false,
-      isCollapsedChat: this.isUserSide
+      isCollapsedChat: this.isCollapsed
     }
   },
   filters: {chatTime},
   methods: {
     openChat () {
       this.isCollapsedChat = false
+      this.setCollapse()
       this.$nextTick(function () {
         this.scrollToBottom()
       })
+    },
+    closeChat () {
+      this.isCollapsedChat = true
+      this.setCollapse()
     },
     sendChatMessage () {
       if (this.msg.trim()) {
@@ -114,10 +119,17 @@ export default {
       }, 4000)
     },
     setTyping () {
-      this.$store.dispatch('setTyping', {
+      this.$store.dispatch('setChatProp', {
         chatId: this.chatId,
-        whoTyping: this.isUserSide ? 'isTypingUser' : 'isTypingAdmin',
+        props: this.isUserSide ? 'isTypingUser' : 'isTypingAdmin',
         value: this.isTyping
+      })
+    },
+    setCollapse () {
+      this.$store.dispatch('setChatProp', {
+        chatId: this.chatId,
+        props: this.isUserSide ? 'isCollapsedUser' : 'isCollapsedAdmin',
+        value: this.isCollapsedChat
       })
     },
     scrollToBottom () {
@@ -132,10 +144,16 @@ export default {
       return this.$store.getters.chatMessages
     },
     isTypingUser () {
-      return this.$store.getters.isTypingUser
+      return this.$store.getters.chatPropByName('isTypingUser')
     },
     isTypingAdmin () {
-      return this.$store.getters.isTypingAdmin
+      return this.$store.getters.chatPropByName('isTypingAdmin')
+    },
+    isCollapsedUser () {
+      return this.$store.getters.chatPropByName('isCollapsedUser')
+    },
+    isCollapsedAdmin () {
+      return this.$store.getters.chatPropByName('isCollapsedAdmin')
     }
   },
   watch: {

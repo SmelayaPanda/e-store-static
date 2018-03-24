@@ -1,15 +1,15 @@
 <template>
   <div align="left">
-    <el-button type="text" @click="isCollapse = !isCollapse" class="mt-2 ml-3 pl-1">
-      <v-icon v-if="isCollapse">hdr_strong</v-icon>
-      <v-icon v-if="!isCollapse">hdr_weak</v-icon>
+    <el-button type="text" @click="isCollapsed = !isCollapsed" class="mt-2 ml-3 pl-1">
+      <v-icon v-if="isCollapsed">hdr_strong</v-icon>
+      <v-icon v-if="!isCollapsed">hdr_weak</v-icon>
     </el-button>
     <el-menu
       :default-active="this.$router.history.current.fullPath"
       class="el-menu-vertical-demo"
       @open="handleOpen"
       @close="handleClose"
-      :collapse="isCollapse"
+      :collapse="isCollapsed"
       :router="true"
     >
       <el-menu-item index="/admin" route="/admin">
@@ -64,7 +64,7 @@ export default {
   },
   data () {
     return {
-      isCollapse: false
+      isCollapsed: false
     }
   },
   methods: {

@@ -6,6 +6,10 @@ export default {
       props: {
         isTypingUser: false,
         isTypingAdmin: false,
+        isCollapsedUser: true,
+        isCollapsedAdmin: true,
+        unreadByUser: 0,
+        unreadByAdmin: 0,
         userEmail: null
       },
       messages: []
@@ -26,19 +30,15 @@ export default {
       (state, payload) => {
         state.chat.messages = payload
       },
-    isTypingUser:
+    setChatProp:
       (state, payload) => {
-        state.chat.props.isTypingUser = payload
-      },
-    isTypingAdmin:
-      (state, payload) => {
-        state.chat.props.isTypingAdmin = payload
+        state.chat.props[payload.propName] = payload.propValue
       }
   },
   actions: {
     initializeChat:
       ({commit, getters, dispatch}, payload) => {
-        let chatRef = firebase.database().ref('liveChat/' + payload.chatId)
+        let chatRef = firebase.database().ref('liveChats/' + payload.chatId)
         chatRef.once('value')
           .then(data => {
             if (!data.val()) {
@@ -46,10 +46,12 @@ export default {
               return chatRef.child('props').set({
                 isTypingUser: false,
                 isTypingAdmin: false,
+                isCollapsedUser: true,
+                isCollapsedAdmin: true,
                 userEmail: payload.userEmail
               })
             } else { // update chat for admin
-              commit('setChatMessages', data.val().messages)
+              commit('setChatMessages', data.val().messages ? data.val().messages : [])
             }
           })
           .then(() => {
@@ -62,7 +64,10 @@ export default {
               }
             })
             chatRef.child('props').on('child_changed', data => {
-              commit(data.key, data.val())
+              commit('setChatProp', {
+                propName: data.key,
+                propValue: data.val()
+              })
             })
           })
           .catch(err => console.log(err))
@@ -74,7 +79,7 @@ export default {
           creator: payload.creator,
           date: new Date().getTime()
         }
-        firebase.database().ref(`liveChat/${payload.chatId}/messages`).push(newMsg)
+        firebase.database().ref(`liveChats/${payload.chatId}/messages`).push(newMsg)
           .then((data) => {
             let chatMessages = {...getters.chatMessages}
             chatMessages[data.key] = newMsg
@@ -82,20 +87,23 @@ export default {
           })
           .catch(err => console.log(err))
       },
-    setTyping:
+    setChatProp:
       ({commit, getters}, payload) => {
-        firebase.database().ref(`liveChat/${payload.chatId}/props`)
+        firebase.database().ref(`liveChats/${payload.chatId}/props`)
           .update({
-            [payload.whoTyping]: payload.value
+            [payload.props]: payload.value
           })
           .then(() => {
-            commit(payload.whoTyping, payload.value)
+            commit('setChatProp', {
+              propName: payload.props,
+              propValue: payload.value
+            })
           })
           .catch(err => console.log(err))
       },
     fetchAllChats:
       ({commit}) => {
-        firebase.database().ref('liveChat').once('value')
+        firebase.database().ref('liveChats').once('value')
           .then(snapshot => {
             commit('setAllChats', snapshot.val())
             console.log('Fetched: live chat messages')
@@ -108,13 +116,9 @@ export default {
       state => {
         return state.chat.messages
       },
-    isTypingUser:
-      state => {
-        return state.chat.props.isTypingUser
-      },
-    isTypingAdmin:
-      state => {
-        return state.chat.props.isTypingAdmin
+    chatPropByName:
+      state => (name) => {
+        return state.chat.props[name]
       },
     allChats:
       state => {

@@ -173,7 +173,7 @@ export default {
           })
           .then(() => {
             commit('LOADING', false)
-            window.location.reload() // TODO: ?
+            window.location.reload() // TODO: fix it
           })
           .catch(err => {
             console.log(err)
@@ -209,7 +209,7 @@ export default {
         return Promise.all(actions)
           .then(() => {
             commit('LOADING', false)
-            window.location.reload() // TODO: ?
+            window.location.reload() // TODO: fix it
           })
           .catch((error) => {
             console.log(error)
@@ -239,7 +239,7 @@ export default {
           .then(() => {
             console.log('Product was removed')
             commit('LOADING', false)
-            window.location.reload()
+            window.location.reload() // TODO: fix it!
           })
           .catch(err => {
             console.log(err)

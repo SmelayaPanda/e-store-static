@@ -140,7 +140,7 @@ export default {
     goHome:
         function () {
           this.$router.push('/')
-          window.location.reload()
+          window.location.reload() // TODO: fix it
         },
     onDismissed:
         function () {

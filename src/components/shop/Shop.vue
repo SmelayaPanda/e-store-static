@@ -2,13 +2,13 @@
   <div>
     <el-row type="flex" justify="left" style="flex-wrap: wrap">
       <el-col :xs="24" :sm="6" :md="5" :lg="4" :xl="4" align="left">
-        <el-button type="text" @click="isCollapse = !isCollapse" class="mt-2 ml-3 pl-1">
-          <v-icon v-if="isCollapse">hdr_strong</v-icon>
-          <v-icon v-if="!isCollapse">hdr_weak</v-icon>
+        <el-button type="text" @click="isCollapsed = !isCollapsed" class="mt-2 ml-3 pl-1">
+          <v-icon v-if="isCollapsed">hdr_strong</v-icon>
+          <v-icon v-if="!isCollapsed">hdr_weak</v-icon>
         </el-button>
         <el-menu :default-active="selectedCategory"
                  @select="changeCategory"
-                 :collapse="isCollapse">
+                 :collapse="isCollapsed">
           <!--Nav Menu-->
           <el-menu-item index="" @click="filterProducts">
             <v-icon class="pr-2">select_all</v-icon>
@@ -180,7 +180,7 @@ export default {
       selectedGroup: this.$store.getters.productFilters.group,
       selectedCategory: this.$store.getters.productFilters.category,
       formLabelWidth: '120px',
-      isCollapse: true,
+      isCollapsed: true,
       activeName:
           this.$store.getters.productFilters.brand === '' &&
           this.$store.getters.productFilters.color === '' &&

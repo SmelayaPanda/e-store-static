@@ -12,7 +12,9 @@
       <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2 mt-2"
               v-if="chatId"
       >
-        <live-chat :chatId="chatId" :isUserSide="false"></live-chat>
+        <live-chat :chatId="chatId"
+                   :isUserSide="false"
+                   :isCollapsed="false"></live-chat>
       </el-col>
     </el-row>
   </div>
@@ -36,6 +38,12 @@ export default {
       this.$store.dispatch('fetchAllChats')
     },
     openChat (chatId) {
+      console.log('Close ' + this.chatId)
+      this.$store.dispatch('setChatProp', {
+        chatId: this.chatId,
+        props: 'isCollapsedAdmin',
+        value: true
+      })
       console.log('Open ' + chatId)
       this.$store.dispatch('initializeChat', {chatId: chatId})
       this.chatId = chatId
