@@ -12,7 +12,7 @@
           </v-card-title>
           <v-card>
             <div id="chat_users" ref="chatUsers">
-              <div v-for="(chat, id) of allChats"
+              <div v-for="(chat, id) of liveChats"
                    :key="id"
                    :class="chatId === id ? 'primary' : ''">
                 <el-button type="text"
@@ -83,7 +83,7 @@ export default {
           props: 'isCollapsedAdmin',
           value: true
         })
-        console.log(`Chat ${this.chatId} closed`)
+        this.$store.dispatch('unsubscribeFromChat', this.chatId)
       }
       // OPEN NEW CHAT
       this.$store.dispatch('setChatProp', {
@@ -93,7 +93,6 @@ export default {
       })
       this.$store.dispatch('initializeChat', {chatId: chatId})
       this.chatId = chatId
-      console.log(`Chat ${chatId} opened`)
     },
     scrollEventsToBottom () {
       if (this.$refs.userEvents) {
@@ -103,8 +102,8 @@ export default {
     }
   },
   computed: {
-    allChats () {
-      return this.$store.getters.allChats
+    liveChats () {
+      return this.$store.getters.liveChats
     },
     userEvents () {
       return this.$store.getters.userEvents

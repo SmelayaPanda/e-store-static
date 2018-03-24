@@ -17,7 +17,7 @@ export default {
       messages: [],
       events: [] // user action on site
     },
-    allChats: {} // for admin
+    liveChats: {} // for admin
     // chatId -> msgId: { msg: "", date: "", creator: 1/0 }
     //
     // 1. chatId equals to userId
@@ -25,9 +25,9 @@ export default {
     // 3. date in timestamp format ( new Date().getTime() )
   },
   mutations: {
-    setAllChats:
+    setLiveChats:
       (state, payload) => {
-        state.allChats = payload
+        state.liveChats = payload
       },
     setChatMessages:
       (state, payload) => {
@@ -43,6 +43,37 @@ export default {
       }
   },
   actions: {
+    subscribeToChat:
+      ({commit, getters}, payload) => {
+        let chatRef = firebase.database().ref('liveChats/' + payload)
+        chatRef.child('messages').on('child_added', data => {
+          if (data.val()) {
+            let chatMessages = {...getters.chatMessages}
+            chatMessages[data.key] = data.val()
+            commit('setChatMessages', chatMessages)
+          }
+        })
+        chatRef.child('events').on('child_added', data => {
+          if (data.val()) {
+            let userEvents = {...getters.userEvents}
+            userEvents[data.key] = data.val()
+            commit('setUserEvents', userEvents)
+          }
+        })
+        chatRef.child('props').on('child_changed', data => {
+          commit('setChatProp', {
+            propName: data.key,
+            propValue: data.val()
+          })
+        })
+      },
+    unsubscribeFromChat:
+      ({commit, getters}, payload) => {
+        let chatRef = firebase.database().ref('liveChats/' + payload)
+        chatRef.child('messages').off()
+        chatRef.child('events').off()
+        chatRef.child('props').off()
+      },
     initializeChat:
       ({commit, getters, dispatch}, payload) => {
         let chatRef = firebase.database().ref('liveChats/' + payload.chatId)
@@ -59,33 +90,13 @@ export default {
                 unreadByAdmin: 0,
                 userEmail: payload.userEmail
               })
-            } else { // update chat for admin
+            } else { // load chat data
               commit('setChatMessages', data.val().messages ? data.val().messages : [])
               commit('setUserEvents', data.val().events ? data.val().events : [])
             }
           })
           .then(() => {
-            // TODO: detach from on (off) when user offline
-            chatRef.child('messages').on('child_added', data => {
-              if (data.val()) {
-                let chatMessages = {...getters.chatMessages}
-                chatMessages[data.key] = data.val()
-                commit('setChatMessages', chatMessages)
-              }
-            })
-            chatRef.child('events').on('child_added', data => {
-              if (data.val()) {
-                let userEvents = {...getters.userEvents}
-                userEvents[data.key] = data.val()
-                commit('setUserEvents', userEvents)
-              }
-            })
-            chatRef.child('props').on('child_changed', data => {
-              commit('setChatProp', {
-                propName: data.key,
-                propValue: data.val()
-              })
-            })
+            dispatch('subscribeToChat', payload.chatId)
           })
           .catch(err => console.log(err))
       },
@@ -136,7 +147,7 @@ export default {
       ({commit}) => {
         firebase.database().ref('liveChats').once('value')
           .then(snapshot => {
-            commit('setAllChats', snapshot.val())
+            commit('setLiveChats', snapshot.val())
             console.log('Fetched: live chat messages')
           })
           .catch(err => console.log(err))
@@ -155,9 +166,9 @@ export default {
       state => (name) => {
         return state.chat.props[name]
       },
-    allChats:
+    liveChats:
       state => {
-        return state.allChats
+        return state.liveChats
       }
   }
 }
