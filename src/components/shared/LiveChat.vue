@@ -9,7 +9,7 @@
       <h2 v-if="isUserSide && unreadByUser"> +{{ unreadByUser }}</h2>
       <h2 v-if="!isUserSide && unreadByAdmin"> +{{ unreadByAdmin }}</h2>
     </v-btn>
-    <v-card v-if="!isCollapsedChat" class="live_chat">
+    <v-card v-if="!isCollapsedChat" :class="isUserSide ? 'user_live_chat' : 'admin_live_chat'">
       <v-card-title class="chat_header primary">
         <el-button type="text"
                    class="closeChat"
@@ -28,13 +28,12 @@
             </span>
         </transition>
       </v-card-title>
-      <v-card-text ref="chatMessages" class="chat_messages">
+      <v-card-text ref="chatMessages" :class="isUserSide ? 'user_chat_messages' : 'admin_chat_messages'">
           <span v-if="Object.keys(chatMessages).length === 0">
             <h2 class="mt-5 info--text">Have question?</h2>
           </span>
         <div v-for="(chat, key) in chatMessages"
-             :key="key"
-        >
+             :key="key">
           <el-row>
             <el-col :span="24" class="info--text chat_msg_meta">
                 <span :class="chat.creator ? 'left' : 'right'">
@@ -190,21 +189,32 @@ export default {
     padding-bottom: 12px;
   }
 
-  .chat_messages {
+  .chat_input {
+    padding: 5px;
+  }
+
+  .user_chat_messages {
     width: 100%;
     height: 280px;
     overflow: scroll;
   }
 
-  .chat_input {
-    padding: 5px;
+  .admin_chat_messages {
+    width: 100%;
+    height: 420px;
+    overflow: scroll;
   }
 
-  .live_chat {
+  .user_live_chat {
     position: fixed;
     bottom: 30px;
     right: 40px;
     width: 320px;
+    height: 400px;
+    z-index: 10000;
+  }
+
+  .admin_live_chat {
     height: 400px;
     z-index: 10000;
   }

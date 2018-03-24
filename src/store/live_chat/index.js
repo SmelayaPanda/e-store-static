@@ -104,13 +104,13 @@ export default {
           })
           .catch(err => console.log(err))
       },
-    updateUserEvents:
+    USER_EVENT:
       ({commit, getters}, payload) => {
         let newEvent = {
-          name: payload.event,
+          name: payload,
           date: new Date().getTime()
         }
-        firebase.database().ref(`liveChats/${payload.chatId}/events`).push(newEvent)
+        firebase.database().ref(`liveChats/${getters.user.uid}/events`).push(newEvent)
           .then((data) => {
             let userEvents = {...getters.userEvents}
             userEvents[data.key] = newEvent

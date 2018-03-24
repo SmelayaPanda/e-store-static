@@ -43,7 +43,7 @@
             >
               One Click!
             </el-button>
-            <el-button @click="dialogVisible = false">Cancel</el-button>
+            <el-button @click="closeOneClick">Cancel</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -97,13 +97,15 @@ export default {
   },
   methods: {
     buyOneClick () {
-      this.$store.dispatch('updateUserEvents', {
-        event: `User click by one click`,
-        chatId: this.$store.getters.user.uid
-      })
+      this.$store.dispatch('USER_EVENT', 'Click By one click last product')
       this.dialogVisible = true
     },
+    closeOneClick () {
+      this.dialogVisible = false
+      this.$store.dispatch('USER_EVENT', 'Close one click')
+    },
     submitForm () {
+      this.$store.dispatch('USER_EVENT', 'One click submit! Bingo!')
       this.dialogVisible = false
       axios.post('https://us-central1-e-store-dev.cloudfunctions.net/oneClickNotification', {
         nickname: this.oneClickForm.nickname,

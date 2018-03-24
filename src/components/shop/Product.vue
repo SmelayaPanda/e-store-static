@@ -130,13 +130,11 @@ export default {
   },
   methods: {
     addToCart () {
-      this.$store.dispatch('updateUserEvents', {
-        event: `User add to cart this products`,
-        chatId: this.$store.getters.user.uid
-      })
+      this.$store.dispatch('USER_EVENT', 'Add to cart last product')
       this.$store.dispatch('updateCart', {operation: 'add', productId: this.id})
     },
     removeFromCart () {
+      this.$store.dispatch('USER_EVENT', 'Remove from cart last product')
       this.$store.dispatch('updateCart', {operation: 'remove', productId: this.id})
     },
     loadOriginal (name) {

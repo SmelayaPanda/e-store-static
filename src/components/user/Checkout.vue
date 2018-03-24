@@ -2,7 +2,7 @@
   <span style="text-align: center">
     <el-button size="small"
                type="primary"
-               @click="dialogFormVisible = true">
+               @click="clickBuy">
       {{ btnName }}
     </el-button>
     <el-dialog title="CHECKOUT"
@@ -322,14 +322,20 @@ export default {
     }
   },
   methods: {
+    clickBuy () {
+      this.dialogFormVisible = true
+      this.$store.dispatch('USER_EVENT', 'Click buy!')
+    },
     nextStep () {
       if (this.activeStep < 4) {
         this.activeStep++
       }
+      this.$store.dispatch('USER_EVENT', `Step: ${this.activeStep}`)
     },
     prevStep () {
       if (this.activeStep > 1) {
         this.activeStep--
+        this.$store.dispatch('USER_EVENT', `Step: ${this.activeStep}`)
       }
     },
     isValidEmail () {
@@ -339,6 +345,7 @@ export default {
       return this.form_1.phone.replace(/[^0-9]/g, '').length === 11
     },
     checkout () {
+      this.$store.dispatch('USER_EVENT', 'Checkout click! Bingo!')
       this.orderIsProcessed = true
       let lightProducts = []
       for (let p of this.orderProducts) {

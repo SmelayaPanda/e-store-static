@@ -190,17 +190,16 @@ export default {
   },
   methods: {
     sortByPrice () {
+      this.$store.dispatch('USER_EVENT', 'Sort by price')
       this.sortAsc = !this.sortAsc
       this.filterProducts()
     },
     viewProduct (id, title) {
-      this.$store.dispatch('updateUserEvents', {
-        event: `User watch product: ${title}`,
-        chatId: this.$store.getters.user.uid
-      })
+      this.$store.dispatch('USER_EVENT', `Watch product: ${title}`)
       this.$router.push('/product/' + id)
     },
     changeCategory (key) {
+      this.$store.dispatch('USER_EVENT', `Change category to ${key}`)
       let groupList = ['Group A', 'Group B', '...']
       if (groupList.indexOf(key) !== -1) {
         this.selectedGroup = key
@@ -215,6 +214,7 @@ export default {
       this.filter()
     },
     loadMore () {
+      this.$store.dispatch('USER_EVENT', 'Load more')
       this.filter()
     },
     filter () {
@@ -231,6 +231,7 @@ export default {
       return this.$store.dispatch('fetchProducts')
     },
     algoliaSearch () {
+      this.$store.dispatch('USER_EVENT', `Algolia search word: "${this.algoliaSearchText}"`)
       this.$store.dispatch('algoliaSearch', this.algoliaSearchText)
     }
   },

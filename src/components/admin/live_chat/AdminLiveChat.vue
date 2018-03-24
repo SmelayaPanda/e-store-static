@@ -2,7 +2,7 @@
   <div>
     <el-row type="flex" justify="left" style="flex-wrap: wrap">
       <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2 mt-2">
-        <h2 class="mb-2">Live Chat Rooms</h2>
+        <h2 class="mb-2 mt-1">Live Chat Users</h2>
         <el-card v-for="(chat, chatId) of allChats" :key="chatId">
           <el-button type="text" @click="openChat(chatId)">
             {{ chat.props.userEmail ? ( chat.props.userEmail ) : `Anonymous ( ${chatId.substring(0, 5)} )` }}
@@ -12,13 +12,16 @@
       <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2 mt-2"
               v-if="userEvents"
       >
-        <h2 class="mb-2">User events</h2>
-        <el-card v-for="(event, idx) in userEvents"
-                 :key="idx"
-                 :body-style="{ paddingBottom: '7px', paddingTop: '7px' }"
-        >
-          <el-tag type="info" class="left mr-3 mt-1">{{ new Date(event.date) | chatTime }}</el-tag>
-          <p align="left">{{ event.name }}</p>
+        <h2 class="mb-2 mt-1">User events</h2>
+        <el-card>
+          <div ref="userEvents" class="event_messages">
+            <el-row v-for="(event, idx) in userEvents"
+                    :key="idx"
+                    justify="left">
+              <el-col :span="6" class="info--text left pr-1">{{ new Date(event.date) | chatTime }}</el-col>
+              <el-col :span="18" align="left">{{ event.name }}</el-col>
+            </el-row>
+          </div>
         </el-card>
       </el-col>
       <live-chat :chatId="chatId"
@@ -65,6 +68,12 @@ export default {
       this.$store.dispatch('initializeChat', {chatId: chatId})
       this.chatId = chatId
       console.log(`Chat ${chatId} opened`)
+    },
+    scrollEventsToBottom () {
+      if (this.$refs.userEvents) {
+        let events = this.$refs.userEvents
+        events.scrollTop = events.scrollHeight
+      }
     }
   },
   computed: {
@@ -75,6 +84,13 @@ export default {
       return this.$store.getters.userEvents
     }
   },
+  watch: {
+    userEvents () {
+      this.$nextTick(function () {
+        this.scrollEventsToBottom()
+      })
+    }
+  },
   created () {
     this.fetchAllChats()
   }
@@ -82,4 +98,9 @@ export default {
 </script>
 
 <style scoped>
+  .event_messages {
+    width: 100%;
+    height: 480px;
+    overflow: scroll;
+  }
 </style>
