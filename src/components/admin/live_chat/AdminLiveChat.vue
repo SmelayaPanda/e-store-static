@@ -10,12 +10,21 @@
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8" class="pl-2 pr-2 mt-2"
-              v-if="chatId"
+              v-if="userEvents"
       >
-        <live-chat :chatId="chatId"
-                   :isUserSide="false"
-                   :isCollapsed="false"></live-chat>
+        <h2 class="mb-2">User events</h2>
+        <el-card v-for="(event, idx) in userEvents"
+                 :key="idx"
+                 :body-style="{ paddingBottom: '7px', paddingTop: '7px' }"
+        >
+          <el-tag type="info" class="left mr-3 mt-1">{{ new Date(event.date) | chatTime }}</el-tag>
+          <p align="left">{{ event.name }}</p>
+        </el-card>
       </el-col>
+      <live-chat :chatId="chatId"
+                 :isUserSide="false"
+                 :isCollapsed="false">
+      </live-chat>
     </el-row>
   </div>
 </template>
@@ -61,6 +70,9 @@ export default {
   computed: {
     allChats () {
       return this.$store.getters.allChats
+    },
+    userEvents () {
+      return this.$store.getters.userEvents
     }
   },
   created () {
@@ -70,5 +82,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

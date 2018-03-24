@@ -97,6 +97,10 @@ export default {
   },
   methods: {
     buyOneClick () {
+      this.$store.dispatch('updateUserEvents', {
+        event: `User click by one click`,
+        chatId: this.$store.getters.user.uid
+      })
       this.dialogVisible = true
     },
     submitForm () {

@@ -133,7 +133,7 @@
           <el-col :xs="23" :sm="12" :md="8" :lg="8" :xl="8"
                   v-for="(p,key) in products" :key="key"
           >
-            <div @click="viewProduct(p.productId)" class="card_wrapper">
+            <div @click="viewProduct(p.productId, p.title)" class="card_wrapper">
               <v-card class="main_card" height="410px">
                 <v-card-media :src="p.img_0.card" height="300px"></v-card-media>
                 <v-card-title>
@@ -193,7 +193,11 @@ export default {
       this.sortAsc = !this.sortAsc
       this.filterProducts()
     },
-    viewProduct (id) {
+    viewProduct (id, title) {
+      this.$store.dispatch('updateUserEvents', {
+        event: `User watch product: ${title}`,
+        chatId: this.$store.getters.user.uid
+      })
       this.$router.push('/product/' + id)
     },
     changeCategory (key) {

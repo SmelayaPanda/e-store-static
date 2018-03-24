@@ -18,6 +18,7 @@ import 'swiper/dist/css/swiper.css'
 // FILTERS
 import DateFilter from './filters/date'
 import AdminDateFilter from './filters/admin_date'
+import ChatTimeFilter from './filters/chatTime'
 import Snippet from './filters/snippet'
 // MIXINS
 import {authMixin} from './mixins/autentication'
@@ -42,6 +43,7 @@ Vue.mixin(mailing)
 Vue.mixin(purchaseStatuses)
 Vue.filter('date', DateFilter)
 Vue.filter('admin_date', AdminDateFilter)
+Vue.filter('chatTime', ChatTimeFilter)
 Vue.filter('snippet', Snippet)
 Vue.component('masked-input', MaskedInput)
 Vue.component('app-alert', AlertComp)

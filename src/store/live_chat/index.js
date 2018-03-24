@@ -4,6 +4,8 @@ export default {
   state: {
     chat: {
       props: {
+        isOnlineUser: false, // handle it (delete chat if user is offline)
+        isOnlineAdmin: false, // handle it
         isTypingUser: false,
         isTypingAdmin: false,
         isCollapsedUser: true,
@@ -12,7 +14,8 @@ export default {
         unreadByAdmin: 0,
         userEmail: null
       },
-      messages: []
+      messages: [],
+      events: [] // user action on site
     },
     allChats: {} // for admin
     // chatId -> msgId: { msg: "", date: "", creator: 1/0 }
@@ -29,6 +32,10 @@ export default {
     setChatMessages:
       (state, payload) => {
         state.chat.messages = payload
+      },
+    setUserEvents:
+      (state, payload) => {
+        state.chat.events = payload
       },
     setChatProp:
       (state, payload) => {
@@ -54,6 +61,7 @@ export default {
               })
             } else { // update chat for admin
               commit('setChatMessages', data.val().messages ? data.val().messages : [])
+              commit('setUserEvents', data.val().events ? data.val().events : [])
             }
           })
           .then(() => {
@@ -63,6 +71,13 @@ export default {
                 let chatMessages = {...getters.chatMessages}
                 chatMessages[data.key] = data.val()
                 commit('setChatMessages', chatMessages)
+              }
+            })
+            chatRef.child('events').on('child_added', data => {
+              if (data.val()) {
+                let userEvents = {...getters.userEvents}
+                userEvents[data.key] = data.val()
+                commit('setUserEvents', userEvents)
               }
             })
             chatRef.child('props').on('child_changed', data => {
@@ -86,6 +101,20 @@ export default {
             let chatMessages = {...getters.chatMessages}
             chatMessages[data.key] = newMsg
             commit('setChatMessages', chatMessages)
+          })
+          .catch(err => console.log(err))
+      },
+    updateUserEvents:
+      ({commit, getters}, payload) => {
+        let newEvent = {
+          name: payload.event,
+          date: new Date().getTime()
+        }
+        firebase.database().ref(`liveChats/${payload.chatId}/events`).push(newEvent)
+          .then((data) => {
+            let userEvents = {...getters.userEvents}
+            userEvents[data.key] = newEvent
+            commit('setUserEvents', userEvents)
           })
           .catch(err => console.log(err))
       },
@@ -117,6 +146,10 @@ export default {
     chatMessages:
       state => {
         return state.chat.messages
+      },
+    userEvents:
+      state => {
+        return state.chat.events
       },
     chatPropByName:
       state => (name) => {

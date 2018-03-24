@@ -70,8 +70,6 @@
 </template>
 
 <script>
-import chatTime from '@/filters/chatTime'
-
 export default {
   name: 'LiveChat',
   // isUserSide === false -> admin
@@ -83,7 +81,6 @@ export default {
       isCollapsedChat: this.isCollapsed
     }
   },
-  filters: {chatTime},
   methods: {
     openChat () {
       this.isCollapsedChat = false
