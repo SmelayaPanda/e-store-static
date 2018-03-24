@@ -28,7 +28,9 @@
             </span>
         </transition>
       </v-card-title>
-      <v-card-text ref="chatMessages" :class="isUserSide ? 'user_chat_messages' : 'admin_chat_messages'">
+      <v-card-text v-if="chatMessages"
+                   ref="chatMessages"
+                   :class="isUserSide ? 'user_chat_messages' : 'admin_chat_messages'">
           <span v-if="Object.keys(chatMessages).length === 0">
             <h2 class="pt-5 info--text">Have question?</h2>
           </span>
@@ -37,7 +39,8 @@
           <el-row>
             <el-col :span="24" class="info--text chat_msg_meta">
                 <span :class="chat.creator ? 'left' : 'right'">
-                {{chat.creator ? 'You' : 'ReHigh' }}:
+                <span v-if="isUserSide">{{ chat.creator ? 'You' : 'ReHigh' }}:</span>
+                <span v-if="!isUserSide">{{ chat.creator ? 'User' : 'You' }}:</span>
                 {{ new Date(chat.date) | chatTime }}
                 </span>
             </el-col>

@@ -11,7 +11,7 @@
             </h3>
           </v-card-title>
           <v-card>
-            <div id="chat_users" ref="chatUsers">
+            <div id="chat_users" ref="chatUsers" v-if="liveChats">
               <div v-for="(chat, id) of liveChats"
                    :key="id"
                    :class="chatId === id ? 'primary' : ''">
@@ -26,7 +26,8 @@
                   <span :class="chatId === id ? 'primary--text' : 'info--text'">/</span>
                   <el-tag size="mini"
                           :type="chatId === id ? '' : 'info'">
-                    {{ Object.keys(chat.events).length }}
+                    <span v-if="chat.events">{{ Object.keys(chat.events).length }}</span>
+                    <span v-else>0</span>
                   </el-tag>
                 </el-button>
               </div>
@@ -83,7 +84,6 @@ export default {
   methods: {
     fetchAllChats () {
       this.$store.dispatch('fetchAllChats')
-      this.$store.dispatch('subscribeToAllChats')
     },
     openChat (chatId) {
       // CLOSE OLD CHAT

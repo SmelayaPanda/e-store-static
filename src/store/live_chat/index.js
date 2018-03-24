@@ -6,7 +6,7 @@ export default {
       props: {
         isOnlineUser: false, // handle it (delete chat if user is offline)
         isOnlineAdmin: false, // handle it
-        isTypingUser: false,
+        isTypingUser: false, // to 0 and 1 - firebase JSON
         isTypingAdmin: false,
         isCollapsedUser: true,
         isCollapsedAdmin: true,
@@ -14,8 +14,8 @@ export default {
         unreadByAdmin: 0,
         userEmail: null
       },
-      messages: [],
-      events: [] // user action on site
+      messages: {},
+      events: {} // user action on site
     },
     liveChats: {} // for admin
     // chatId -> msgId: { msg: "", date: "", creator: 1/0 }
@@ -44,11 +44,14 @@ export default {
   },
   actions: {
     fetchAllChats: // for admin
-      ({commit}) => {
+      ({commit, dispatch}) => {
         firebase.database().ref('liveChats').once('value')
           .then(snapshot => {
             commit('setLiveChats', snapshot.val())
             console.log('Fetched: live chat messages')
+          })
+          .then(() => {
+            dispatch('subscribeToAllChats')
           })
           .catch(err => console.log(err))
       },

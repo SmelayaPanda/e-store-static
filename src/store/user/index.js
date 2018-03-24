@@ -104,9 +104,11 @@ export default {
       },
     upgradeAnonymousAccount:
       ({commit, dispatch}, payload) => {
+        let userId
         let credential = firebase.auth.EmailAuthProvider.credential(payload.email, payload.password)
         firebase.auth().currentUser.linkWithCredential(credential)
           .then(user => {
+            userId = user.uid
             user.sendEmailVerification()
             commit('setUser', {...user})
             console.log('User register. Email verification sent.')
@@ -116,6 +118,14 @@ export default {
               emailVerified: user.emailVerified,
               isAnonymous: false
             })
+          })
+          .then(() => {
+            firebase.database().ref(`liveChats/${userId}/props`).update({
+              userEmail: payload.email
+            })
+          })
+          .then(() => {
+            console.log('Live chat email updated', payload.email)
           })
           .catch(err => {
             console.log('Error upgrading anonymous account', err)
