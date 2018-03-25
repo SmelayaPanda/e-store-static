@@ -69,14 +69,14 @@ export default {
         let chatRef = firebase.database().ref('liveChats/' + payload)
         chatRef.child('messages').on('child_added', data => {
           if (data.val()) {
-            let chatMessages = {...getters.chatMessages}
+            let chatMessages = getters.chatMessages
             chatMessages[data.key] = data.val()
             commit('setChatMessages', chatMessages)
           }
         })
         chatRef.child('events').on('child_added', data => {
           if (data.val()) {
-            let userEvents = {...getters.userEvents}
+            let userEvents = getters.userEvents
             userEvents[data.key] = data.val()
             commit('setUserEvents', userEvents)
           }

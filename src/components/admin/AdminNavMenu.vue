@@ -42,7 +42,12 @@
       </el-menu-item>
       <el-menu-item index="/admin/liveChat" route="/admin/liveChat">
         <v-icon>chat</v-icon>
-        <span slot="title">Live Chat</span>
+        <span slot="title">
+          <span class="mr-1">Live Chat</span>
+          <el-tag type="info" size="mini" class="mb-1">
+            {{ liveChats ? Object.keys(liveChats).length : 0 }}
+          </el-tag>
+        </span>
       </el-menu-item>
     </el-menu>
   </div>
@@ -73,6 +78,11 @@ export default {
     },
     handleClose (key, keyPath) {
       console.log(key, keyPath)
+    }
+  },
+  computed: {
+    liveChats () {
+      return this.$store.getters.liveChats
     }
   }
 }

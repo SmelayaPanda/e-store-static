@@ -52,7 +52,9 @@
             <el-row v-for="(event, idx) in userEvents"
                     :key="idx"
                     justify="left">
-              <el-col :span="6" class="info--text left pr-1">{{ new Date(event.date) | chatTime }}</el-col>
+              <el-col :span="6" class="info--text left pr-1 chat_time">
+                {{ new Date(event.date) | chatTime }}
+              </el-col>
               <el-col :span="18" align="left" class="pb-2">{{ event.name }}</el-col>
             </el-row>
           </div>
@@ -85,9 +87,6 @@ export default {
     }
   },
   methods: {
-    fetchAllChats () {
-      this.$store.dispatch('fetchAllChats')
-    },
     openChat (chatId) {
       // CLOSE OLD CHAT
       if (this.chatId && this.chatId !== chatId) {
@@ -133,9 +132,6 @@ export default {
         this.scrollEventsToBottom()
       })
     }
-  },
-  created () {
-    this.fetchAllChats()
   }
 }
 </script>
@@ -156,5 +152,10 @@ export default {
     width: 100%;
     height: 420px;
     overflow: scroll;
+  }
+
+  .chat_time {
+    font-size: 10px;
+    padding-top: 4px;
   }
 </style>

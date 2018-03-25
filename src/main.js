@@ -106,7 +106,9 @@ new Vue({
         if (user) {
           this.$store.dispatch('autoSignIn', user)
           this.$store.dispatch('setAdmin', user.email === 'smelayapandagm@gmail.com')
-          if (!isAdminPanel) {
+          if (isAdminPanel) {
+            this.$store.dispatch('fetchAllChats')
+          } else {
             this.$store.dispatch('fetchUserData')
             this.$store.dispatch('initializeChat', {chatId: user.uid, userEmail: user.email})
             this.$store.dispatch('fetchProducts')

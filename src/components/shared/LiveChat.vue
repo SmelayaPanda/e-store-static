@@ -31,7 +31,7 @@
       <v-card-text v-if="chatMessages"
                    ref="chatMessages"
                    :class="isUserSide ? 'user_chat_messages' : 'admin_chat_messages'">
-          <span v-if="Object.keys(chatMessages).length === 0">
+          <span v-if="Object.keys(chatMessages).length === 0 && isUserSide">
             <h2 class="pt-5 info--text">Have question?</h2>
           </span>
         <div v-for="(chat, key) in chatMessages"
