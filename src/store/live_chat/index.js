@@ -4,8 +4,8 @@ export default {
   state: {
     chat: {
       props: {
-        isOnlineUser: 0, // handle it (delete chat if user is offline)
-        isOnlineAdmin: 0, // handle it
+        lastOnline: 0, // timestamp (0 - online)
+        onlineFrom: 0, // timestamp (0 - offline)
         isTypingUser: 0,
         isTypingAdmin: 0,
         isCollapsedUser: 1,
@@ -43,6 +43,25 @@ export default {
       }
   },
   actions: {
+    observeUserConnection:
+      ({commit}, payload) => {
+        let chatRef = firebase.database().ref(`liveChats/${payload}/props`)
+        let connectedRef = firebase.database().ref('.info/connected')
+        connectedRef.on('value', function (snap) {
+          if (snap.val() === true) {
+            // online
+            chatRef.update({
+              lastOnline: 0,
+              onlineFrom: new Date().getTime() // TODO: to server time
+            })
+            // offline
+            chatRef.onDisconnect().update({
+              lastOnline: new Date().getTime(),
+              onlineFrom: 0
+            })
+          }
+        })
+      },
     fetchAllChats: // for admin
       ({commit, dispatch}) => {
         firebase.database().ref('liveChats').once('value')
@@ -65,22 +84,23 @@ export default {
           })
       },
     subscribeToChat:
-      ({commit, getters}, payload) => {
+      ({commit, getters, dispatch}, payload) => {
         let chatRef = firebase.database().ref('liveChats/' + payload)
         chatRef.child('messages').on('child_added', data => {
           if (data.val()) {
-            let chatMessages = getters.chatMessages
+            let chatMessages = {...getters.chatMessages}
             chatMessages[data.key] = data.val()
             commit('setChatMessages', chatMessages)
           }
         })
         chatRef.child('events').on('child_added', data => {
           if (data.val()) {
-            let userEvents = getters.userEvents
+            let userEvents = {...getters.userEvents}
             userEvents[data.key] = data.val()
             commit('setUserEvents', userEvents)
           }
         })
+        dispatch('observeUserConnection', payload)
         chatRef.child('props').on('child_changed', data => {
           commit('setChatProp', {
             propName: data.key,
@@ -103,6 +123,8 @@ export default {
             if (!data.val()) {
               console.log('New chat initialized!')
               return chatRef.child('props').set({
+                lastOnline: 0,
+                onlineFrom: 0,
                 isTypingUser: 0,
                 isTypingAdmin: 0,
                 isCollapsedUser: 1,

@@ -64,7 +64,8 @@
       <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="8"
               class="pl-2 pr-2 mt-2"
               v-if="userEvents">
-        <live-chat :chatId="chatId"
+        <live-chat v-if="chatId"
+                   :chatId="chatId"
                    :isUserSide="false"
                    :isCollapsed="false">
         </live-chat>
