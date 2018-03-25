@@ -19,12 +19,19 @@
         </el-button>
         <h3 class="pl-3 white--text">
           Live Chat
+          <span class="pl-3">|</span>
         </h3>
         <transition name="fade">
             <span v-if="isUserSide ? isTypingAdmin : isTypingUser" class="pl-4 white--text">
-                <span v-if="!isUserSide">User is typing</span>
-                <span v-if="isUserSide">Admin is typing</span>
-                ...<v-icon size="medium" class="pb-1 white--text">edit</v-icon>
+                <span v-if="!isUserSide">User</span>
+                <span v-if="isUserSide">Admin</span>
+                ...<v-icon size="medium" class="white--text">edit</v-icon>
+            </span>
+            <span v-if="isUserSide && !isTypingAdmin && isOnlineAdmin" class="pl-4 white--text">
+              Admin online
+            </span>
+            <span v-if="isUserSide && !isOnlineAdmin" class="pl-4 white--text">
+              Admin offline
             </span>
         </transition>
       </v-card-title>
@@ -181,6 +188,9 @@ export default {
     },
     isOnlineUser () {
       return this.$store.getters.chatPropByName('onlineFrom')
+    },
+    isOnlineAdmin () {
+      return this.$store.getters.isOnlineAdmin
     }
   },
   watch: {

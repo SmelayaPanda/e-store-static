@@ -18,6 +18,7 @@ export default {
       messages: {},
       events: {} // user action on site
     },
+    isOnlineAdmin: 0,
     liveChats: {} // for admin
     // chatId -> msgId: { msg: "", date: "", creator: 1/0 }
     //
@@ -29,6 +30,10 @@ export default {
     setLiveChats:
       (state, payload) => {
         state.liveChats = payload
+      },
+    setAdminOnline:
+      (state, payload) => {
+        state.isOnlineAdmin = payload
       },
     setChatMessages:
       (state, payload) => {
@@ -47,8 +52,7 @@ export default {
     observeUserConnection:
       ({commit}, payload) => {
         let chatRef = firebase.database().ref(`liveChats/${payload}/props`)
-        let connectedRef = firebase.database().ref('.info/connected')
-        connectedRef.on('value', function (snap) {
+        firebase.database().ref('.info/connected').on('value', snap => {
           if (snap.val() === true) {
             // online
             chatRef.update({
@@ -63,6 +67,17 @@ export default {
           }
         })
       },
+    observeAdminConnection:
+      () => {
+        firebase.database().ref('.info/connected').on('value', snap => {
+          if (snap.val() === true) {
+            // online
+            firebase.database().ref().update({isOnlineAdmin: 1})
+            // offline
+            firebase.database().ref().onDisconnect().update({isOnlineAdmin: 0})
+          }
+        })
+      },
     fetchAllChats: // for admin
       ({commit, dispatch}) => {
         firebase.database().ref('liveChats').once('value')
@@ -72,6 +87,7 @@ export default {
           })
           .then(() => {
             dispatch('subscribeToAllChats')
+            dispatch('observeAdminConnection')
           })
           .catch(err => console.log(err))
       },
@@ -128,6 +144,12 @@ export default {
             propName: data.key,
             propValue: data.val()
           })
+        })
+        // subscribe to admin change state
+        firebase.database().ref().on('child_changed', data => {
+          if (data.key === 'isOnlineAdmin') {
+            commit('setAdminOnline', data.val())
+          }
         })
       },
     unsubscribeFromChat:
@@ -242,6 +264,10 @@ export default {
     liveChats:
       state => {
         return state.liveChats
+      },
+    isOnlineAdmin:
+      state => {
+        return state.isOnlineAdmin
       }
   }
 }
