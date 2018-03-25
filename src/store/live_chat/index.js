@@ -1,4 +1,5 @@
 import * as firebase from 'firebase'
+import {Message} from 'element-ui'
 
 export default {
   state: {
@@ -74,12 +75,31 @@ export default {
           })
           .catch(err => console.log(err))
       },
+    notifyAdminAboutNewMessage:
+      ({commit, getters}, payload) => {
+        if (getters.liveChats[payload.key].props.unreadByAdmin !== payload.val().props.unreadByAdmin &&
+          getters.liveChats[payload.key].props.isCollapsedAdmin) {
+          let userName
+          if (getters.liveChats[payload.key].props.userEmail) {
+            userName = getters.liveChats[payload.key].props.userEmail
+          } else {
+            userName = `Anonymous ( ${payload.key.substring(0, 5)} )`
+          }
+          Message({
+            type: 'success',
+            showClose: true,
+            message: `New message from ${userName}`,
+            duration: 10000
+          })
+        }
+      },
     subscribeToAllChats: // for admin
-      ({commit, getters}) => {
+      ({commit, getters, dispatch}) => {
         firebase.database().ref('liveChats').on('child_changed',
           data => {
             let liveChats = {...getters.liveChats}
             liveChats[data.key] = data.val()
+            dispatch('notifyAdminAboutNewMessage', data)
             commit('setLiveChats', liveChats)
           })
       },

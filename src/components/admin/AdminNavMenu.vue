@@ -45,7 +45,7 @@
         <span slot="title">
           <span class="mr-1">Live Chat</span>
           <el-tag type="info" size="mini" class="mb-1">
-            {{ liveChats ? Object.keys(liveChats).length : 0 }}
+            {{ onlineUsers }}
           </el-tag>
         </span>
       </el-menu-item>
@@ -81,8 +81,15 @@ export default {
     }
   },
   computed: {
-    liveChats () {
-      return this.$store.getters.liveChats
+    onlineUsers () {
+      let liveChats = this.$store.getters.liveChats
+      let i = 0
+      for (let chat in liveChats) {
+        if (liveChats[chat].props.onlineFrom) {
+          i++
+        }
+      }
+      return i
     }
   }
 }
