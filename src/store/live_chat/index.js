@@ -84,8 +84,8 @@ export default {
           })
       },
     subscribeToChat:
-      ({commit, getters, dispatch}, payload) => {
-        let chatRef = firebase.database().ref('liveChats/' + payload)
+      ({commit, getters}, payload) => {
+        let chatRef = firebase.database().ref(`liveChats/${payload}`)
         chatRef.child('messages').on('child_added', data => {
           if (data.val()) {
             let chatMessages = {...getters.chatMessages}
@@ -100,7 +100,6 @@ export default {
             commit('setUserEvents', userEvents)
           }
         })
-        dispatch('observeUserConnection', payload)
         chatRef.child('props').on('child_changed', data => {
           commit('setChatProp', {
             propName: data.key,
@@ -110,14 +109,14 @@ export default {
       },
     unsubscribeFromChat:
       ({commit, getters}, payload) => {
-        let chatRef = firebase.database().ref('liveChats/' + payload)
+        let chatRef = firebase.database().ref(`liveChats/${payload}`)
         chatRef.child('messages').off()
         chatRef.child('events').off()
         chatRef.child('props').off()
       },
     initializeChat:
       ({commit, getters, dispatch}, payload) => {
-        let chatRef = firebase.database().ref('liveChats/' + payload.chatId)
+        let chatRef = firebase.database().ref(`liveChats/${payload.chatId}`)
         chatRef.once('value')
           .then(data => {
             if (!data.val()) {
@@ -140,6 +139,19 @@ export default {
           })
           .then(() => {
             dispatch('subscribeToChat', payload.chatId)
+            dispatch('observeUserConnection', payload.chatId)
+          })
+          .catch(err => console.log(err))
+      },
+    openChat: // for admin
+      ({commit, dispatch}, payload) => {
+        firebase.database().ref(`liveChats/${payload}`).once('value')
+          .then(data => {
+            commit('setChatMessages', data.val().messages ? data.val().messages : [])
+            commit('setUserEvents', data.val().events ? data.val().events : [])
+          })
+          .then(() => {
+            dispatch('subscribeToChat', payload)
           })
           .catch(err => console.log(err))
       },

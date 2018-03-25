@@ -57,7 +57,7 @@
       <v-card-actions>
       <textarea v-model="msg"
                 ref="msgInput"
-                cols="40" rows="3"
+                cols="100" rows="3"
                 placeholder="Type..."
                 class="chat_input"
                 @input="detectTyping"
@@ -152,7 +152,9 @@ export default {
         let chat = this.$refs.chatMessages
         chat.scrollTop = chat.scrollHeight
       }
-      this.$refs.msgInput.focus()
+      if (this.$refs.msgInput) {
+        this.$refs.msgInput.focus()
+      }
     }
   },
   computed: {

@@ -9,11 +9,21 @@
             <h3 class="pl-3 white--text">
               Live chat users
             </h3>
+            <el-switch
+              v-model="showOnlineUsers"
+              class="pl-2"
+              active-color="#13ce66">
+            </el-switch>
+            <span class="pl-2">
+              <span v-if="showOnlineUsers">online</span>
+              <span v-else>offline</span>
+            </span>
           </v-card-title>
           <v-card>
             <div id="chat_users" ref="chatUsers" v-if="liveChats">
               <div v-for="(chat, id) of liveChats"
                    :key="id"
+                   v-if="showOnlineUsers ? chat.props.onlineFrom : chat.props.lastOnline"
                    :class="chatId === id ? 'primary' : ''">
                 <span v-if="chat.props.isTypingUser">
                   ...<v-icon size="small" class="primary--text">edit</v-icon>
@@ -84,7 +94,8 @@ export default {
   },
   data () {
     return {
-      chatId: ''
+      chatId: '',
+      showOnlineUsers: true
     }
   },
   methods: {
@@ -109,7 +120,7 @@ export default {
         props: 'unreadByAdmin',
         value: 0
       })
-      this.$store.dispatch('initializeChat', {chatId: chatId})
+      this.$store.dispatch('openChat', chatId)
       this.chatId = chatId
     },
     scrollEventsToBottom () {
