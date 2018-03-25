@@ -56,6 +56,7 @@
       <v-divider></v-divider>
       <v-card-actions>
       <textarea v-model="msg"
+                ref="msgInput"
                 cols="40" rows="3"
                 placeholder="Type..."
                 class="chat_input"
@@ -151,6 +152,7 @@ export default {
         let chat = this.$refs.chatMessages
         chat.scrollTop = chat.scrollHeight
       }
+      this.$refs.msgInput.focus()
     }
   },
   computed: {
