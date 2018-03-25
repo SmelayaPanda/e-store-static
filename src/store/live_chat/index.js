@@ -135,6 +135,10 @@ export default {
             } else { // load chat data
               commit('setChatMessages', data.val().messages ? data.val().messages : [])
               commit('setUserEvents', data.val().events ? data.val().events : [])
+              commit('setChatProp', {
+                propName: 'unreadByUser',
+                propValue: data.val().props.unreadByUser
+              })
             }
           })
           .then(() => {

@@ -112,7 +112,7 @@ export default {
             })
           })
       }
-      if (this.isCollapsedUser && !this.isUserSide) { // message from admin
+      if (!this.isUserSide && (this.isCollapsedUser || !this.isOnlineUser)) { // message from admin
         this.setUnread('unreadByUser', this.unreadByUser + 1)
       } else if (this.isCollapsedAdmin && this.isUserSide) { // message from user
         this.setUnread('unreadByAdmin', this.unreadByAdmin + 1)
@@ -178,6 +178,9 @@ export default {
     },
     unreadByAdmin () {
       return this.$store.getters.chatPropByName('unreadByAdmin')
+    },
+    isOnlineUser () {
+      return this.$store.getters.chatPropByName('onlineFrom')
     }
   },
   watch: {
