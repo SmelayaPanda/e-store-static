@@ -52,7 +52,7 @@ export default {
           .then(() => {
             commit('setUser', Object.assign(user, payload))
             commit('LOADING', false)
-            console.log('Personal info udated!')
+            console.log('Personal info updated!')
           })
           .catch(err => {
             commit('LOADING', false)

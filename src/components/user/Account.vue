@@ -20,7 +20,7 @@
             </el-card>
             <el-card class="mt-2" :body-style="{ padding: '0px' }">
               <div style="padding: 14px;">
-                <span v-if="user.birthday">{{ user.birthday | birthday }}</span>
+                <span v-if="user.birthday">{{ user.birthday.toDateString() }}</span>
                 <span v-else>DD-MM-YYYY</span>
               </div>
             </el-card>
@@ -36,20 +36,38 @@
             <el-card>
               <h3 class="mb-3">
                 Contacts
-                <el-button type="text" class="button">
-                  <i class="el-icon-edit"></i>
-                </el-button>
+                <!--EDIT CONTACTS-->
+                <edit-personal-address></edit-personal-address>
               </h3>
-              <el-row type="flex" style="flex-wrap: wrap">
+              <el-row type="flex"
+                      style="flex-wrap: wrap">
                 <el-col :xs="22" :sm="12" :md="12" :lg="12" :xl="12" class="pl-2 pr-2" align="left">
-                  <p>Country: {{ user.country }}</p>
-                  <p>City: {{ user.city }}</p>
-                  <p>Street: {{ user.street }}</p>
+                  <p>Country:
+                    <span v-if="user.address">{{ user.address.country }}</span>
+                    <span v-else class="info--text"> no data</span>
+                  </p>
+                  <p>City:
+                    <span v-if="user.address">{{ user.address.city }}</span>
+                    <span v-else class="info--text"> no data</span>
+                  </p>
+                  <p>Street:
+                    <span v-if="user.address">{{ user.address.street }}</span>
+                    <span v-else class="info--text"> no data</span>
+                  </p>
                 </el-col>
                 <el-col :xs="22" :sm="12" :md="12" :lg="12" :xl="12" class="pl-2 pr-2" align="left">
-                  <p>Build: {{ user.build }}</p>
-                  <p>House: {{ user.house }}</p>
-                  <p>Post Code: {{ user.postCode }}</p>
+                  <p>Build:
+                    <span v-if="user.address">{{ user.address.build }}</span>
+                    <span v-else class="info--text"> no data</span>
+                  </p>
+                  <p>House:
+                    <span v-if="user.address">{{ user.address.house }}</span>
+                    <span v-else class="info--text"> no data</span>
+                  </p>
+                  <p>Post Code:
+                    <span v-if="user.address">{{ user.address.postCode }}</span>
+                    <span v-else class="info--text"> no data</span>
+                  </p>
                 </el-col>
               </el-row>
             </el-card>
@@ -84,13 +102,16 @@
 
 <script>
 import EditPersonalInfo from '@/components/user/EditPersonalInfo'
+import EditPersonalAddress from '@/components/user/EditPersonalAddress'
+
 export default {
   name: 'Account',
   data () {
     return {}
   },
   components: {
-    EditPersonalInfo
+    EditPersonalInfo,
+    EditPersonalAddress
   },
   computed: {
     user () {

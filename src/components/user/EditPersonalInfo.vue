@@ -44,16 +44,19 @@
 export default {
   name: 'EditUserInfo',
   data () {
+    let user = this.$store.getters.user
     return {
       dialogVisible: false,
-      firstname: this.$store.getters.user.firstname,
-      lastname: this.$store.getters.user.lastname,
-      birthday: this.$store.getters.user.birthday
+      firstname: user.firstname,
+      lastname: user.lastname,
+      birthday: user.birthday
     }
   },
   methods: {
     editPersonalInfo () {
       this.dialogVisible = false
+      console.log(this.birthday)
+      console.log(new Date(this.birthday))
       this.$store.dispatch('editPersonalInfo', {
         firstname: this.firstname,
         lastname: this.lastname,
