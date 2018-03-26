@@ -72,19 +72,15 @@ export default {
         // since admin connect from multiple devices or browser tabs,
         // we store each connection instance separately
         // any time that connectionsRef's value is null (i.e. has no children) - admin offline
-        let adminRef = firebase.database().ref('admin')
         firebase.database().ref('.info/connected').on('value', snap => {
           if (snap.val() === true) {
             // Admin connected (or reconnected)
-            let con = adminRef.child('connections').push()
+            let con = firebase.database().ref('admin').child('connections').push()
             // When admin disconnect, remove this device
             con.onDisconnect().remove()
             // Add this device to connections list,
             // this value could contain info about the device or a timestamp too
             con.set(true)
-            adminRef.update({isOnline: 1})
-            // When admin disconnect, update the last online time
-            adminRef.onDisconnect().update({isOnline: 0})
           }
         })
       },
@@ -134,7 +130,7 @@ export default {
           })
       },
     subscribeToChat:
-      ({commit, getters}, payload) => {
+      ({commit, getters, dispatch}, payload) => {
         let chatRef = firebase.database().ref(`liveChats/${payload}`)
         chatRef.child('messages').on('child_added', data => {
           if (data.val()) {
@@ -156,11 +152,21 @@ export default {
             propValue: data.val()
           })
         })
-        // subscribe to admin change state
-        firebase.database().ref('admin').on('child_changed', data => {
-          if (data.key === 'isOnline') {
-            commit('setAdminOnline', data.val())
-          }
+        dispatch('subscribeToAdminConnectionDevices')
+      },
+    subscribeToAdminConnectionDevices:
+      // for users to detect online admin
+      ({commit}) => {
+        let adminConn = firebase.database().ref('admin').child('connections')
+        adminConn.on('child_added', () => {
+          commit('setAdminOnline', 1)
+        })
+        adminConn.on('child_removed', () => {
+          adminConn.once('value').then(snap => {
+            if (!snap.exists()) {
+              commit('setAdminOnline', 0)
+            }
+          })
         })
       },
     unsubscribeFromChat:
