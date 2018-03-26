@@ -13,15 +13,15 @@
             <el-card :body-style="{ padding: '0px' }">
               <img src="@/assets/placeholders/person_placeholder.png" height="200px">
               <div style="padding: 14px;">
-                <span>I'm wonderful</span>
-                <div class="bottom clearfix">
-                  <el-button type="text" class="button">Operating button</el-button>
-                </div>
+                <span v-if="user.firstname">{{ user.firstname }}</span>
+                <span v-if="user.lastname">{{ user.lastname }}</span>
+                <span v-if="!user.firstname && !user.firstname">Anonymous</span>
               </div>
             </el-card>
             <el-card class="mt-2" :body-style="{ padding: '0px' }">
               <div style="padding: 14px;">
-                Earth, Heart of the mountains 42, Soul of the forest 5/1
+                <span v-if="user.birthday">{{ user.birthday }}</span>
+                <span v-else>DD-MM-YYYY</span>
               </div>
             </el-card>
             <el-card class="mt-2" :body-style="{ padding: '0px' }">
@@ -29,10 +29,31 @@
                 {{ this.user.email }}
               </div>
             </el-card>
+            <el-button type="text" class="button mt-2">
+              <i class="el-icon-edit"></i>
+              edit info
+            </el-button>
           </el-col>
           <el-col :xs="24" :sm="17" :md="15" :lg="12" :xl="9" class="ml-1 mr-1">
             <el-card>
-              <h2 class="mb-2">Contact info</h2>
+              <h3 class="mb-3">
+                Contacts
+                <el-button type="text" class="button">
+                  <i class="el-icon-edit"></i>
+                </el-button>
+              </h3>
+              <el-row type="flex" style="flex-wrap: wrap">
+                <el-col :xs="22" :sm="12" :md="12" :lg="12" :xl="12" class="pl-2 pr-2" align="left">
+                  <p>Country: {{ user.country }}</p>
+                  <p>City: {{ user.city }}</p>
+                  <p>Street: {{ user.street }}</p>
+                </el-col>
+                <el-col :xs="22" :sm="12" :md="12" :lg="12" :xl="12" class="pl-2 pr-2" align="left">
+                  <p>Build: {{ user.build }}</p>
+                  <p>House: {{ user.house }}</p>
+                  <p>Post Code: {{ user.postCode }}</p>
+                </el-col>
+              </el-row>
             </el-card>
           </el-col>
         </el-row>

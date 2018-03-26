@@ -20,17 +20,18 @@ export default {
       }
   },
   // Actions ---------------------------------------------------
-  actions: { // specify the mutation
-    fetchUserData:
+  actions: {
+    fetchUserData: // one action with another vuex dependencies
       ({commit, dispatch, getters}) => {
         commit('LOADING', true)
         const user = getters.user
         firebase.firestore().collection('users').doc(user.uid).get()
           .then(snapshot => {
             if (snapshot.data()) {
-              user.userNo = snapshot.data().userNo
+              // add to auth user data own firestore
+              let extendUser = Object.assign(user, snapshot.data())
               commit('setCart', snapshot.data().cart)
-              commit('setUser', user)
+              commit('setUser', extendUser)
             }
             dispatch('fetchOrders', {userId: user.uid})
           })
@@ -38,11 +39,10 @@ export default {
             commit('LOADING', false)
             console.log('Fetched: user data')
           })
-          .catch(
-            error => {
-              console.log(error)
-              commit('LOADING', false)
-            })
+          .catch(err => {
+            console.log(err)
+            commit('LOADING', false)
+          })
       },
     signUserUp:
       ({commit, dispatch}, payload) => {
@@ -109,7 +109,7 @@ export default {
         firebase.auth().currentUser.linkWithCredential(credential)
           .then(user => {
             userId = user.uid
-            user.sendEmailVerification()
+            user.sendEmailVerification() // TODO: verification link may be expired, force resend
             commit('setUser', {...user})
             console.log('User register. Email verification sent.')
             console.log('Anonymous account successfully upgraded', user)
@@ -187,6 +187,9 @@ export default {
             }
             console.log(err)
           })
+      },
+    editUserData:
+      () => {
       }
   },
   // Getters  ---------------------------------------------------

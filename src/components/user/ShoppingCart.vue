@@ -76,8 +76,8 @@
 </template>
 
 <script>
-import Checkout from './Checkout'
-import OrdersHistory from './OrdersHistory'
+import Checkout from '@/components/shop/Checkout'
+import OrdersHistory from '@/components/shop/OrdersHistory'
 
 export default {
   name: 'ShoppingCart',
