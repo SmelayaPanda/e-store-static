@@ -11,22 +11,22 @@
     <el-row type="flex" justify="center">
       <el-col :span="20">
         <el-form label-position="left" label-width="80px">
-          <el-form-item label="country">
+          <el-form-item label="Country">
             <el-input v-model="address.country"></el-input>
           </el-form-item>
-          <el-form-item label="city">
+          <el-form-item label="City">
             <el-input v-model="address.city"></el-input>
           </el-form-item>
-          <el-form-item label="street">
+          <el-form-item label="Street">
             <el-input v-model="address.street"></el-input>
           </el-form-item>
-          <el-form-item label="build">
+          <el-form-item label="Build">
             <el-input v-model="address.build"></el-input>
           </el-form-item>
-          <el-form-item label="house">
+          <el-form-item label="House">
             <el-input v-model="address.house"></el-input>
           </el-form-item>
-          <el-form-item label="postCode">
+          <el-form-item label="Post Code">
             <el-input v-model="address.postCode"></el-input>
           </el-form-item>
         </el-form>

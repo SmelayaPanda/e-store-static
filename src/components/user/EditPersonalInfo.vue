@@ -63,8 +63,6 @@ export default {
   methods: {
     editPersonalInfo () {
       this.dialogVisible = false
-      console.log(this.birthday)
-      console.log(new Date(this.birthday))
       this.$store.dispatch('editPersonalInfo', {
         firstname: this.firstname,
         lastname: this.lastname,
