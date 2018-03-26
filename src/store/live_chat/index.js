@@ -96,8 +96,6 @@ export default {
         if (getters.liveChats[payload.key].props.unreadByAdmin !== payload.val().props.unreadByAdmin &&
           getters.liveChats[payload.key].props.isCollapsedAdmin) {
           let userName
-          let audio = new Audio(require('@/assets/sounds/iphone_notification.mp3'))
-          audio.setAttribute('crossorigin', 'anonymous')
           if (getters.liveChats[payload.key].props.userEmail) {
             userName = getters.liveChats[payload.key].props.userEmail
           } else {
@@ -109,11 +107,14 @@ export default {
             message: `New message from ${userName}`,
             duration: 10000
           })
+          let audio = new Audio(require('@/assets/sounds/iphone_notification.mp3'))
+          audio.setAttribute('crossorigin', 'anonymous')
           audio.play()
         }
       },
     subscribeToAllChats: // for admin
       ({commit, getters, dispatch}) => {
+        commit('setAdminOnline', 1)
         firebase.database().ref('liveChats').on('child_changed',
           data => {
             let liveChats = {...getters.liveChats}
@@ -217,6 +218,7 @@ export default {
             chatMessages[data.key] = newMsg
             commit('setChatMessages', chatMessages)
             // for send email to offline admin through cloud function
+            console.log(getters.isOnlineAdmin)
             if (!getters.isOnlineAdmin) {
               firebase.database().ref('unreadLiveChat').push({
                 from: getters.user.email ? getters.user.email : `Anonymous ( ${data.key.substring(0, 5)} )`,
