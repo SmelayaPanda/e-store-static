@@ -146,7 +146,7 @@ export default {
     isValidEmail () {
       return /^\S+@\S+\.\S+$/.test(this.oneClickForm.email)
     },
-    isValidPhone: function () {
+    isValidPhone () {
       return this.oneClickForm.phone.replace(/[^0-9]/g, '').length === 11
     }
   },

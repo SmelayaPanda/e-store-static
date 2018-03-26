@@ -26,7 +26,8 @@
             </el-card>
             <el-card class="mt-2" :body-style="{ padding: '0px' }">
               <div style="padding: 14px;">
-                {{ this.user.email }}
+                <span v-if="this.user.email">{{ this.user.email }}</span><br>
+                <span v-if="this.user.phone">{{ this.user.phone }}</span>
               </div>
             </el-card>
             <!--EDIT PERSONAL INFO-->

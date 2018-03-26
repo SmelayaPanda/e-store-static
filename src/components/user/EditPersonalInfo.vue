@@ -18,6 +18,13 @@
           <el-form-item label="Lastname">
             <el-input v-model="lastname"></el-input>
           </el-form-item>
+          <el-form-item label="Phone" prop="phone">
+          <masked-input v-model="phone"
+                        class="el-input__inner"
+                        required
+                        mask="\+\7 (111) 111-11-11"
+                        placeholder="Phone number"/>
+          </el-form-item>
           <el-form-item label="Birthday" prop="birthday">
           <el-date-picker
             v-model="birthday"
@@ -49,6 +56,7 @@ export default {
       dialogVisible: false,
       firstname: user.firstname,
       lastname: user.lastname,
+      phone: user.phone,
       birthday: user.birthday
     }
   },
@@ -60,13 +68,19 @@ export default {
       this.$store.dispatch('editPersonalInfo', {
         firstname: this.firstname,
         lastname: this.lastname,
+        phone: this.phone,
         birthday: this.birthday
       })
     }
   },
   computed: {
     isValidForm () {
-      return this.firstname && this.lastname && this.birthday
+      return this.firstname && this.lastname && this.birthday && this.isValidPhone
+    },
+    isValidPhone () {
+      if (this.phone) {
+        return this.phone.replace(/[^0-9]/g, '').length === 11
+      }
     }
   }
 }

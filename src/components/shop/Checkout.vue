@@ -80,9 +80,8 @@
                               class="el-input__inner"
                               required
                               mask="\+\7 (111) 111-11-11"
-                              placeholder="Phone number"
-                />
-              </el-form-item>
+                              placeholder="Phone number"/>
+                </el-form-item>
               </el-form>
             </div>
             </el-col>
@@ -341,7 +340,7 @@ export default {
     isValidEmail () {
       return /^\S+@\S+\.\S+$/.test(this.form_1.email)
     },
-    isValidPhone: function () {
+    isValidPhone () {
       return this.form_1.phone.replace(/[^0-9]/g, '').length === 11
     },
     checkout () {
