@@ -32,6 +32,8 @@ export default {
               let extendUser = Object.assign(user, snapshot.data())
               commit('setCart', snapshot.data().cart)
               commit('setUser', extendUser)
+              commit('setAdmin', payload)
+              commit('setAdmin', user.email === 'smelayapandagm@gmail.com')
             }
             dispatch('fetchOrders', {userId: user.uid})
           })
@@ -148,10 +150,6 @@ export default {
       ({commit}, payload) => {
         firebase.firestore().collection('users').doc(payload.uid).update({emailVerified: payload.emailVerified})
           .catch((err) => console.log(err))
-      },
-    setAdmin:
-      ({commit}, payload) => {
-        commit('setAdmin', payload)
       },
     logout:
       ({commit, dispatch}) => {

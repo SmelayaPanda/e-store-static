@@ -105,11 +105,10 @@ new Vue({
         let isAdminPanel = this.$router.history.current.fullPath.includes('admin')
         if (user) {
           this.$store.dispatch('fetchUserData', user)
-          this.$store.dispatch('setAdmin', user.email === 'smelayapandagm@gmail.com')
           if (isAdminPanel) {
             this.$store.dispatch('fetchAllChats')
           } else {
-            this.$store.dispatch('initializeChat', {chatId: user.uid, userEmail: user.email})
+            this.$store.dispatch('initializeChat', user)
             this.$store.dispatch('fetchProducts')
             this.$store.dispatch('updateEmailVerification', user) // always check - because there is no another way
           }

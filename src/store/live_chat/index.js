@@ -155,6 +155,7 @@ export default {
         dispatch('subscribeToAdminConnectionDevices')
       },
     subscribeToAdminConnectionDevices:
+      // TODO: set for all chats isCollapsedAdmin when admin go away from chat or offline
       // for users to detect online admin
       ({commit}) => {
         let adminConn = firebase.database().ref('admin').child('connections')
@@ -178,7 +179,7 @@ export default {
       },
     initializeChat:
       ({commit, getters, dispatch}, payload) => {
-        let chatRef = firebase.database().ref(`liveChats/${payload.chatId}`)
+        let chatRef = firebase.database().ref(`liveChats/${payload.uid}`)
         chatRef.once('value')
           .then(data => {
             if (!data.val()) {
@@ -192,7 +193,7 @@ export default {
                 isCollapsedAdmin: 1,
                 unreadByUser: 0,
                 unreadByAdmin: 0,
-                userEmail: payload.userEmail
+                userEmail: payload.email
               })
             } else { // load chat data
               commit('setChatMessages', data.val().messages ? data.val().messages : [])
@@ -204,8 +205,8 @@ export default {
             }
           })
           .then(() => {
-            dispatch('subscribeToChat', payload.chatId)
-            dispatch('observeUserConnection', payload.chatId)
+            dispatch('subscribeToChat', payload.uid)
+            dispatch('observeUserConnection', payload.uid)
           })
           .catch(err => console.log(err))
       },
