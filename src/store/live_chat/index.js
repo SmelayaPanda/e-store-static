@@ -69,12 +69,22 @@ export default {
       },
     observeAdminConnection:
       () => {
+        // since admin connect from multiple devices or browser tabs,
+        // we store each connection instance separately
+        // any time that connectionsRef's value is null (i.e. has no children) - admin offline
+        let adminRef = firebase.database().ref('admin')
         firebase.database().ref('.info/connected').on('value', snap => {
           if (snap.val() === true) {
-            // online
-            firebase.database().ref().update({isOnlineAdmin: 1})
-            // offline
-            firebase.database().ref().onDisconnect().update({isOnlineAdmin: 0})
+            // Admin connected (or reconnected)
+            let con = adminRef.child('connections').push()
+            // When admin disconnect, remove this device
+            con.onDisconnect().remove()
+            // Add this device to connections list,
+            // this value could contain info about the device or a timestamp too
+            con.set(true)
+            adminRef.update({isOnline: 1})
+            // When admin disconnect, update the last online time
+            adminRef.onDisconnect().update({isOnline: 0})
           }
         })
       },
@@ -147,8 +157,8 @@ export default {
           })
         })
         // subscribe to admin change state
-        firebase.database().ref().on('child_changed', data => {
-          if (data.key === 'isOnlineAdmin') {
+        firebase.database().ref('admin').on('child_changed', data => {
+          if (data.key === 'isOnline') {
             commit('setAdminOnline', data.val())
           }
         })
@@ -218,7 +228,7 @@ export default {
             chatMessages[data.key] = newMsg
             commit('setChatMessages', chatMessages)
             // for send email to offline admin through cloud function
-            console.log(getters.isOnlineAdmin)
+            // TODO: to http trigger
             if (!getters.isOnlineAdmin) {
               firebase.database().ref('unreadLiveChat').push({
                 from: getters.user.email ? getters.user.email : `Anonymous ( ${data.key.substring(0, 5)} )`,
