@@ -1,4 +1,4 @@
-exports.updateOrderHandler = function (event, functions, admin) {
+exports.updateOrderHandler = function (event, admin) {
   console.log(LOG_DELIMITER)
   let payPending = 0
   let sentPending = 0

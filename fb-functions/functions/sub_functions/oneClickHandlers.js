@@ -1,4 +1,4 @@
-exports.updateOneClickHandler = function (event, functions, admin) {
+exports.updateOneClickHandler = function (event, admin) {
   console.log(LOG_DELIMITER)
   let created = 0
   let sentPending = 0

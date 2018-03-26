@@ -8,6 +8,7 @@ const orderHandlers = require('./sub_functions/orderHandlers')
 const oneClickHandlers = require('./sub_functions/oneClickHandlers')
 const reviewHandlers = require('./sub_functions/reviewHandlers')
 const userHandlers = require('./sub_functions/userHandlers')
+const liveChat = require('./sub_functions/liveChat')
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
@@ -28,7 +29,7 @@ let transporter = nodemailer.createTransport({
 });
 
 // ---------------------------[ ALL FUNCTIONS ]---------------------------
-exports.onUserCreate = functions.auth.user().onCreate((event) => {
+exports.onUserCreate = functions.auth.user().onCreate(event => {
   return userHandlers.onUserCreate(event, admin)
 })
 // PAYPAL
@@ -42,7 +43,7 @@ exports.oneClickNotification = functions.https.onRequest((req, res) => {
 })
 
 // PRODUCT IMAGES
-exports.generateProductImages = functions.storage.object().onChange((event) => {
+exports.generateProductImages = functions.storage.object().onChange(event => {
   return generateProductImages.handler(event, admin)
 })
 
@@ -50,31 +51,35 @@ exports.generateProductImages = functions.storage.object().onChange((event) => {
 // 1. ALGOLIA SEARCH
 // 2. STATISTICS
 // Now, product updated after insertion (.onWrite not necessary)
-exports.onProductUpdate = functions.firestore.document('products/{productId}').onUpdate((event) => {
+exports.onProductUpdate = functions.firestore.document('products/{productId}').onUpdate(event => {
   return productHandlers.updateProductHandler(event, functions, admin)
 })
-exports.onProductDelete = functions.firestore.document('products/{productId}').onDelete((event) => {
+exports.onProductDelete = functions.firestore.document('products/{productId}').onDelete(event => {
   return productHandlers.deleteProductHandler(event, functions, admin)
 })
 
 
 // ORDER HANDLERS:
 // 1. STATISTICS
-exports.onOrderWrire = functions.firestore.document('orders/{orderId}').onWrite((event) => {
-  return orderHandlers.updateOrderHandler(event, functions, admin)
+exports.onOrderWrire = functions.firestore.document('orders/{orderId}').onWrite(event => {
+  return orderHandlers.updateOrderHandler(event, admin)
 })
 
 // ONE CLICK HANDLERS:
 // 1. STATISTICS
-exports.onOneCLickWrite = functions.firestore.document('oneclick/{oneClickId}').onWrite((event) => {
-  return oneClickHandlers.updateOneClickHandler(event, functions, admin)
+exports.onOneCLickWrite = functions.firestore.document('oneclick/{oneClickId}').onWrite(event => {
+  return oneClickHandlers.updateOneClickHandler(event, admin)
 })
 
 // REVIEW HANDLERS:
 // 1. STATISTICS
-exports.onReviewWrite = functions.firestore.document('reviews/{reviewId}').onWrite((event) => {
-  return reviewHandlers.updateReviewHandler(event, functions, admin)
+exports.onReviewWrite = functions.firestore.document('reviews/{reviewId}').onWrite(event => {
+  return reviewHandlers.updateReviewHandler(event, admin)
 })
 
+// HANDLE UNREAD LIVE CHAT MESSAGE
+exports.liveChatNewMsgNotification = functions.database.ref('unreadLiveChat/{msgId}').onCreate(event => {
+  return liveChat.handleUnreadMsg(event, admin, transporter)
+})
 
 // onWrite = created, updated, or deleted

@@ -1,4 +1,4 @@
-exports.updateReviewHandler = function (event, functions, admin) {
+exports.updateReviewHandler = function (event, admin) {
   console.log(LOG_DELIMITER)
   let newReview = 0
   let published = 0
@@ -31,3 +31,4 @@ exports.updateReviewHandler = function (event, functions, admin) {
       console.log(err)
     })
 }
+// TODO: Send msg

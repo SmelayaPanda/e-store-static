@@ -216,6 +216,13 @@ export default {
             let chatMessages = {...getters.chatMessages}
             chatMessages[data.key] = newMsg
             commit('setChatMessages', chatMessages)
+            // for send email to offline admin through cloud function
+            if (!getters.isOnlineAdmin) {
+              firebase.database().ref('unreadLiveChat').push({
+                from: getters.user.email ? getters.user.email : `Anonymous ( ${data.key.substring(0, 5)} )`,
+                msg: payload.msg
+              })
+            }
           })
           .catch(err => console.log(err))
       },
