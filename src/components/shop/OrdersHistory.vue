@@ -138,7 +138,7 @@ In user cart for simple visualization and minimum clicks
 </template>
 
 <script>
-import PayNowDialog from '../user/PayNowDialog'
+import PayNowDialog from '@/components/shop/PayNowDialog'
 
 export default {
   name: 'OrdersHistory',

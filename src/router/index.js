@@ -3,7 +3,7 @@ import Router from 'vue-router'
 // MAIN
 import Home from '@/components/Home'
 import About from '@/components/about/About'
-import ShoppingCart from '@/components/user/ShoppingCart'
+import ShoppingCart from '@/components/shop/ShoppingCart'
 // AUTH
 import Signin from '@/components/auth/Signin'
 import Signup from '@/components/auth/Signup'
