@@ -47,9 +47,10 @@ export default {
     editPersonalInfo:
       ({commit, getters}, payload) => {
         commit('LOADING', true)
-        let userId = getters.user.uid
-        firebase.firestore().collection('users').doc(userId).update(payload)
+        let user = getters.user
+        firebase.firestore().collection('users').doc(user.uid).update(payload)
           .then(() => {
+            commit('setUser', Object.assign(user, payload))
             commit('LOADING', false)
             console.log('Personal info udated!')
           })
