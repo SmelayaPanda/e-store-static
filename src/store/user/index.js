@@ -22,9 +22,9 @@ export default {
   // Actions ---------------------------------------------------
   actions: {
     fetchUserData: // one action with another vuex dependencies
-      ({commit, dispatch, getters}) => {
+      ({commit, dispatch, getters}, payload) => {
         commit('LOADING', true)
-        const user = getters.user
+        let user = {...payload}
         firebase.firestore().collection('users').doc(user.uid).get()
           .then(snapshot => {
             if (snapshot.data()) {
@@ -42,6 +42,20 @@ export default {
           .catch(err => {
             console.log(err)
             commit('LOADING', false)
+          })
+      },
+    editPersonalInfo:
+      ({commit, getters}, payload) => {
+        commit('LOADING', true)
+        let userId = getters.user.uid
+        firebase.firestore().collection('users').doc(userId).update(payload)
+          .then(() => {
+            commit('LOADING', false)
+            console.log('Personal info udated!')
+          })
+          .catch(err => {
+            commit('LOADING', false)
+            console.log(err)
           })
       },
     signUserUp:
@@ -133,10 +147,6 @@ export default {
       ({commit}, payload) => {
         firebase.firestore().collection('users').doc(payload.uid).update({emailVerified: payload.emailVerified})
           .catch((err) => console.log(err))
-      },
-    autoSignIn:
-      ({commit}, payload) => {
-        commit('setUser', payload)
       },
     setAdmin:
       ({commit}, payload) => {

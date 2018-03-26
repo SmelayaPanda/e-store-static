@@ -20,7 +20,7 @@
             </el-card>
             <el-card class="mt-2" :body-style="{ padding: '0px' }">
               <div style="padding: 14px;">
-                <span v-if="user.birthday">{{ user.birthday }}</span>
+                <span v-if="user.birthday">{{ user.birthday | birthday }}</span>
                 <span v-else>DD-MM-YYYY</span>
               </div>
             </el-card>
@@ -29,10 +29,8 @@
                 {{ this.user.email }}
               </div>
             </el-card>
-            <el-button type="text" class="button mt-2">
-              <i class="el-icon-edit"></i>
-              edit info
-            </el-button>
+            <!--EDIT PERSONAL INFO-->
+            <edit-personal-info></edit-personal-info>
           </el-col>
           <el-col :xs="24" :sm="17" :md="15" :lg="12" :xl="9" class="ml-1 mr-1">
             <el-card>
@@ -85,13 +83,15 @@
 </template>
 
 <script>
-
+import EditPersonalInfo from '@/components/user/EditPersonalInfo'
 export default {
   name: 'Account',
   data () {
     return {}
   },
-  components: {},
+  components: {
+    EditPersonalInfo
+  },
   computed: {
     user () {
       return this.$store.getters.user

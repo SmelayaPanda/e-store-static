@@ -36,15 +36,12 @@
                           placeholder="Phone number"
             />
           </el-form-item>
-          <el-form-item>
-            <el-button type="primary"
-                       @click="submitForm"
-                       :disabled="!isValidForm"
-            >
-              One Click!
-            </el-button>
-            <el-button @click="closeOneClick">Cancel</el-button>
-          </el-form-item>
+          <el-button type="primary"
+                     @click="submitForm"
+                     :disabled="!isValidForm">
+            One Click!
+          </el-button>
+          <el-button @click="closeOneClick">Cancel</el-button>
         </el-form>
       </el-col>
     </el-row>
@@ -126,7 +123,7 @@ export default {
             this.$notify({
               title: 'Cool!',
               message: 'Your request has been delivered! ' +
-              'Our manager will contact you soon.',
+                'Our manager will contact you soon.',
               type: 'success',
               showClose: true,
               duration: 10000,
