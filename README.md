@@ -10,4 +10,4 @@
 
 * Don't touch webhooks!
 ** Don't rename cloud function name later!
-*** And smile =)
+*** And smile!
